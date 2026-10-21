@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 320" width="100%" height="100%">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&amp;family=Montserrat:wght@500;600;700&amp;family=Caveat:wght@400;600&amp;display=swap');
+      .v-title {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 34px;
+        font-weight: 700;
+        fill: #367156;
+        text-anchor: middle;
+        letter-spacing: 0.02em;
+      }
+      .v-tagline {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 0.35em;
+        fill: #6B8F58;
+        text-anchor: middle;
+      }
+      .v-slogan {
+        font-family: 'Caveat', 'Playfair Display', cursive, serif;
+        font-size: 20px;
+        font-style: italic;
+        fill: #584636;
+        text-anchor: middle;
+      }
+    </style>
+  </defs>
+
+  <!-- Centered Emblem -->
+  <g transform="translate(115, 15)">
+    <!-- Sun (Warm Sunset Orange) -->
+    <circle cx="82" cy="46" r="23" fill="#F4A261" />
+
+    <!-- Left Pine Tree 1 (Outer Smaller) -->
+    <path d="M 28 42 L 23 51 H 25 L 20 62 H 23 L 16 75 H 36 L 31 62 H 34 L 29 51 H 31 Z" fill="#367156" />
+
+    <!-- Left Pine Tree 2 (Inner Taller) -->
+    <path d="M 44 26 L 37 38 H 40 L 33 52 H 37 L 28 68 H 54 L 47 52 H 51 L 45 38 H 48 Z" fill="#367156" />
+
+    <!-- Right Pine Tree 1 (Inner Small) -->
+    <path d="M 104 38 L 100 46 H 102 L 97 56 H 100 L 94 68 H 112 L 107 56 H 110 L 106 46 H 108 Z" fill="#367156" />
+
+    <!-- Right Pine Tree 2 (Outer Taller) -->
+    <path d="M 118 28 L 112 39 H 115 L 108 53 H 112 L 103 69 H 128 L 122 53 H 126 L 120 39 H 123 Z" fill="#367156" />
+
+    <!-- Villa Roof (Main Pitched Gable with Overhangs) -->
+    <path d="M 67 36 L 42 66 H 49 L 67 44 L 88 66 H 96 L 67 36 Z" fill="#367156" />
+    <rect x="52" y="38" width="4.5" height="12" fill="#367156" />
+
+    <!-- Villa Front Facade Wall -->
+    <path d="M 50 66 L 50 78 H 85 L 85 66 Z" fill="#367156" />
+
+    <!-- 4-Pane Window on Facade -->
+    <g fill="#FAF9F6">
+      <rect x="63" y="68" width="4.5" height="4.5" rx="0.5" />
+      <rect x="69" y="68" width="4.5" height="4.5" rx="0.5" />
+      <rect x="63" y="74" width="4.5" height="4.5" rx="0.5" />
+      <rect x="69" y="74" width="4.5" height="4.5" rx="0.5" />
+    </g>
+
+    <!-- Hill Baseline Curves -->
+    <path d="M 8 78 Q 45 68 85 75 Q 120 82 142 74" fill="none" stroke="#6B8F58" stroke-width="2.5" stroke-linecap="round" />
+    <path d="M 6 82 C 45 68 85 70 144 80 C 85 92 45 88 6 82 Z" fill="#367156" />
+  </g>
+
+  <!-- Typography Below -->
+  <text x="190" y="185" class="v-title">M_Dalats Villa</text>
+  <text x="190" y="215" class="v-tagline">STAY CLOSE TO NATURE</text>
+  <text x="190" y="260" class="v-slogan">Đà Lạt – Nơi những kỷ niệm đẹp bắt đầu</text>
+</svg>

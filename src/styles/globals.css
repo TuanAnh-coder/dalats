@@ -1,0 +1,280 @@
+@import "tailwindcss";
+
+@theme {
+  /* Extra-small breakpoint (portrait phones ≥480px) — used across Navbar, Hero,
+     search forms, sliders & modals. Must be defined or all `xs:` classes are no-ops. */
+  --breakpoint-xs: 30rem;
+
+  --color-cream: #faf7f1;
+  --color-cream-light: #fdfbf7;
+  --color-cream-dark: #f0e9dc;
+  --color-forest: #367156;
+  --color-forest-dark: #244b39;
+  --color-forest-light: #498b6c;
+  --color-terracotta: #f27052;
+  --color-terracotta-hover: #e05c3c;
+  --color-charcoal: #222222;
+  --color-charcoal-muted: #555555;
+  --color-charcoal-light: #888888;
+
+  /* Official Brand Colors */
+  --color-nature-green: #367156;
+  --color-moss-green: #367156;
+  --color-sand-beige: #D9C9A7;
+  --color-sunset-orange: #F4A261;
+  --color-wood-brown: #584636;
+  --color-cream-white: #FAF9F6;
+  
+  --font-serif: var(--font-serif), "Lora", Georgia, serif;
+  --font-sans: var(--font-be-vietnam-pro), "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-script: var(--font-dancing-script), "Dancing Script", cursive, "Lora", serif;
+  --font-display: var(--font-serif), "Lora", Georgia, serif;
+}
+
+:root {
+  --background: #faf7f1;
+  --foreground: #222222;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  line-height: 1.75;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  color: #367156;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  font-feature-settings: "liga" 0, "dlig" 0, "calt" 0;
+}
+
+.font-script {
+  font-family: var(--font-script);
+  letter-spacing: 0.01em;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+  letter-spacing: -0.01em;
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+/* ============================================================
+   Luxury Boutique Scrollbar - Cross-browser, Floating & Responsive
+   ============================================================ */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(54, 113, 86, 0.45) transparent;
+  scroll-behavior: smooth;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+}
+
+/* Prevent any child media or elements from breaking viewport boundary */
+img, svg, video, canvas, audio, iframe, embed, object {
+  max-width: 100%;
+}
+
+/* Chrome, Edge, Safari WebKit Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(54, 113, 86, 0.38);
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  transition: background-color 0.25s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #367156;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #244b39;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Scrollbar inside modals, dialogue sheets, table containers */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(54, 113, 86, 0.4) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(54, 113, 86, 0.35);
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #367156;
+}
+
+/* Utility to hide scrollbars while maintaining full scrollability on touch & desktop */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Dragonfly Wing Flapping Keyframes for Scroll Companion */
+@keyframes wing-flap-left {
+  0% {
+    transform: rotate(0deg) scaleY(1);
+  }
+  50% {
+    transform: rotate(-14deg) scaleY(0.25) skewX(12deg);
+  }
+  100% {
+    transform: rotate(4deg) scaleY(0.85);
+  }
+}
+
+@keyframes wing-flap-right {
+  0% {
+    transform: rotate(0deg) scaleY(1);
+  }
+  50% {
+    transform: rotate(14deg) scaleY(0.25) skewX(-12deg);
+  }
+  100% {
+    transform: rotate(-4deg) scaleY(0.85);
+  }
+}
+
+@keyframes wing-flap-left-hind {
+  0% {
+    transform: rotate(0deg) scaleY(1);
+  }
+  50% {
+    transform: rotate(-10deg) scaleY(0.3) skewX(10deg);
+  }
+  100% {
+    transform: rotate(2deg) scaleY(0.9);
+  }
+}
+
+@keyframes wing-flap-right-hind {
+  0% {
+    transform: rotate(0deg) scaleY(1);
+  }
+  50% {
+    transform: rotate(10deg) scaleY(0.3) skewX(-10deg);
+  }
+  100% {
+    transform: rotate(-2deg) scaleY(0.9);
+  }
+}
+
+.animate-wing-flap-left {
+  animation: wing-flap-left 0.09s ease-in-out infinite alternate;
+}
+
+.animate-wing-flap-right {
+  animation: wing-flap-right 0.09s ease-in-out infinite alternate;
+}
+
+.animate-wing-flap-left-hind {
+  animation: wing-flap-left-hind 0.095s ease-in-out infinite alternate;
+  animation-delay: 0.015s;
+}
+
+.animate-wing-flap-right-hind {
+  animation: wing-flap-right-hind 0.095s ease-in-out infinite alternate;
+  animation-delay: 0.015s;
+}
+
+/* Hôtel Fantaisie slow-spin boutique seal */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 24s linear infinite;
+}
+
+/* Shared entrance animation for modals, dropdowns & overlays */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out both;
+}
+
+/* Pop-in for success badges & receipts */
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-zoomIn {
+  animation: zoomIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+

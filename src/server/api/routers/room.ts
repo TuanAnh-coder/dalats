@@ -1,31 +1,115 @@
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  adminProcedure,
+  createTRPCRouter,
+  publicProcedure,
+  staffProcedure,
+} from "~/server/api/trpc";
 import { rooms, bookings } from "~/server/db/schema";
 import { seedRooms } from "~/server/db/seed";
+import { redisCache } from "~/server/redis";
+import {
+  calculateBookingPrice,
+  calculateStayNights,
+  formatDateVi,
+  getRoomTodayOccupancy,
+  getTodayIsoDate,
+  isBookingActive,
+  isDateRangeOverlapping,
+} from "~/server/business/booking-rules";
 
 export const roomRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
-    let allRooms = await ctx.db.select().from(rooms);
-    if (allRooms.length === 0) {
-      await seedRooms();
-      allRooms = await ctx.db.select().from(rooms);
-    }
-    return allRooms;
+    return await redisCache.getOrSet(
+      "rooms:all:enriched",
+      async () => {
+        let allRooms = await ctx.db.select().from(rooms);
+        if (allRooms.length === 0) {
+          await seedRooms();
+          allRooms = await ctx.db.select().from(rooms);
+        }
+
+        const allBookings = await ctx.db.select().from(bookings);
+        const today = getTodayIsoDate();
+
+        return allRooms.map((room) => {
+          const occupancy = getRoomTodayOccupancy(room, allBookings, today);
+          return {
+            ...room,
+            occupancy,
+            isOccupiedToday: occupancy.status === "occupied",
+            todayStatusLabel: occupancy.statusLabel,
+            todayBadgeBg: occupancy.badgeBg,
+            bookedUntil: occupancy.bookedUntil || null,
+          };
+        });
+      },
+      60 // Cache for 1 minute
+    );
   }),
 
   getBySlug: publicProcedure
     .input(z.object({ slug: z.string() }))
     .query(async ({ ctx, input }) => {
-      const room = await ctx.db
+      const [room] = await ctx.db
         .select()
         .from(rooms)
         .where(eq(rooms.slug, input.slug))
-        .get();
+        .limit(1);
 
-      return room ?? null;
+      if (!room) return null;
+
+      const roomBookings = await ctx.db
+        .select()
+        .from(bookings)
+        .where(eq(bookings.roomId, room.id));
+
+      const today = getTodayIsoDate();
+      const occupancy = getRoomTodayOccupancy(room, roomBookings, today);
+
+      const activeBookedRanges = roomBookings
+        .filter((b) => isBookingActive(b.status) && b.checkOut >= today)
+        .map((b) => ({
+          checkIn: b.checkIn,
+          checkOut: b.checkOut,
+          status: b.status,
+          display: `${formatDateVi(b.checkIn)} → ${formatDateVi(b.checkOut)}`,
+        }));
+
+      return {
+        ...room,
+        occupancy,
+        isOccupiedToday: occupancy.status === "occupied",
+        activeBookedRanges,
+      };
     }),
+
+  // Strictly retrieves ONLY rooms enrolled in the Flash Sale program
+  getFlashSale: publicProcedure.query(async ({ ctx }) => {
+    const allRooms = await ctx.db.select().from(rooms);
+
+    // STRICT: Only rooms that are currently flagged isFlashSale === true and available
+    const flashSaleRooms = allRooms.filter((r) => Boolean(r.isFlashSale) && r.isAvailable);
+
+    return flashSaleRooms.map((room) => {
+      const discount = room.flashSaleDiscount || 20;
+      const originalPrice = room.originalPrice || Math.round(room.pricePerNight * 1.25);
+      const flashSalePrice = room.pricePerNight;
+      const savings = originalPrice - flashSalePrice;
+
+      return {
+        ...room,
+        discountPercent: discount,
+        originalPrice,
+        flashSalePrice,
+        savings,
+        claimedPercent: 75 + ((room.id * 6) % 20), // 75% - 95% claimed
+        stockRemaining: (room.id % 2) + 1, // 1-2 slots remaining
+      };
+    });
+  }),
 
   search: publicProcedure
     .input(
@@ -85,34 +169,63 @@ export const roomRouter = createTRPCRouter({
 
         // Date conflict check
         let isBooked = false;
+        let conflictingBooking: (typeof allBookings)[0] | null = null;
         if (input.checkIn && input.checkOut) {
-          isBooked = allBookings.some((b) => {
-            if (b.roomId !== room.id || b.status === "cancelled") return false;
-            return b.checkIn < input.checkOut! && b.checkOut > input.checkIn!;
-          });
+          for (const b of allBookings) {
+            if (b.roomId === room.id && isBookingActive(b.status)) {
+              if (isDateRangeOverlapping(b.checkIn, b.checkOut, input.checkIn, input.checkOut)) {
+                isBooked = true;
+                conflictingBooking = b;
+                break;
+              }
+            }
+          }
         }
 
         const isAvailableForDates = room.isAvailable && !isBooked;
 
+        // Today occupancy check
+        const today = getTodayIsoDate();
+        const occupancy = getRoomTodayOccupancy(room, allBookings, today);
+
         // Agoda-style pricing & promotion intelligence
+        const pricing =
+          input.checkIn && input.checkOut
+            ? calculateBookingPrice({
+                pricePerNight: room.pricePerNight,
+                maxAdults: room.maxAdults,
+                maxChildren: room.maxChildren,
+                checkIn: input.checkIn,
+                checkOut: input.checkOut,
+                adults: input.adults,
+                children: input.children,
+              })
+            : null;
+
         const originalPrice = room.originalPrice || Math.round(room.pricePerNight * 1.25);
         const discountPercent = Math.max(0, Math.round(((originalPrice - room.pricePerNight) / originalPrice) * 100));
 
         // Agoda urgency & social proof badges
-        const recentBookingsCount = (room.id * 3) % 7 + 1; // 1-7 bookings in 24h
+        const recentBookingsCount = ((room.id * 3) % 7) + 1; // 1-7 bookings in 24h
         const reviewScore = Number((9.2 + ((room.id * 7) % 7) * 0.1).toFixed(1)); // 9.2 - 9.8
-        const reviewCount = 85 + (room.id * 17) % 95; // 85-180 reviews
+        const reviewCount = 85 + ((room.id * 17) % 95); // 85-180 reviews
 
         return {
           ...room,
+          occupancy,
+          isOccupiedToday: occupancy.status === "occupied",
           matchesFloor,
           matchesBed,
           matchesPrice,
           fitsCapacity,
           isBooked,
+          conflictingBookingDisplay: conflictingBooking
+            ? `${formatDateVi(conflictingBooking.checkIn)} → ${formatDateVi(conflictingBooking.checkOut)}`
+            : null,
           isAvailableForDates,
-          totalNights,
-          totalEstimatedPrice: room.pricePerNight * totalNights,
+          totalNights: pricing?.nights ?? totalNights,
+          totalEstimatedPrice: pricing?.totalPrice ?? room.pricePerNight * totalNights,
+          pricingBreakdown: pricing,
           originalPrice,
           discountPercent,
           reviewScore,
@@ -122,9 +235,11 @@ export const roomRouter = createTRPCRouter({
           freeCancellation: true,
           breakfastIncluded: true,
           urgencyBadge: isBooked
-            ? "Đã hết phòng trong ngày chọn"
+            ? `Đã hết phòng (${conflictingBooking ? formatDateVi(conflictingBooking.checkIn) + " - " + formatDateVi(conflictingBooking.checkOut) : "đã có khách"})`
             : !room.isAvailable
             ? "Đang bảo trì"
+            : occupancy.status === "occupied"
+            ? `Đang có khách lưu trú (trả phòng ${formatDateVi(occupancy.bookedUntil || "")})`
             : "Chỉ còn 1 phòng duy nhất với giá này!",
         };
       });
@@ -148,24 +263,30 @@ export const roomRouter = createTRPCRouter({
       return results;
     }),
 
-  create: publicProcedure
+  create: staffProcedure
     .input(
       z.object({
         name: z.string().min(2, "Tên phòng tối thiểu 2 ký tự"),
         roomNumber: z.string().min(1, "Số phòng không được để trống"),
-        slug: z.string().optional(),
+        slug: z.string().nullish(),
         area: z.number().min(10, "Diện tích tối thiểu 10m²"),
         maxAdults: z.number().min(1).default(2),
         maxChildren: z.number().default(2),
         bedType: z.string().default("1 Giường Queen"),
         viewType: z.string().default("Sân vườn"),
-        pricePerNight: z.number().min(100000, "Đơn giá tối thiểu 100.000₫"),
-        originalPrice: z.number().optional(),
+        pricePerNight: z
+          .union([z.number(), z.string()])
+          .transform((v) => (typeof v === "string" ? Number(v.replace(/,/g, "")) : v))
+          .pipe(z.number().min(100000, "Đơn giá tối thiểu 100.000₫")),
+        originalPrice: z
+          .union([z.number(), z.string()])
+          .nullish()
+          .transform((v) => (typeof v === "string" ? (v ? Number(v.replace(/,/g, "")) : null) : v)),
         image: z.string().min(1, "Đường dẫn ảnh chính không được để trống"),
-        gallery: z.array(z.string()).optional(),
-        shortDescription: z.string().optional(),
-        description: z.string().optional(),
-        amenities: z.array(z.string()).optional(),
+        gallery: z.array(z.string()).nullish(),
+        shortDescription: z.string().nullish(),
+        description: z.string().nullish(),
+        amenities: z.array(z.string()).nullish(),
         isAvailable: z.boolean().default(true),
       })
     )
@@ -205,10 +326,13 @@ export const roomRouter = createTRPCRouter({
         })
         .returning();
 
+      // Invalidate room cache in Redis
+      await redisCache.delPrefix("rooms:*");
+
       return newRoom;
     }),
 
-  update: publicProcedure
+  update: staffProcedure
     .input(
       z.object({
         id: z.number(),
@@ -219,13 +343,19 @@ export const roomRouter = createTRPCRouter({
         maxChildren: z.number().optional(),
         bedType: z.string().optional(),
         viewType: z.string().optional(),
-        pricePerNight: z.number().optional(),
-        originalPrice: z.number().optional(),
+        pricePerNight: z
+          .union([z.number(), z.string()])
+          .optional()
+          .transform((v) => (typeof v === "string" ? Number(v.replace(/,/g, "")) : v)),
+        originalPrice: z
+          .union([z.number(), z.string()])
+          .nullish()
+          .transform((v) => (typeof v === "string" ? (v ? Number(v.replace(/,/g, "")) : null) : v)),
         image: z.string().optional(),
-        gallery: z.array(z.string()).optional(),
-        shortDescription: z.string().optional(),
-        description: z.string().optional(),
-        amenities: z.array(z.string()).optional(),
+        gallery: z.array(z.string()).nullish(),
+        shortDescription: z.string().nullish(),
+        description: z.string().nullish(),
+        amenities: z.array(z.string()).nullish(),
         isAvailable: z.boolean().optional(),
       })
     )
@@ -245,13 +375,16 @@ export const roomRouter = createTRPCRouter({
         .set(updatePayload)
         .where(eq(rooms.id, id));
 
+      // Invalidate room cache in Redis
+      await redisCache.delPrefix("rooms:*");
+
       return { success: true };
     }),
 
-  toggleAvailability: publicProcedure
+  toggleAvailability: staffProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      const room = await ctx.db.select().from(rooms).where(eq(rooms.id, input.id)).get();
+      const [room] = await ctx.db.select().from(rooms).where(eq(rooms.id, input.id)).limit(1);
       if (!room) throw new Error("Không tìm thấy phòng");
 
       await ctx.db
@@ -259,10 +392,13 @@ export const roomRouter = createTRPCRouter({
         .set({ isAvailable: !room.isAvailable })
         .where(eq(rooms.id, input.id));
 
+      // Invalidate room cache in Redis
+      await redisCache.delPrefix("rooms:*");
+
       return { success: true, isAvailable: !room.isAvailable };
     }),
 
-  delete: publicProcedure
+  delete: adminProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
       // Check if room has active bookings
@@ -277,10 +413,18 @@ export const roomRouter = createTRPCRouter({
           .update(rooms)
           .set({ isAvailable: false })
           .where(eq(rooms.id, input.id));
+
+        // Invalidate room cache in Redis
+        await redisCache.delPrefix("rooms:*");
+
         return { success: true, message: "Phòng có đơn đặt, đã chuyển sang trạng thái tạm ngưng bán." };
       }
 
       await ctx.db.delete(rooms).where(eq(rooms.id, input.id));
+
+      // Invalidate room cache in Redis
+      await redisCache.delPrefix("rooms:*");
+
       return { success: true, message: "Đã xóa phòng thành công." };
     }),
 });

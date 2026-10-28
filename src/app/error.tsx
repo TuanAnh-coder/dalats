@@ -14,6 +14,21 @@ export default function ErrorBoundary({
   useEffect(() => {
     // Log error to console or telemetry
     console.error("Application error:", error);
+
+    // Auto-reload once on ChunkLoadError to recover from stale build chunks
+    const isChunkError =
+      error?.name === "ChunkLoadError" ||
+      error?.message?.includes("Loading chunk") ||
+      error?.message?.includes("Failed to load chunk");
+
+    if (isChunkError && typeof window !== "undefined") {
+      const lastReload = sessionStorage.getItem("chunk_reload_timestamp");
+      const now = Date.now();
+      if (!lastReload || now - parseInt(lastReload, 10) > 10000) {
+        sessionStorage.setItem("chunk_reload_timestamp", now.toString());
+        window.location.reload();
+      }
+    }
   }, [error]);
 
   return (

@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-import { BadgePercent, ShieldCheck, DollarSign, ArrowRight } from "lucide-react";
-import { FadeIn, StaggerContainer, StaggerItem } from "./MotionWrapper";
+import { DollarSign, Coffee, ShieldCheck, Clock, ArrowRight } from "lucide-react";
+import { FadeIn, StaggerContainer, StaggerItem, SectionStack } from "./MotionWrapper";
+import { Button } from "~/components/ui/button";
 
 interface BookingPerksSectionProps {
   onOpenBookingModal: () => void;
@@ -11,75 +12,85 @@ interface BookingPerksSectionProps {
 export function BookingPerksSection({ onOpenBookingModal }: BookingPerksSectionProps) {
   const perks = [
     {
-      title: "Giá phòng tốt nhất",
-      desc: "Cam kết giá gốc trực tiếp từ villa, không qua trung gian, tặng kèm ưu đãi chào đón độc quyền.",
+      title: "Giá tốt nhất trực tiếp",
+      subtitle: "Meilleur Tarif Garanti",
+      desc: "Cam kết giá trực tiếp từ biệt thự, không phụ phí trung gian và luôn tặng kèm ưu đãi chào đón độc quyền.",
       icon: DollarSign,
     },
     {
-      title: "Chương trình khuyến mãi",
-      desc: "Luôn có chính sách giảm giá cho khách lưu trú dài ngày hoặc đặt trước từ 7 ngày trở lên.",
-      icon: BadgePercent,
+      title: "Bao gồm điểm tâm sáng",
+      subtitle: "Petit-déjeuner Offert",
+      desc: "Thưởng thức bữa sáng thơm lành chế biến từ nông sản hữu cơ Đà Lạt và cà phê nguyên chất mỗi sớm.",
+      icon: Coffee,
     },
     {
-      title: "Không phí dịch vụ",
-      desc: "Minh bạch 100%, không phát sinh bất kỳ khoản phụ phí ẩn nào khi nhận phòng tại villa.",
+      title: "Chính sách linh hoạt",
+      subtitle: "Annulation Sans Frais",
+      desc: "Chính sách hỗ trợ đổi ngày và quản lý đơn đặt phòng nhanh chóng, an tâm cho chuyến nghỉ dưỡng.",
       icon: ShieldCheck,
+    },
+    {
+      title: "Ưu tiên nhận phòng sớm",
+      subtitle: "Arrivée Anticipée",
+      desc: "Hỗ trợ nhận phòng sớm và giữ hành lý an toàn miễn phí (tùy thuộc vào tình trạng phòng sẵn có).",
+      icon: Clock,
     },
   ];
 
   return (
-    <section className="py-16 sm:py-24 bg-[#faf7f1] overflow-hidden">
-      <div className="max-w-6xl mx-auto px-4 sm:px-8">
+    /* Chapter 7: Signature Full-Bleed PlayStation Blue Action Band (hero-band-blue #0070d1) */
+    <SectionStack className="py-20 sm:py-28 bg-[#0070d1] text-white overflow-hidden w-full max-w-full">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <FadeIn direction="up">
-          <div className="bg-white rounded-lg p-6 sm:p-12 border border-[#ece7dd] shadow-sm text-center">
-            <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.3em] text-[#367156] font-semibold block mb-1.5 sm:mb-2">
-              Đặt phòng trực tiếp
-            </span>
-            <h2 className="font-serif text-2xl sm:text-4xl text-[#222222] font-normal mb-3 sm:mb-4">
-              Bạn có hẹn với Đà Lạt? Hãy bắt đầu ở M_Dalats Villa!
-            </h2>
-            <div className="flex items-center justify-center gap-2.5 mx-auto mb-4 sm:mb-5">
-              <span className="w-10 sm:w-14 h-px bg-gradient-to-r from-transparent to-[#367156]/50" />
-              <span className="text-[10px] text-[#367156] select-none">◆</span>
-              <span className="w-10 sm:w-14 h-px bg-gradient-to-l from-transparent to-[#367156]/50" />
-            </div>
-            <p className="font-sans text-xs sm:text-sm text-[#666666] font-light max-w-xl mx-auto mb-8 sm:mb-12 leading-relaxed">
-              Đặt phòng trực tiếp tại website để nhận được sự chăm sóc chu đáo nhất từ đội ngũ M_Dalats Boutique Villa.
-            </p>
+          <span className="text-[12px] uppercase tracking-[2px] text-white/80 font-bold block mb-2">
+            Exclusive Privileges • Đặc Quyền Đặt Trực Tiếp
+          </span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl text-white font-light tracking-tight mb-4 leading-tight">
+            Khởi đầu kỳ nghỉ đáng nhớ cùng M_Dalats Villa
+          </h2>
+          <p className="text-sm sm:text-base text-white/85 font-normal max-w-2xl mx-auto mb-10 sm:mb-14 leading-relaxed">
+            Đặt phòng trực tiếp trên website chính thức để nhận trọn vẹn dịch vụ Concierge tận tâm và những đặc quyền riêng tư cao cấp nhất.
+          </p>
 
-            {/* 3 Pillars Stagger */}
-            <StaggerContainer staggerChildren={0.1} className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 text-left mb-8 sm:mb-10">
-              {perks.map((perk, i) => {
-                const Icon = perk.icon;
-                return (
-                  <StaggerItem key={i}>
-                    <div className="p-5 rounded-md bg-[#faf7f1] border border-[#ece7dd] hover:border-[#367156] hover:bg-white transition-all h-full group">
-                      <div className="w-10 h-10 rounded-full bg-white text-[#367156] flex items-center justify-center mb-3 shadow-xs group-hover:scale-110 transition-transform">
+          {/* 4 Pillars Stagger (PlayStation In-Band Dark Cards: #121314, 8px radius) */}
+          <StaggerContainer staggerChildren={0.06} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 text-left mb-10 sm:mb-12">
+            {perks.map((perk, i) => {
+              const Icon = perk.icon;
+              return (
+                <StaggerItem key={i}>
+                  <div className="p-5 sm:p-6 rounded-[8px] bg-[#000000]/30 backdrop-blur-md border border-white/20 hover:border-white/40 transition-all h-full group flex flex-col justify-between">
+                    <div>
+                      <div className="w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
                         <Icon className="w-5 h-5" />
                       </div>
-                      <h4 className="font-serif text-lg sm:text-xl text-[#222222] font-medium mb-1.5 group-hover:text-[#367156] transition-colors">
+                      <h4 className="text-base sm:text-lg text-white font-medium mb-0.5">
                         {perk.title}
                       </h4>
-                      <p className="text-xs text-[#666666] font-light leading-relaxed">
+                      <span className="text-[11px] uppercase tracking-[1px] text-white/70 font-normal block mb-2">
+                        {perk.subtitle}
+                      </span>
+                      <p className="text-xs sm:text-sm text-white/80 font-normal leading-relaxed">
                         {perk.desc}
                       </p>
                     </div>
-                  </StaggerItem>
-                );
-              })}
-            </StaggerContainer>
+                  </div>
+                </StaggerItem>
+              );
+            })}
+          </StaggerContainer>
 
-            <button
-              type="button"
-              onClick={onOpenBookingModal}
-              className="inline-flex items-center gap-2 bg-[#f27052] hover:bg-[#e05c3c] text-white px-6 sm:px-8 py-3 rounded-sm text-xs uppercase tracking-[0.15em] font-medium shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer"
-            >
-              <span>Đặt phòng trực tiếp ngay</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
+          {/* Signature Pure White Button on PlayStation Blue Band */}
+          <Button
+            type="button"
+            size="lg"
+            onClick={onOpenBookingModal}
+            className="gap-2 bg-white hover:bg-neutral-100 text-[#0070d1] rounded-full font-bold text-sm sm:text-base h-12 px-9 shadow-none transition-colors cursor-pointer"
+          >
+            <span>Đặt phòng trực tiếp ngay</span>
+            <ArrowRight className="w-4 h-4" />
+          </Button>
         </FadeIn>
       </div>
-    </section>
+    </SectionStack>
   );
 }

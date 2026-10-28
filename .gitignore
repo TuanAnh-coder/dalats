@@ -42,5 +42,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 
+# test results & temporary
+/test-results/
+.aider-desk/
+
 # idea files
 .idea

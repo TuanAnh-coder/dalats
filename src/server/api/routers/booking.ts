@@ -1,92 +1,287 @@
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, inArray } from "drizzle-orm";
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 
 import {
+  adminProcedure,
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
+  staffProcedure,
 } from "~/server/api/trpc";
 import { bookings, rooms } from "~/server/db/schema";
+import { redisCache } from "~/server/redis";
+import { checkRateLimit, getClientIp } from "~/server/security/rate-limit";
+import {
+  calculateBookingPrice,
+  checkRoomConflict,
+  formatDateVi,
+  getRoomTodayOccupancy,
+  getTodayIsoDate,
+  isBookingActive,
+  validateBookingDates,
+} from "~/server/business/booking-rules";
+
+function sanitizeString(input?: string | null): string {
+  if (!input) return "";
+  return input.replace(/<[^>]*>?/gm, "").trim();
+}
 
 export const bookingRouter = createTRPCRouter({
-  create: publicProcedure
+  /**
+   * Real-time Check Availability for a Room & Date Range
+   */
+  checkAvailability: publicProcedure
     .input(
       z.object({
         roomId: z.number(),
-        customerName: z.string().min(2, "Họ tên phải từ 2 ký tự"),
-        customerEmail: z.string().email("Email không hợp lệ"),
-        customerPhone: z.string().min(9, "Số điện thoại không hợp lệ"),
-        checkIn: z.string(),
-        checkOut: z.string(),
+        checkIn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Định dạng ngày nhận phòng phải là YYYY-MM-DD"),
+        checkOut: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Định dạng ngày trả phòng phải là YYYY-MM-DD"),
         adults: z.number().min(1).default(2),
         children: z.number().default(0),
-        totalNights: z.number().min(1).default(1),
-        totalPrice: z.number(),
-        specialRequests: z.string().optional(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
-      // Validate date sequence
-      if (input.checkIn >= input.checkOut) {
-        throw new Error("Ngày trả phòng phải sau ngày nhận phòng ít nhất 1 ngày.");
+    .query(async ({ ctx, input }) => {
+      const dateValidation = validateBookingDates(input.checkIn, input.checkOut);
+      if (!dateValidation.valid) {
+        return {
+          isAvailable: false,
+          reason: dateValidation.error,
+          pricing: null,
+          conflictingBooking: null,
+        };
       }
 
-      // Check room status
-      const room = await ctx.db
+      const [room] = await ctx.db
         .select()
         .from(rooms)
         .where(eq(rooms.id, input.roomId))
-        .get();
+        .limit(1);
 
-      if (!room || !room.isAvailable) {
-        throw new Error("Phòng này hiện đang tạm ngừng nhận khách hoặc đang bảo trì.");
+      if (!room) {
+        return {
+          isAvailable: false,
+          reason: "Phòng nghỉ không tồn tại trong hệ thống.",
+          pricing: null,
+          conflictingBooking: null,
+        };
       }
 
-      // Check for overlapping bookings
+      if (!room.isAvailable) {
+        return {
+          isAvailable: false,
+          reason: `Phòng ${room.name} hiện đang tạm đóng hoặc đang trong quá trình bảo trì kỹ thuật.`,
+          pricing: null,
+          conflictingBooking: null,
+        };
+      }
+
       const existingBookings = await ctx.db
         .select()
         .from(bookings)
         .where(eq(bookings.roomId, input.roomId));
 
-      const hasConflict = existingBookings.some((b) => {
-        if (b.status === "cancelled") return false;
-        return b.checkIn < input.checkOut && b.checkOut > input.checkIn;
+      const conflictCheck = checkRoomConflict(
+        input.roomId,
+        input.checkIn,
+        input.checkOut,
+        existingBookings
+      );
+
+      const pricing = calculateBookingPrice({
+        pricePerNight: room.pricePerNight,
+        maxAdults: room.maxAdults,
+        maxChildren: room.maxChildren,
+        checkIn: input.checkIn,
+        checkOut: input.checkOut,
+        adults: input.adults,
+        children: input.children,
       });
 
-      if (hasConflict) {
-        throw new Error("Phòng này đã có khách đặt trong khoảng thời gian quý khách chọn. Vui lòng chọn ngày khác hoặc chọn phòng khác.");
+      if (conflictCheck.hasConflict) {
+        return {
+          isAvailable: false,
+          reason: conflictCheck.reason,
+          pricing,
+          conflictingBooking: conflictCheck.conflictingBooking
+            ? {
+                checkIn: conflictCheck.conflictingBooking.checkIn,
+                checkOut: conflictCheck.conflictingBooking.checkOut,
+              }
+            : null,
+        };
       }
 
-      const codeSuffix = Math.random().toString(36).substring(2, 7).toUpperCase();
-      const bookingCode = `MDALAT-${Date.now().toString().slice(-4)}${codeSuffix}`;
+      return {
+        isAvailable: true,
+        reason: "Phòng trống sẵn sàng nhận khách.",
+        pricing,
+        conflictingBooking: null,
+      };
+    }),
 
-      const userId = ctx.session?.user?.id ?? null;
-
-      const [newBooking] = await ctx.db
-        .insert(bookings)
-        .values({
-          bookingCode,
-          userId,
-          roomId: input.roomId,
-          customerName: input.customerName,
-          customerEmail: input.customerEmail,
-          customerPhone: input.customerPhone,
-          checkIn: input.checkIn,
-          checkOut: input.checkOut,
-          adults: input.adults,
-          children: input.children,
-          totalNights: input.totalNights,
-          totalPrice: input.totalPrice,
-          specialRequests: input.specialRequests,
-          status: "confirmed",
+  /**
+   * Get all booked date ranges for a room (for UI calendars & pickers)
+   */
+  getBookedRanges: publicProcedure
+    .input(z.object({ roomId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const today = getTodayIsoDate();
+      const allRoomBookings = await ctx.db
+        .select({
+          id: bookings.id,
+          checkIn: bookings.checkIn,
+          checkOut: bookings.checkOut,
+          status: bookings.status,
+          customerName: bookings.customerName,
         })
-        .returning();
+        .from(bookings)
+        .where(eq(bookings.roomId, input.roomId));
 
-      if (!newBooking) {
-        throw new Error("Không thể khởi tạo đơn đặt phòng, vui lòng thử lại.");
+      // Filter active bookings whose checkout is today or in the future
+      return allRoomBookings
+        .filter((b) => isBookingActive(b.status) && b.checkOut >= today)
+        .map((b) => ({
+          checkIn: b.checkIn,
+          checkOut: b.checkOut,
+          status: b.status,
+          displayTitle: `Kín phòng: ${formatDateVi(b.checkIn)} → ${formatDateVi(b.checkOut)}`,
+        }));
+    }),
+
+  /**
+   * Create Booking with Concurrency Lock, ACID Transaction & Server-side Validation
+   */
+  create: publicProcedure
+    .input(
+      z.object({
+        roomId: z.number(),
+        customerName: z.string().min(2, "Họ tên phải từ 2 ký tự").max(100, "Họ tên không được vượt quá 100 ký tự"),
+        customerEmail: z.string().email("Email không hợp lệ"),
+        customerPhone: z.string().regex(/^[0-9+() -]{8,20}$/, "Số điện thoại không hợp lệ (tối thiểu 8 ký tự số)"),
+        checkIn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Định dạng ngày nhận phòng phải là YYYY-MM-DD"),
+        checkOut: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Định dạng ngày trả phòng phải là YYYY-MM-DD"),
+        adults: z.number().min(1).default(2),
+        children: z.number().default(0),
+        totalNights: z.number().min(1).default(1),
+        totalPrice: z.number().optional(),
+        specialRequests: z.string().max(500, "Yêu cầu đặc biệt không được vượt quá 500 ký tự").optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // 0. Rate Limiting Check: max 10 booking creation attempts per 5 minutes per IP
+      const ip = getClientIp(ctx.headers);
+      const rateLimit = await checkRateLimit(`booking:create:${ip}`, 10, 300);
+      if (!rateLimit.success) {
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "Hệ thống phát hiện quá nhiều yêu cầu tạo đơn từ địa chỉ mạng của bạn. Vui lòng chờ ít phút hoặc liên hệ quản gia.",
+        });
       }
 
-      return newBooking;
+      // 1. Strict Date Validation
+      const dateValidation = validateBookingDates(input.checkIn, input.checkOut);
+      if (!dateValidation.valid) {
+        throw new Error(dateValidation.error);
+      }
+
+      const safeCustomerName = sanitizeString(input.customerName);
+      const safeSpecialRequests = input.specialRequests ? sanitizeString(input.specialRequests) : null;
+
+      try {
+        // 2. Concurrency Lock: Redis Mutex lock on room id to prevent double booking
+        return await redisCache.withLock(
+          `booking:room:lock:${input.roomId}`,
+          10, // 10 seconds lock timeout
+          async () => {
+            // 3. PostgreSQL ACID Transaction for atomicity & concurrency protection
+            return await ctx.db.transaction(async (tx) => {
+              // Verify room existence & availability status
+              const [room] = await tx
+                .select()
+                .from(rooms)
+                .where(eq(rooms.id, input.roomId))
+                .limit(1);
+
+              if (!room || !room.isAvailable) {
+                throw new Error("Phòng này hiện đang tạm ngừng nhận khách hoặc đang bảo trì kỹ thuật.");
+              }
+
+              // Strict capacity check
+              if (input.adults > room.maxAdults + 2) {
+                throw new Error(
+                  `Số khách (${input.adults} người lớn) vượt quá giới hạn tối đa cho phép của phòng ${room.name} (Tối đa ${room.maxAdults + 2} người lớn kèm kê nệm phụ).`
+                );
+              }
+
+              // Check for overlapping bookings inside the transaction
+              const existingBookings = await tx
+                .select()
+                .from(bookings)
+                .where(eq(bookings.roomId, input.roomId));
+
+              const conflict = checkRoomConflict(
+                input.roomId,
+                input.checkIn,
+                input.checkOut,
+                existingBookings
+              );
+
+              if (conflict.hasConflict) {
+                throw new Error(conflict.reason || "Phòng này đã có khách đặt trong khoảng ngày bạn chọn.");
+              }
+
+              // 4. Server-side Verified Pricing (prevents client price tampering)
+              const pricing = calculateBookingPrice({
+                pricePerNight: room.pricePerNight,
+                maxAdults: room.maxAdults,
+                maxChildren: room.maxChildren,
+                checkIn: input.checkIn,
+                checkOut: input.checkOut,
+                adults: input.adults,
+                children: input.children,
+              });
+
+              const codeSuffix = Math.random().toString(36).substring(2, 7).toUpperCase();
+              const bookingCode = `MDALAT-${Date.now().toString().slice(-4)}${codeSuffix}`;
+              const userId = ctx.session?.user?.id ?? null;
+
+              const [newBooking] = await tx
+                .insert(bookings)
+                .values({
+                  bookingCode,
+                  userId,
+                  roomId: input.roomId,
+                  customerName: safeCustomerName,
+                  customerEmail: input.customerEmail.trim().toLowerCase(),
+                  customerPhone: input.customerPhone.trim(),
+                  checkIn: input.checkIn,
+                  checkOut: input.checkOut,
+                  adults: input.adults,
+                  children: input.children,
+                  totalNights: pricing.nights,
+                  totalPrice: pricing.totalPrice,
+                  specialRequests: safeSpecialRequests,
+                  status: "confirmed",
+                })
+                .returning();
+
+              if (!newBooking) {
+                throw new Error("Không thể khởi tạo đơn đặt phòng, vui lòng thử lại.");
+              }
+
+              return {
+                ...newBooking,
+                pricingBreakdown: pricing,
+              };
+            });
+          }
+        );
+      } finally {
+        // 5. Invalidate Room & Booking Cache in Redis immediately
+        await redisCache.delPrefix("rooms:*");
+        await redisCache.delPrefix("bookings:*");
+      }
     }),
 
   getMyBookings: protectedProcedure.query(async ({ ctx }) => {
@@ -127,11 +322,11 @@ export const bookingRouter = createTRPCRouter({
   cancel: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      const booking = await ctx.db
+      const [booking] = await ctx.db
         .select()
         .from(bookings)
         .where(eq(bookings.id, input.id))
-        .get();
+        .limit(1);
 
       if (!booking || booking.userId !== ctx.session.user.id) {
         throw new Error("Không tìm thấy đơn đặt phòng hoặc bạn không có quyền huỷ.");
@@ -142,106 +337,66 @@ export const bookingRouter = createTRPCRouter({
         .set({ status: "cancelled" })
         .where(eq(bookings.id, input.id));
 
+      // Invalidate room cache in Redis so room is freed immediately
+      await redisCache.delPrefix("rooms:*");
+      await redisCache.delPrefix("bookings:*");
+
       return { success: true };
     }),
 
   // Admin Procedures
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    let all = await ctx.db.query.bookings.findMany({
+  getAll: staffProcedure.query(async ({ ctx }) => {
+    const all = await ctx.db.query.bookings.findMany({
       with: {
         room: true,
       },
       orderBy: [desc(bookings.createdAt)],
     });
 
-    // If database is brand new, seed realistic sample bookings for demonstration
-    if (all.length === 0) {
-      const allRooms = await ctx.db.select().from(rooms);
-      if (allRooms.length > 0) {
-        const r1 = allRooms[0]?.id ?? 1;
-        const r2 = allRooms[1]?.id ?? 2;
-        const r3 = allRooms[2]?.id ?? 3;
-
-        await ctx.db.insert(bookings).values([
-          {
-            bookingCode: "MDALAT-8921A",
-            roomId: r1,
-            customerName: "Nguyễn Thành Long",
-            customerEmail: "thanhlong.nguyen@gmail.com",
-            customerPhone: "0912 345 678",
-            checkIn: "2026-10-25",
-            checkOut: "2026-10-27",
-            adults: 2,
-            children: 1,
-            totalNights: 2,
-            totalPrice: 1700000,
-            status: "confirmed",
-            specialRequests: "Chuẩn bị set tiệc BBQ ngoài trời tối 25/10 và nôi em bé.",
-          },
-          {
-            bookingCode: "MDALAT-5412B",
-            roomId: r2,
-            customerName: "Trần Mai Chi",
-            customerEmail: "maichi.tran@yahoo.com",
-            customerPhone: "0988 776 655",
-            checkIn: "2026-10-28",
-            checkOut: "2026-10-31",
-            adults: 2,
-            children: 0,
-            totalNights: 3,
-            totalPrice: 2550000,
-            status: "pending",
-            specialRequests: "Check-in sớm lúc 11:30 sáng nếu phòng trống.",
-          },
-          {
-            bookingCode: "MDALAT-3390C",
-            roomId: r3,
-            customerName: "Lê Hoàng Minh",
-            customerEmail: "minh.lehoang@outlook.com",
-            customerPhone: "0903 112 233",
-            checkIn: "2026-11-02",
-            checkOut: "2026-11-04",
-            adults: 4,
-            children: 2,
-            totalNights: 2,
-            totalPrice: 2700000,
-            status: "confirmed",
-            specialRequests: "Kỷ niệm 5 năm ngày cưới, nhờ villa chuẩn bị bình hoa hồng.",
-          },
-          {
-            bookingCode: "MDALAT-1204D",
-            roomId: r1,
-            customerName: "Phạm Quỳnh Anh",
-            customerEmail: "quynhanh.pham@gmail.com",
-            customerPhone: "0934 998 877",
-            checkIn: "2026-10-18",
-            checkOut: "2026-10-19",
-            adults: 2,
-            children: 0,
-            totalNights: 1,
-            totalPrice: 850000,
-            status: "completed",
-            specialRequests: "Trải nghiệm rất tuyệt vời!",
-          },
-        ]);
-
-        all = await ctx.db.query.bookings.findMany({
-          with: {
-            room: true,
-          },
-          orderBy: [desc(bookings.createdAt)],
-        });
-      }
-    }
-
     return all;
   }),
 
-  updateStatus: publicProcedure
+  /**
+   * Live Room Occupancy Dashboard for Staff & Admin
+   */
+  getRoomOccupancyOverview: staffProcedure.query(async ({ ctx }) => {
+    const allRooms = await ctx.db.select().from(rooms);
+    const allBookings = await ctx.db.select().from(bookings);
+    const today = getTodayIsoDate();
+
+    const roomStatusList = allRooms.map((room) => {
+      const occupancy = getRoomTodayOccupancy(room, allBookings, today);
+      return {
+        room,
+        occupancy,
+      };
+    });
+
+    // Compute KPI stats
+    const totalRooms = allRooms.length;
+    const occupiedCount = roomStatusList.filter((r) => r.occupancy.status === "occupied").length;
+    const arrivingTodayCount = roomStatusList.filter((r) => r.occupancy.status === "arriving_today").length;
+    const departingTodayCount = roomStatusList.filter((r) => r.occupancy.status === "departing_today").length;
+    const maintenanceCount = roomStatusList.filter((r) => r.occupancy.status === "maintenance").length;
+    const availableCount = roomStatusList.filter((r) => r.occupancy.status === "available").length;
+
+    return {
+      today,
+      totalRooms,
+      occupiedCount,
+      arrivingTodayCount,
+      departingTodayCount,
+      maintenanceCount,
+      availableCount,
+      rooms: roomStatusList,
+    };
+  }),
+
+  updateStatus: staffProcedure
     .input(
       z.object({
         id: z.number(),
-        status: z.enum(["confirmed", "pending", "completed", "cancelled"]),
+        status: z.enum(["confirmed", "checked_in", "completed", "cancelled", "pending"]),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -250,14 +405,21 @@ export const bookingRouter = createTRPCRouter({
         .set({ status: input.status })
         .where(eq(bookings.id, input.id));
 
+      // Invalidate room cache in Redis
+      await redisCache.delPrefix("rooms:*");
+      await redisCache.delPrefix("bookings:*");
+
       return { success: true };
     }),
 
-  delete: publicProcedure
+  delete: adminProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
       await ctx.db.delete(bookings).where(eq(bookings.id, input.id));
+
+      await redisCache.delPrefix("rooms:*");
+      await redisCache.delPrefix("bookings:*");
+
       return { success: true };
     }),
 });
-

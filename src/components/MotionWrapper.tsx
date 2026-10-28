@@ -239,5 +239,34 @@ export function Counter({
   );
 }
 
+export interface SectionStackProps extends React.HTMLAttributes<HTMLElement> {
+  children: React.ReactNode;
+  className?: string;
+  dark?: boolean;
+  id?: string;
+}
+
+/**
+ * Signature Boutique Overlapping Section Card Stack Component
+ * Pure CSS hardware-accelerated stacking & elevation shadows for buttery smooth 60-120fps scrolling.
+ */
+export function SectionStack({
+  children,
+  className = "",
+  dark = false,
+  id,
+  ...props
+}: SectionStackProps) {
+  return (
+    <section
+      id={id}
+      className={`${dark ? "section-stack-dark" : "section-stack"} ${className}`}
+      {...props}
+    >
+      {children}
+    </section>
+  );
+}
+
 export { motion, AnimatePresence, useInView };
 

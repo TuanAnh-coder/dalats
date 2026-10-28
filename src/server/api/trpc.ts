@@ -13,6 +13,7 @@ import { ZodError } from "zod";
 
 import { auth } from "~/server/better-auth";
 import { db } from "~/server/db";
+import { isAdminRole, isStaffRole } from "~/lib/roles";
 
 /**
  * 1. CONTEXT
@@ -139,6 +140,38 @@ export const protectedProcedure = t.procedure
   });
 
 /**
+ * Staff procedure
+ *
+ * Guarantees the session exists and the user is an operator of the villa
+ * (role === "admin" or role === "staff"). Used for operational data such as
+ * bookings, rooms, guests and contact messages.
+ */
+export const staffProcedure = t.procedure
+  .use(timingMiddleware)
+  .use(({ ctx, next }) => {
+    if (!ctx.session?.user) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Yêu cầu đăng nhập tài khoản vận hành.",
+      });
+    }
+
+    const role = (ctx.session.user as { role?: string }).role;
+    if (!isStaffRole(role)) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Tài khoản của bạn không có quyền truy cập khu vực vận hành.",
+      });
+    }
+
+    return next({
+      ctx: {
+        session: { ...ctx.session, user: ctx.session.user },
+      },
+    });
+  });
+
+/**
  * Admin procedure
  *
  * Guarantees the session exists and the user has role === "admin".
@@ -154,7 +187,7 @@ export const adminProcedure = t.procedure
     }
 
     const role = (ctx.session.user as { role?: string }).role;
-    if (role !== "admin") {
+    if (!isAdminRole(role)) {
       throw new TRPCError({
         code: "FORBIDDEN",
         message: "Tài khoản của bạn không có quyền quản trị viên (Admin).",

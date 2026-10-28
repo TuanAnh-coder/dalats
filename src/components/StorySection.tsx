@@ -1,35 +1,43 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
-import { FadeIn, motion, Counter } from "./MotionWrapper";
+import { useScroll, useTransform } from "motion/react";
+import { FadeIn, motion, SectionStack } from "./MotionWrapper";
 
 export function StorySection() {
+  const collageRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: collageRef,
+    offset: ["start end", "end start"],
+  });
+
+  const smallPhotoY = useTransform(scrollYProgress, [0, 1], [25, -25]);
+
   return (
-    <section id="story" className="py-16 sm:py-24 bg-white border-y border-[#ece7dd] overflow-hidden scroll-mt-32">
-      <div className="max-w-6xl mx-auto px-4 sm:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-          {/* Photo Collage Left Side */}
-          <div className="lg:col-span-6 relative">
+    /* Chapter 2: Full-bleed True White Canvas Band */
+    <SectionStack id="story" className="py-20 sm:py-28 bg-[#ffffff] text-[#000000] overflow-hidden scroll-mt-20">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+          {/* Photo Showcase Left (Console/Product Style Glamour Shots) */}
+          <div ref={collageRef} className="lg:col-span-6 relative">
             <FadeIn direction="right" duration={0.8}>
               <div className="relative mx-auto max-w-md lg:max-w-none">
-                {/* Main Photo */}
-                <div className="relative h-[320px] sm:h-[440px] w-full rounded-sm overflow-hidden shadow-lg border-4 border-[#faf7f1]">
+                {/* Main Photo (8px radius) */}
+                <div className="relative h-[340px] sm:h-[480px] w-full rounded-[8px] overflow-hidden border border-[#f3f3f3] shadow-none">
                   <Image
                     src="/images/DH_01328_2-pgvj0qxon4n8u4tqnzxuo0cafocg3jtjqw7qfalgc0.jpg"
                     alt="Không gian bên trong M_Dalats Villa"
                     fill
-                    className="object-cover hover:scale-103 transition-transform duration-700"
+                    className="object-cover"
                   />
+                  <div className="absolute inset-0 bg-black/5" />
                 </div>
 
-                {/* Overlapping Small Photo */}
+                {/* Overlapping Secondary Photo with Scroll Parallax */}
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                  whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.7, delay: 0.3 }}
-                  className="absolute -bottom-6 -right-3 sm:-bottom-8 sm:-right-6 w-36 sm:w-52 h-40 sm:h-60 rounded-sm overflow-hidden shadow-2xl border-4 border-white hidden sm:block"
+                  style={{ y: smallPhotoY }}
+                  className="absolute -bottom-6 -right-3 sm:-bottom-8 sm:-right-6 w-44 sm:w-60 h-48 sm:h-68 rounded-[8px] overflow-hidden border-4 border-white hidden sm:block z-10 shadow-md"
                 >
                   <Image
                     src="/images/DSCF1106-1024x683.jpg"
@@ -38,84 +46,72 @@ export function StorySection() {
                     className="object-cover"
                   />
                 </motion.div>
-
-                {/* Floating Pine Decorative Icon */}
-                <motion.div
-                  animate={{ y: [0, -8, 0], rotate: [0, 2, 0] }}
-                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute -top-5 -left-4 sm:-top-6 sm:-left-6 w-12 h-12 sm:w-16 sm:h-16 bg-[#faf7f1] border border-[#ece7dd] rounded-full p-2.5 sm:p-3 shadow-md flex items-center justify-center z-10"
-                >
-                  <div className="relative w-full h-full">
-                    <Image
-                      src="/images/LE_Pine.png"
-                      alt="Pine tree icon"
-                      fill
-                      className="object-contain"
-                    />
-                  </div>
-                </motion.div>
               </div>
             </FadeIn>
           </div>
 
-          {/* Text Story Right Side */}
+          {/* Text Editorial Right Side: PlayStation SST Light 300 Headline */}
           <div className="lg:col-span-6 flex flex-col justify-center">
             <FadeIn direction="left" delay={0.1}>
-              <div className="inline-flex items-center gap-2 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.25em] text-[#367156] mb-2 sm:mb-3">
-                <span className="w-6 sm:w-8 h-px bg-[#367156]/50" />
-                <span className="text-[8px] text-[#367156] select-none">◆</span>
-                <span>Câu chuyện M_Dalats Villa</span>
-              </div>
+              <span className="text-[12px] font-bold uppercase tracking-[1.5px] text-[#0070d1] block mb-3">
+                L&apos;Esprit M_Dalats • Câu chuyện kiến trúc
+              </span>
             </FadeIn>
 
             <FadeIn direction="left" delay={0.2}>
-              <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl text-[#222222] font-normal leading-tight mb-4 sm:mb-6">
-                Câu chuyện về một Đà Lạt thu nhỏ
+              <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl text-[#000000] font-light leading-[1.2] tracking-tight mb-6">
+                Kiến trúc mộc mạc giao hòa cùng rừng thông
               </h2>
             </FadeIn>
 
             <FadeIn direction="left" delay={0.3}>
-              <div className="space-y-3 sm:space-y-4 text-xs sm:text-sm md:text-base text-[#555555] font-light leading-relaxed">
+              <div className="space-y-4 text-sm sm:text-base text-[rgba(0,0,0,0.65)] font-normal leading-relaxed">
                 <p>
-                  Giữa Đà Lạt đầy thơ mộng, <strong className="font-medium text-[#367156]">M_Dalats Boutique Villa</strong> mang lại chút nét Châu Âu vừa cổ điển, vừa hiện đại, vừa ấm áp, vừa nhẹ nhàng thanh lịch. Chút cảm nhận về một Đà Lạt xưa cũ – Đà Lạt của những con dốc thoai thoải, những ngôi biệt thự cổ kính trong sương, và của những con người nồng hậu mến khách.
+                  Lấy cảm hứng từ nét duyên dáng của những boutique hotel cổ điển vùng Tuscany nước Ý, <strong className="font-medium text-[#000000]">M_Dalats Boutique Villa</strong> được dựng xây như một chốn trú ẩn an yên nép mình bên triền đồi thông cao nguyên Đà Lạt.
                 </p>
                 <p>
-                  Lấy cảm hứng từ nét kiến trúc vùng nông thôn Tuscany nước Ý, từng góc nhỏ tại M_Dalats Villa đều được thổi vào hồn thơ: bức tường gạch nung ấm áp, khung cửa vòm đón nắng mai, và khu vườn hoa thơm ngát rộn tiếng chim ca mỗi sớm.
+                  Từng bức tường gạch nung mộc, khung cửa kính lớn đón trọn sương mai và ban công riêng tư mở ra thung lũng Khe Sanh mang đến một cảm giác tĩnh tại, tách biệt hoàn toàn khỏi nhịp sống phố thị ồn ã.
                 </p>
                 <p>
-                  Đến với M_Dalats Villa, bạn không chỉ tìm một nơi để dừng chân, mà còn tìm về một chốn bình yên để lắng nghe nhịp thở của chính mình, cùng người thương lưu giữ những khoảnh khắc trọn vẹn nhất.
+                  Tại M_Dalats Villa, chúng tôi chú trọng từng trải nghiệm giác quan: từ tách trà thơm ấm áp bên ban công sớm đến tiệc nướng BBQ ấm cúng trong tiết trời se lạnh 15°C.
                 </p>
               </div>
             </FadeIn>
 
-            {/* Core Values Stats */}
+            {/* Core Values Specs (PlayStation surface-card: #f5f7fa cool-blue tinted, 8px radius) */}
             <FadeIn direction="up" delay={0.4}>
-              <div className="grid grid-cols-3 gap-3 sm:gap-4 mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-[#ece7dd]">
-                <div className="flex flex-col">
-                  <span className="font-display text-2xl sm:text-4xl text-[#367156] font-semibold leading-none">
-                    <Counter to={11} suffix=" Phòng" />
+              <div className="grid grid-cols-3 gap-3 sm:gap-4 mt-8 pt-6 border-t border-[#f3f3f3]">
+                <div className="bg-[#f5f7fa] border border-[#f3f3f3] rounded-[8px] p-3 sm:p-4 text-center sm:text-left">
+                  <span className="text-2xl sm:text-3xl font-light text-[#0070d1] font-sans tracking-tight block">
+                    11
                   </span>
-                  <span className="text-[10px] sm:text-xs text-[#777777] mt-1 font-sans">Mỗi phòng một nét riêng</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-display text-2xl sm:text-4xl text-[#367156] font-semibold leading-none">Tuscany</span>
-                  <span className="text-[10px] sm:text-xs text-[#777777] mt-1 font-sans">Kiến trúc Ý tinh tế</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-display text-2xl sm:text-4xl text-[#367156] font-semibold leading-none">
-                    <Counter to={100} suffix="%" />
+                  <span className="text-[11px] uppercase tracking-[1px] text-[#6b6b6b] font-medium block mt-1">
+                    Phòng nghỉ độc bản
                   </span>
-                  <span className="text-[10px] sm:text-xs text-[#777777] mt-1 font-sans">Tận tâm phục vụ</span>
+                </div>
+
+                <div className="bg-[#f5f7fa] border border-[#f3f3f3] rounded-[8px] p-3 sm:p-4 text-center sm:text-left">
+                  <span className="text-2xl sm:text-3xl font-light text-[#0070d1] font-sans tracking-tight block">
+                    100%
+                  </span>
+                  <span className="text-[11px] uppercase tracking-[1px] text-[#6b6b6b] font-medium block mt-1">
+                    View rừng thông
+                  </span>
+                </div>
+
+                <div className="bg-[#f5f7fa] border border-[#f3f3f3] rounded-[8px] p-3 sm:p-4 text-center sm:text-left">
+                  <span className="text-2xl sm:text-3xl font-light text-[#0070d1] font-sans tracking-tight block">
+                    4.9★
+                  </span>
+                  <span className="text-[11px] uppercase tracking-[1px] text-[#6b6b6b] font-medium block mt-1">
+                    Đánh giá từ khách
+                  </span>
                 </div>
               </div>
-
-              <p className="font-script text-xl sm:text-2xl text-[#F4A261] mt-4 font-normal">
-                “Đà Lạt - Nơi cảm xúc thăng hoa và lắng đọng”
-              </p>
             </FadeIn>
           </div>
         </div>
       </div>
-    </section>
+    </SectionStack>
   );
 }

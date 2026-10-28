@@ -146,7 +146,7 @@ export function DragonflyScrollCompanion() {
       const currentScroll = window.scrollY;
       const delta = currentScroll - lastScrollYRef.current;
 
-      if (Math.abs(delta) > 160 && flightStateRef.current === "hover") {
+      if (Math.abs(delta) > 350 && flightStateRef.current === "hover") {
         lastScrollYRef.current = currentScroll;
         launchSwoopFlight();
       }
@@ -381,9 +381,7 @@ export function DragonflyScrollCompanion() {
           grad.addColorStop(1, "rgba(244, 162, 97, 0.85)");
 
           ctx.strokeStyle = grad;
-          ctx.lineWidth = 4;
-          ctx.shadowColor = "#F4A261";
-          ctx.shadowBlur = 10;
+          ctx.lineWidth = 3.5;
           ctx.stroke();
 
           // 2. Pure White Core Filament
@@ -396,7 +394,6 @@ export function DragonflyScrollCompanion() {
           }
           ctx.strokeStyle = "rgba(255, 255, 255, 0.9)";
           ctx.lineWidth = 1.2;
-          ctx.shadowBlur = 4;
           ctx.stroke();
           ctx.restore();
         }

@@ -3,7 +3,8 @@
 import React, { useState } from "react";
 import { Mail, CheckCircle2, Loader2 } from "lucide-react";
 import { api } from "~/trpc/react";
-import { FadeIn } from "./MotionWrapper";
+import { FadeIn, SectionStack } from "./MotionWrapper";
+import { Button } from "~/components/ui/button";
 
 export function NewsletterSection() {
   const [email, setEmail] = useState("");
@@ -23,49 +24,54 @@ export function NewsletterSection() {
   };
 
   return (
-    <section className="py-14 sm:py-16 bg-[#faf7f1] border-b border-[#ece7dd] overflow-hidden">
-      <div className="max-w-6xl mx-auto px-4 sm:px-8">
+    <SectionStack className="py-16 sm:py-20 bg-[#000000] border-b border-white/10 overflow-hidden text-white">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-xl mx-auto text-center">
           <FadeIn direction="up">
-          <Mail className="w-7 h-7 sm:w-8 sm:h-8 text-[#367156] mx-auto mb-2.5 sm:mb-3" />
-          <h3 className="font-serif text-2xl sm:text-3xl text-[#222222] font-normal mb-1.5">
-            Nhận thông tin mới từ M_Dalats
-          </h3>
-          <p className="font-sans text-xs sm:text-sm text-[#666666] font-light max-w-md mx-auto mb-5 sm:mb-6 leading-relaxed">
-            Đăng ký để nhận sớm các chương trình ưu đãi theo mùa và cẩm nang du lịch Đà Lạt đặc sắc.
-          </p>
-
-          {subscribed ? (
-            <div className="inline-flex items-center gap-2 p-3 bg-white border border-green-300 text-green-800 text-xs rounded-sm shadow-xs">
-              <CheckCircle2 className="w-4 h-4 text-green-600" />
-              <span>Cảm ơn bạn đã đăng ký nhận thông tin từ M_Dalats!</span>
+            <div className="w-12 h-12 rounded-full bg-[#0070d1]/15 text-[#53b1ff] flex items-center justify-center mx-auto mb-4">
+              <Mail className="w-6 h-6" />
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Nhập email của bạn..."
-                className="flex-1 bg-white border border-[#d6cebf] px-3.5 py-2 text-xs text-[#222222] rounded-sm focus:outline-hidden focus:border-[#367156]"
-                required
-              />
-              <button
-                type="submit"
-                disabled={subscribeMutation.isPending}
-                className="bg-[#367156] hover:bg-[#113123] text-white px-5 py-2.5 min-h-[42px] rounded-sm text-xs uppercase tracking-wider font-medium transition-all active:scale-95 cursor-pointer disabled:opacity-50 flex items-center justify-center gap-1.5"
-              >
-                {subscribeMutation.isPending ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <span>Đăng ký</span>
-                )}
-              </button>
-            </form>
-          )}
-        </FadeIn>
+            <span className="text-[12px] uppercase tracking-[1.5px] text-[#53b1ff] font-bold block mb-2">
+              Privé Newsletter • Bản Tin M_Dalats
+            </span>
+            <h3 className="text-2xl sm:text-3xl text-white font-light tracking-tight mb-2">
+              Nhận thông tin & ưu đãi độc quyền
+            </h3>
+            <p className="text-xs sm:text-sm text-neutral-400 font-normal max-w-md mx-auto mb-6 leading-relaxed">
+              Đăng ký để nhận sớm các chương trình ưu đãi theo mùa và cẩm nang nghỉ dưỡng tinh tế tại xứ sở sương mù.
+            </p>
+
+            {subscribed ? (
+              <div className="inline-flex items-center gap-2 p-4 bg-[#181818] border border-white/15 text-white text-xs rounded-full">
+                <CheckCircle2 className="w-4 h-4 text-[#0070d1]" />
+                <span>Cảm ơn quý khách đã đăng ký nhận bản tin từ M_Dalats Villa!</span>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Nhập email của quý khách..."
+                  className="flex-1 bg-[#181818] border border-white/20 text-white text-xs px-4 h-12 rounded-full focus:outline-none focus:border-[#0070d1]"
+                  required
+                />
+                <Button
+                  type="submit"
+                  disabled={subscribeMutation.isPending}
+                  className="h-12 px-7 font-bold text-xs sm:text-sm bg-[#0070d1] hover:bg-[#0064b7] active:bg-[#004d8d] text-white rounded-full cursor-pointer shadow-none"
+                >
+                  {subscribeMutation.isPending ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <span>Đăng ký</span>
+                  )}
+                </Button>
+              </form>
+            )}
+          </FadeIn>
         </div>
       </div>
-    </section>
+    </SectionStack>
   );
 }

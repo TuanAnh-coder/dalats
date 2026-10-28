@@ -4,20 +4,59 @@ import { type Metadata, type Viewport } from "next";
 import { Lora, Be_Vietnam_Pro, Dancing_Script } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
-import { DragonflyScrollCompanion } from "~/components/DragonflyScrollCompanion";
+import { CookieConsentBanner } from "~/components/CookieConsentBanner";
+import { SmoothScrollProvider } from "~/components/SmoothScrollProvider";
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#367156",
+  themeColor: "#000000",
 };
 
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://mdalatsvilla.com";
+
 export const metadata: Metadata = {
-  title: "M_Dalats Villa Đà Lạt | Stay Close To Nature",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "M_Dalats Boutique Villa Đà Lạt | Stay Close To Nature",
+    template: "%s | M_Dalats Villa Đà Lạt",
+  },
   description:
-    "Nằm liền kề trung tâm Thành phố Đà Lạt, M_Dalats Villa mang phong cách kiến trúc mộc mạc hòa quyện cùng thiên nhiên rừng thông cao nguyên.",
+    "Nằm liền kề trung tâm Thành phố Đà Lạt, M_Dalats Villa mang phong cách kiến trúc mộc mạc hòa quyện cùng thiên nhiên rừng thông cao nguyên với 11 phòng nghỉ tiện nghi cao cấp.",
+  keywords: [
+    "M_Dalats Villa",
+    "Villa Đà Lạt",
+    "Đặt phòng Đà Lạt",
+    "Boutique Villa Đà Lạt",
+    "Khách sạn Đà Lạt",
+    "Nghỉ dưỡng Đà Lạt",
+  ],
+  authors: [{ name: "M_Dalats Boutique Villa" }],
   icons: [{ rel: "icon", url: "/images/m_dalats_logo_icon.svg" }],
+  openGraph: {
+    type: "website",
+    locale: "vi_VN",
+    url: siteUrl,
+    siteName: "M_Dalats Boutique Villa Đà Lạt",
+    title: "M_Dalats Boutique Villa Đà Lạt | Stay Close To Nature",
+    description:
+      "Trải nghiệm kỳ nghỉ thư thái giữa rừng thông Đà Lạt. 11 phòng boutique mộc mạc, tiện nghi hiện đại và dịch vụ tận tâm.",
+    images: [
+      {
+        url: "/images/m_dalats_brand_board.jpg",
+        width: 1200,
+        height: 630,
+        alt: "M_Dalats Boutique Villa Đà Lạt",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "M_Dalats Boutique Villa Đà Lạt",
+    description: "Boutique Villa nghỉ dưỡng hòa quyện thiên nhiên giữa lòng Đà Lạt.",
+    images: ["/images/m_dalats_brand_board.jpg"],
+  },
 };
 
 const lora = Lora({
@@ -82,7 +121,8 @@ export default function RootLayout({
   return (
     <html
       lang="vi"
-      className={`${lora.variable} ${beVietnamPro.variable} ${dancingScript.variable} scroll-smooth`}
+      suppressHydrationWarning
+      className={`${lora.variable} ${beVietnamPro.variable} ${dancingScript.variable}`}
     >
       <head>
         <script
@@ -90,10 +130,15 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-screen bg-[#faf7f1] text-[#222222] antialiased selection:bg-[#367156] selection:text-white font-sans w-full max-w-full overflow-x-hidden min-w-0">
+      <body
+        suppressHydrationWarning
+        className="min-h-screen bg-[#000000] text-white antialiased selection:bg-[#0070d1] selection:text-white font-sans w-full max-w-full overflow-x-hidden min-w-0"
+      >
         <TRPCReactProvider>
-          {children}
-          <DragonflyScrollCompanion />
+          <SmoothScrollProvider>
+            {children}
+          </SmoothScrollProvider>
+          <CookieConsentBanner />
         </TRPCReactProvider>
       </body>
     </html>

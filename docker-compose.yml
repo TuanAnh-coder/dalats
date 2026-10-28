@@ -1,0 +1,137 @@
+services:
+  # ==========================================
+  # 1. PostgreSQL 16 Database
+  # ==========================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: mdalats-villa-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: mdalats_villa
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ==========================================
+  # 2. Redis 7 In-Memory Cache & Key-Value
+  # ==========================================
+  redis:
+    image: redis:7-alpine
+    container_name: mdalats-villa-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass redispassword
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "redispassword", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ==========================================
+  # 3. Silo (Pigsty S3 Object Storage for Images & Videos)
+  # Community-maintained, open-source MinIO distribution
+  # ==========================================
+  minio:
+    image: pgsty/silo:latest
+    container_name: mdalats-villa-minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"   # S3 API Endpoint
+      - "9001:9001"   # Silo Web Console UI
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: miniopassword123
+      MINIO_BROWSER_REDIRECT_URL: http://localhost:9001
+      MINIO_SERVER_URL: http://localhost:9000
+    command: server /data --console-address ":9001"
+    volumes:
+      - miniodata:/data
+
+  # ==========================================
+  # 4. Silo Bucket & Media Policy Initializer (pgsty/mc)
+  # Automatically creates bucket & configures public streaming
+  # ==========================================
+  minio-init:
+    image: pgsty/mc:latest
+    container_name: mdalats-villa-minio-init
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      until (/usr/bin/mc alias set local http://minio:9000 minioadmin miniopassword123); do
+        echo 'Waiting for Silo server to be ready...';
+        sleep 2;
+      done;
+      /usr/bin/mc mb --ignore-existing local/mdalats-media;
+      /usr/bin/mc anonymous set download local/mdalats-media;
+      echo '==================================================';
+      echo 'Silo bucket [mdalats-media] is ready for Images & Videos!';
+      echo 'Public access URL: http://localhost:9000/mdalats-media/...';
+      echo '==================================================';
+      exit 0;
+      "
+
+  # ==========================================
+  # 5. M_Dalats Boutique Villa - Next.js Web App
+  # ==========================================
+  mdalats-villa:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tuananhcoder1/dalats:latest
+    container_name: mdalats-villa-app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://postgres:postgrespassword@postgres:5432/mdalats_villa
+      - REDIS_URL=redis://:redispassword@redis:6379
+      - S3_ENDPOINT=http://minio:9000
+      - S3_REGION=us-east-1
+      - S3_ACCESS_KEY=minioadmin
+      - S3_SECRET_KEY=miniopassword123
+      - S3_BUCKET=mdalats-media
+      - S3_PUBLIC_URL=http://localhost:9000/mdalats-media
+      - S3_FORCE_PATH_STYLE=true
+      - BETTER_AUTH_SECRET=K2WBz3+c7ZM2B4sSxvu5EPXAH9tx60Y25QEAAoFGBv4=
+      - BETTER_AUTH_URL=http://localhost:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_started
+    restart: unless-stopped
+
+  # ==========================================
+  # 6. Nginx Unified Gateway & Media Reverse Proxy
+  # Routes port 80 to Web + high-performance MinIO video streaming
+  # ==========================================
+  nginx:
+    image: nginx:alpine
+    container_name: mdalats-villa-gateway
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - mdalats-villa
+      - minio
+
+volumes:
+  pgdata:
+  redisdata:
+  miniodata:

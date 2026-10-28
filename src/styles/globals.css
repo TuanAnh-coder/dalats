@@ -1,59 +1,86 @@
 @import "tailwindcss";
 
 @theme {
-  /* Extra-small breakpoint (portrait phones ≥480px) — used across Navbar, Hero,
-     search forms, sliders & modals. Must be defined or all `xs:` classes are no-ops. */
+  /* Extra-small breakpoint (portrait phones ≥480px) */
   --breakpoint-xs: 30rem;
 
-  --color-cream: #faf7f1;
-  --color-cream-light: #fdfbf7;
-  --color-cream-dark: #f0e9dc;
-  --color-forest: #367156;
-  --color-forest-dark: #244b39;
-  --color-forest-light: #498b6c;
-  --color-terracotta: #f27052;
-  --color-terracotta-hover: #e05c3c;
-  --color-charcoal: #222222;
-  --color-charcoal-muted: #555555;
-  --color-charcoal-light: #888888;
-
-  /* Official Brand Colors */
-  --color-nature-green: #367156;
-  --color-moss-green: #367156;
-  --color-sand-beige: #D9C9A7;
-  --color-sunset-orange: #F4A261;
-  --color-wood-brown: #584636;
-  --color-cream-white: #FAF9F6;
+  /* PlayStation Marketing System Design Tokens */
+  --color-canvas-dark: #000000;
+  --color-canvas-light: #ffffff;
+  --color-primary-blue: #0070d1;
+  --color-primary-pressed: #0064b7;
+  --color-primary-active: #004d8d;
   
-  --font-serif: var(--font-serif), "Lora", Georgia, serif;
-  --font-sans: var(--font-be-vietnam-pro), "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-script: var(--font-dancing-script), "Dancing Script", cursive, "Lora", serif;
-  --font-display: var(--font-serif), "Lora", Georgia, serif;
+  --color-commerce: #d53b00;
+  --color-commerce-pressed: #aa2f00;
+
+  --color-surface-soft: #f3f3f3;
+  --color-surface-card: #f5f7fa;
+  --color-surface-filter: rgba(245, 247, 250, 0.3);
+  
+  --color-surface-dark-elevated: #121314;
+  --color-surface-dark-card: #181818;
+
+  --color-hairline-light: #f3f3f3;
+  --color-hairline-dark: rgba(229, 229, 229, 0.2);
+
+  --color-ink: #000000;
+  --color-ink-deep: #121314;
+  --color-body-light: rgba(0, 0, 0, 0.6);
+  --color-body-dark: rgba(255, 255, 255, 0.7);
+  --color-mute-light: #6b6b6b;
+  --color-mute-dark: rgba(229, 229, 229, 0.55);
+  --color-ash-light: #cccccc;
+  --color-ash-dark: rgba(229, 229, 229, 0.2);
+
+  --color-on-primary: #ffffff;
+  --color-on-commerce: #ffffff;
+  --color-on-dark: #ffffff;
+  
+  --color-warning: #c81b3a;
+  --color-ps-plus-gold-start: #ffce21;
+  --color-ps-plus-gold-mid: #f5a623;
+  --color-ps-plus-gold-end: #ee8e00;
+
+  /* Backward Compatibility Aliases */
+  --color-canvas: #000000;
+  --color-hairline: rgba(229, 229, 229, 0.2);
+  --color-primary-yellow: #0070d1;
+  --color-nature-green: #0070d1;
+  --color-forest: #000000;
+  --color-sand-beige: #f5f7fa;
+  --color-sunset-orange: #d53b00;
+  --color-cream-white: #ffffff;
+  
+  --font-serif: var(--font-be-vietnam-pro), -apple-system, system-ui, sans-serif;
+  --font-sans: var(--font-be-vietnam-pro), -apple-system, system-ui, sans-serif;
+  --font-script: var(--font-dancing-script), cursive, serif;
+  --font-display: var(--font-sans);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 :root {
-  --background: #faf7f1;
-  --foreground: #222222;
+  --background: #000000;
+  --foreground: #ffffff;
 }
 
 body {
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: #000000;
+  color: rgba(255, 255, 255, 0.7);
   font-family: var(--font-sans);
-  line-height: 1.75;
-  letter-spacing: -0.01em;
+  line-height: 1.5;
+  letter-spacing: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
+/* PlayStation SST Signature Display Typography: Weight 300 Light */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-serif);
-  font-weight: 500;
-  color: #367156;
-  letter-spacing: -0.015em;
+  font-family: var(--font-sans);
+  font-weight: 300;
+  letter-spacing: 0.01em;
   line-height: 1.25;
-  font-feature-settings: "liga" 0, "dlig" 0, "calt" 0;
 }
 
 .font-script {
@@ -76,12 +103,34 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ============================================================
-   Luxury Boutique Scrollbar - Cross-browser, Floating & Responsive
+   Lenis Smooth Momentum Scrolling (Hôtel Fantaisie Standard)
+   ============================================================ */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* ============================================================
+   Luxury Boutique Floating Scrollbar - M_Dalats Signature Style
+   Transparent track (zero white background), floating capsule thumb.
    ============================================================ */
 html {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(54, 113, 86, 0.45) transparent;
-  scroll-behavior: smooth;
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
@@ -100,60 +149,83 @@ img, svg, video, canvas, audio, iframe, embed, object {
   max-width: 100%;
 }
 
-/* Chrome, Edge, Safari WebKit Scrollbar */
+/* Chrome, Edge, Safari, Brave, Arc WebKit Floating Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
+  background-color: transparent;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background-color: transparent;
+  border: none;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(54, 113, 86, 0.38);
+  background-color: #242424;
   border-radius: 9999px;
   border: 1px solid transparent;
   background-clip: padding-box;
-  transition: background-color 0.25s ease;
+  min-height: 44px;
+  transition: background-color 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #367156;
+  background-color: #0070d1;
 }
 
 ::-webkit-scrollbar-thumb:active {
-  background: #244b39;
+  background-color: #0064b7;
 }
 
 ::-webkit-scrollbar-corner {
-  background: transparent;
+  background-color: transparent;
 }
 
 /* Scrollbar inside modals, dialogue sheets, table containers */
 .custom-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(54, 113, 86, 0.4) transparent;
   -webkit-overflow-scrolling: touch;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
   width: 5px;
   height: 5px;
+  background-color: transparent;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
+  background-color: transparent;
+  border: none;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(54, 113, 86, 0.35);
+  background-color: #333333;
   border-radius: 9999px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  min-height: 36px;
   transition: background-color 0.2s ease;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #367156;
+  background-color: #0070d1;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:active {
+  background-color: #e6eb52;
+}
+
+/* Firefox standard CSS Scrollbars Level 1 (transparent track) */
+@supports not selector(::-webkit-scrollbar) {
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: #2a2a2a transparent;
+  }
+
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #2a2a2a transparent;
+  }
 }
 
 /* Utility to hide scrollbars while maintaining full scrollability on touch & desktop */
@@ -164,6 +236,48 @@ img, svg, video, canvas, audio, iframe, embed, object {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* ============================================================
+   Luxury Boutique Overlapping Card Stack Effect (Scroll Parallax)
+   Each succeeding section gracefully stacks and glides over the previous one.
+   ============================================================ */
+.section-stack {
+  position: relative;
+  z-index: 10;
+  margin-top: -1.75rem; /* -mt-7: 28px physical overlap on mobile */
+  border-top-left-radius: 1.75rem;
+  border-top-right-radius: 1.75rem;
+  border-top: 1px solid #ece7dd;
+  box-shadow: 0 -22px 50px -15px rgba(27, 48, 47, 0.08);
+}
+
+@media (min-width: 640px) {
+  .section-stack {
+    margin-top: -2.5rem; /* -mt-10: 40px physical overlap on desktop */
+    border-top-left-radius: 2.5rem;
+    border-top-right-radius: 2.5rem;
+    box-shadow: 0 -28px 65px -18px rgba(27, 48, 47, 0.1);
+  }
+}
+
+.section-stack-dark {
+  position: relative;
+  z-index: 10;
+  margin-top: -1.75rem;
+  border-top-left-radius: 1.75rem;
+  border-top-right-radius: 1.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 -25px 60px -15px rgba(0, 0, 0, 0.28);
+}
+
+@media (min-width: 640px) {
+  .section-stack-dark {
+    margin-top: -2.5rem;
+    border-top-left-radius: 2.5rem;
+    border-top-right-radius: 2.5rem;
+    box-shadow: 0 -32px 75px -18px rgba(0, 0, 0, 0.36);
+  }
 }
 
 /* Dragonfly Wing Flapping Keyframes for Scroll Companion */

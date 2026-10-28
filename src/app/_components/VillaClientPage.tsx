@@ -19,7 +19,6 @@ import { Footer } from "~/components/Footer";
 import { AuthModal } from "~/components/AuthModal";
 import { MyBookingsModal } from "~/components/MyBookingsModal";
 import { MobileQuickBar } from "~/components/MobileQuickBar";
-import { ArtisticEntranceLoader } from "~/components/ArtisticEntranceLoader";
 import { TasteDiamondSlider } from "~/components/TasteDiamondSlider";
 import type { Room } from "~/server/db/schema";
 
@@ -76,9 +75,6 @@ export function VillaClientPage() {
 
   return (
     <div className="flex flex-col min-h-screen w-full max-w-full overflow-x-hidden min-w-0">
-      {/* Luxury Artistic Entrance Curtain & Logo Reveal (Hôtel Fantaisie Style) */}
-      <ArtisticEntranceLoader />
-
       {/* Navigation Header */}
       <Navbar
         onOpenBookingModal={() => handleOpenBooking()}

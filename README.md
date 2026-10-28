@@ -1,29 +1,74 @@
-# Create T3 App
+# M_Dalats Boutique Villa
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+Website đặt phòng cho M_Dalats Boutique Villa Đà Lạt, xây dựng trên **Next.js 15 (App Router)**, **Tailwind CSS 4**, **tRPC**, **Drizzle ORM (PostgreSQL)** và **Better Auth**.
 
-## What's next? How do I make an app with this?
+## Chạy dự án
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+```bash
+pnpm install
+pnpm db:push      # đồng bộ schema
+pnpm dev          # http://localhost:3000
+```
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+Kiểm tra production:
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+```bash
+pnpm typecheck
+pnpm build
+pnpm start
+```
 
-## Learn More
+## Biến môi trường
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+| Biến | Bắt buộc | Mô tả |
+| --- | --- | --- |
+| `DATABASE_URL` | Có | Chuỗi kết nối PostgreSQL, ví dụ `postgresql://postgres:postgres@localhost:5432/mdalats_villa` |
+| `BETTER_AUTH_SECRET` | Production | Secret ký session của Better Auth |
+| `BETTER_AUTH_URL` | Nên đặt | Origin công khai của website, ví dụ `https://mdalatsvilla.com` |
+| `BETTER_AUTH_GITHUB_CLIENT_ID` / `_SECRET` | Không | Bật đăng nhập GitHub |
+| `BETTER_AUTH_TRUSTED_ORIGINS` | Không | Danh sách origin phụ, phân tách bằng dấu phẩy (staging, preview URL) |
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+`BETTER_AUTH_URL` phải trùng origin thực tế mà trình duyệt truy cập, nếu không Better Auth sẽ từ chối đăng nhập với lỗi `Invalid origin`.
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+## Xác thực & phân quyền
 
-## How do I deploy this?
+Chỉ có **một form đăng nhập duy nhất** — `src/components/AuthForm.tsx`:
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+- Hiển thị trong modal ở trang chủ/phòng (`AuthModal`).
+- Hiển thị tại trang `/login` khi middleware yêu cầu đăng nhập.
+- `/admin/login` là route cũ, tự chuyển hướng về `/login?callbackUrl=/admin`.
+
+Sau khi đăng nhập, hệ thống đọc `role` của tài khoản và điều hướng:
+
+| Role | Trang mặc định | Quyền |
+| --- | --- | --- |
+| `admin` | `/admin` | Toàn quyền quản trị, phân quyền, xóa dữ liệu |
+| `staff` | `/admin` | Vận hành đặt phòng, phòng, khách, tin nhắn; không phân quyền/xóa cứng |
+| `user` | `/` | Đặt phòng, xem lịch sử đặt phòng của mình |
+
+Chính sách route nằm tại `src/lib/roles.ts` và được áp dụng bởi `src/middleware.ts`:
+
+| Route | Quyền truy cập |
+| --- | --- |
+| `/admin/**` | `admin`, `staff` |
+| `/my-bookings` | Người đã đăng nhập; khách vãng lai vẫn tra cứu được bằng link `?code=...` hoặc `?phone=...` |
+| Các route còn lại | Công khai |
+
+Ở tầng API, các procedure vận hành dùng `staffProcedure`, các thao tác nhạy cảm (phân quyền, khóa tài khoản, xóa cứng) dùng `adminProcedure` trong `src/server/api/trpc.ts`.
+
+## Quản lý tài khoản
+
+```bash
+pnpm admin:list                                  # liệt kê tài khoản
+pnpm admin:create <email> <password> <name> [role]
+pnpm admin:promote <email> [admin|staff|user]    # đổi vai trò
+pnpm admin:reset <email> <newPassword>           # đặt lại mật khẩu
+```
+
+## Cấu trúc chính
+
+- `src/app` — các trang (App Router) và API route.
+- `src/components` — UI dùng chung (Navbar, AuthForm, AuthModal, các section…).
+- `src/server/api/routers` — booking, room, customer, contact.
+- `src/server/better-auth` — cấu hình Better Auth.
+- `src/server/db` — schema Drizzle và seed dữ liệu.

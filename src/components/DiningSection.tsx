@@ -3,8 +3,10 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Coffee, Utensils, Flame, Sparkles, Sun, Clock, ArrowRight, CheckCircle2 } from "lucide-react";
-import { FadeIn, motion, AnimatePresence } from "./MotionWrapper";
+import { Coffee, Utensils, Flame, Sun, Clock, ArrowRight, CheckCircle2 } from "lucide-react";
+import { FadeIn, motion, AnimatePresence, SectionStack } from "./MotionWrapper";
+import { Button } from "~/components/ui/button";
+import { Badge } from "~/components/ui/badge";
 
 export function DiningSection() {
   const [activeTab, setActiveTab] = useState<"coffee" | "breakfast" | "bbq">("coffee");
@@ -57,34 +59,30 @@ export function DiningSection() {
   const current = tabsData[activeTab];
 
   return (
-    <section id="dining" className="py-20 sm:py-28 bg-[#FAF9F6] border-y border-[#ece7dd] overflow-hidden scroll-mt-32">
-      <div className="max-w-6xl mx-auto px-4 sm:px-8">
+    /* Chapter 4B: Full-bleed True White Canvas Band (#ffffff) */
+    <SectionStack id="dining" className="py-20 sm:py-28 bg-[#ffffff] text-[#000000] border-b border-[#f3f3f3] overflow-hidden scroll-mt-24 w-full max-w-full">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 w-full min-w-0">
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+        <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16 min-w-0">
           <FadeIn direction="up">
-            <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.3em] text-[#367156] font-semibold block mb-2">
-              Ẩm Thực • Cà Phê
+            <span className="text-[12px] uppercase tracking-[1.5px] text-[#0070d1] font-bold block mb-2">
+              Culinary & Lounge • Ẩm Thực & Cà Phê
             </span>
-            <h2 className="font-serif text-2xl sm:text-4xl md:text-5xl text-[#367156] font-normal mb-3 sm:mb-4">
-              Hương Vị Nồng Nàn Nơi Phố Sương
+            <h2 className="text-3xl sm:text-4xl md:text-5xl text-[#000000] font-light tracking-tight mb-3 sm:mb-4">
+              Hương vị nồng nàn nơi phố sương
             </h2>
-            <div className="flex items-center justify-center gap-2.5 mx-auto mb-4">
-              <span className="w-10 sm:w-14 h-px bg-gradient-to-r from-transparent to-[#367156]/50" />
-              <span className="text-[10px] text-[#367156] select-none">◆</span>
-              <span className="w-10 sm:w-14 h-px bg-gradient-to-l from-transparent to-[#367156]/50" />
-            </div>
-            <p className="font-script text-xl sm:text-2xl text-[#F4A261]">
-              “Mỗi bữa ăn là một bản hòa ca giữa đất trời cao nguyên”
+            <p className="text-sm sm:text-base text-[rgba(0,0,0,0.65)] font-normal leading-relaxed">
+              Mỗi món ngon và tách cà phê là một câu chuyện hòa quyện giữa đất trời cao nguyên và bàn tay tinh tế của nghệ nhân.
             </p>
           </FadeIn>
 
-          {/* Interactive Navigation Pills */}
+          {/* Filter Pills (PlayStation filter-pill style) */}
           <FadeIn direction="up" delay={0.15}>
-            <div className="flex overflow-x-auto no-scrollbar sm:flex-wrap items-center justify-start sm:justify-center gap-1.5 sm:gap-2 mt-6 sm:mt-8 p-1.5 bg-white border border-[#ece7dd] rounded-2xl sm:rounded-full max-w-full sm:max-w-fit mx-auto shadow-2xs snap-x">
+            <div className="inline-flex overflow-x-auto no-scrollbar sm:flex-wrap items-center justify-start sm:justify-center mt-6 sm:mt-8 gap-2 max-w-full min-w-0 mx-auto">
               {[
-                { id: "coffee", label: "Cà Phê Ngày 4 Mùa", icon: Coffee },
-                { id: "breakfast", label: "Bữa Sáng Tinh Tế", icon: Sun },
-                { id: "bbq", label: "Tiệc Nướng BBQ & Lửa Trại", icon: Flame },
+                { id: "coffee", label: "Cà phê Ngày 4 Mùa", icon: Coffee },
+                { id: "breakfast", label: "Điểm tâm sáng kiểu Âu", icon: Sun },
+                { id: "bbq", label: "Tiệc nướng BBQ & Lửa trại", icon: Flame },
               ].map((tab) => {
                 const isSelected = activeTab === tab.id;
                 const Icon = tab.icon;
@@ -93,19 +91,14 @@ export function DiningSection() {
                     key={tab.id}
                     type="button"
                     onClick={() => setActiveTab(tab.id as any)}
-                    className={`relative px-3.5 sm:px-5 py-2 sm:py-2.5 text-[10px] xs:text-[11px] sm:text-xs uppercase tracking-wider rounded-full transition-colors cursor-pointer font-medium flex items-center gap-1.5 sm:gap-2 whitespace-nowrap shrink-0 snap-start ${
-                      isSelected ? "text-white font-semibold" : "text-[#555555] hover:text-[#367156]"
+                    className={`px-5 py-2.5 text-xs font-bold transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shrink-0 rounded-full ${
+                      isSelected
+                        ? "bg-[#0070d1] text-white shadow-sm"
+                        : "bg-[#f5f7fa] text-neutral-700 hover:bg-[#e5e7eb] hover:text-black border border-[#e5e7eb]"
                     }`}
                   >
-                    {isSelected && (
-                      <motion.div
-                        layoutId="activeDiningTab"
-                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                        className="absolute inset-0 bg-[#367156] rounded-full shadow-sm"
-                      />
-                    )}
-                    <Icon className="w-3.5 h-3.5 relative z-10 shrink-0" />
-                    <span className="relative z-10">{tab.label}</span>
+                    <Icon className="w-3.5 h-3.5 shrink-0" />
+                    <span>{tab.label}</span>
                   </button>
                 );
               })}
@@ -113,49 +106,45 @@ export function DiningSection() {
           </FadeIn>
         </div>
 
-        {/* Tab Content Box with AnimatePresence */}
+        {/* Tab Content Box: PlayStation surface-card #f5f7fa */}
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
-            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10 lg:gap-14 items-center bg-white p-4 xs:p-6 sm:p-10 lg:p-12 rounded-sm border border-[#ece7dd] shadow-sm"
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10 lg:gap-14 items-center bg-[#f5f7fa] p-6 sm:p-10 lg:p-12 rounded-[8px] border border-[#f3f3f3]"
           >
-            {/* Visual Photo */}
+            {/* Visual Photo (8px radius) */}
             <div className="lg:col-span-6 relative">
-              <div className="relative h-[320px] sm:h-[420px] w-full rounded-sm overflow-hidden shadow-lg border-4 border-[#FAF9F6] group">
+              <div className="relative h-[320px] sm:h-[420px] w-full rounded-[8px] overflow-hidden border border-[#f3f3f3] group">
                 <Image
                   src={current.image}
                   alt={current.title}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-xs shadow-md text-[11px] font-semibold text-[#367156] flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-[#F4A261]" />
+                <div className="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/15 text-[11px] font-bold text-white flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5 text-[#53b1ff]" />
                   <span>{current.time}</span>
                 </div>
 
-                <div className="absolute bottom-4 right-4 bg-[#367156]/90 backdrop-blur-md px-3 py-1 rounded-xs text-[10px] uppercase tracking-wider text-white font-medium">
+                <div className="absolute bottom-4 right-4 bg-[#0070d1] px-3.5 py-1 rounded-full text-[11px] font-bold text-white">
                   {current.badge}
                 </div>
               </div>
             </div>
 
-            {/* Content Details */}
+            {/* Content Details: PlayStation SST 300 Light */}
             <div className="lg:col-span-6 space-y-4">
-              <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#F4A261] font-semibold block">
+              <span className="text-[12px] uppercase tracking-[1.5px] text-[#0070d1] font-bold block">
                 {current.tag}
               </span>
-              <h3 className="font-serif text-2xl sm:text-3xl lg:text-4xl text-[#367156] font-normal leading-tight">
+              <h3 className="text-2xl sm:text-3xl lg:text-4xl text-[#000000] font-light leading-tight">
                 {current.title}
               </h3>
-              <div className="flex items-center gap-2">
-                <span className="w-10 h-px bg-[#367156]/50" />
-                <span className="text-[9px] text-[#367156] select-none">◆</span>
-              </div>
-              <p className="font-sans text-xs sm:text-sm text-[#555555] font-light leading-relaxed">
+              <p className="text-sm sm:text-base text-[rgba(0,0,0,0.65)] font-normal leading-relaxed">
                 {current.desc}
               </p>
 
@@ -163,26 +152,26 @@ export function DiningSection() {
               <div className="pt-2">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {current.highlights.map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-xs text-[#333333]">
-                      <CheckCircle2 className="w-4 h-4 text-[#367156] flex-shrink-0" />
+                    <div key={idx} className="flex items-center gap-2 text-xs sm:text-sm text-neutral-800">
+                      <CheckCircle2 className="w-4 h-4 text-[#0070d1] shrink-0" />
                       <span>{item}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Action Buttons */}
+              {/* Action Buttons: PlayStation Blue Pill */}
               <div className="pt-4 flex flex-wrap items-center gap-3">
                 <Link
                   href="/dining"
-                  className="inline-flex items-center gap-2 bg-[#367156] hover:bg-[#244b39] text-white text-xs uppercase tracking-wider font-semibold px-5 py-2.5 rounded-xs shadow-xs transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-2 bg-[#0070d1] hover:bg-[#0064b7] active:bg-[#004d8d] text-white text-xs sm:text-sm font-bold px-7 h-12 rounded-full transition-colors cursor-pointer"
                 >
                   <span>Xem thực đơn & bảng giá</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-4 h-4" />
                 </Link>
                 <a
                   href="tel:0939014234"
-                  className="text-xs font-semibold text-[#F4A261] hover:underline px-2"
+                  className="text-xs sm:text-sm font-bold text-neutral-600 hover:text-[#0070d1] px-4 py-2 transition-colors"
                 >
                   Đặt tiệc: 0939 014 234
                 </a>
@@ -191,6 +180,6 @@ export function DiningSection() {
           </motion.div>
         </AnimatePresence>
       </div>
-    </section>
+    </SectionStack>
   );
 }

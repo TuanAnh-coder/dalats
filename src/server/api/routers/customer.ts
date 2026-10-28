@@ -1,88 +1,18 @@
 import { desc, eq, sql } from "drizzle-orm";
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 
 import {
   adminProcedure,
   createTRPCRouter,
-  publicProcedure,
+  staffProcedure,
 } from "~/server/api/trpc";
 import { bookings, rooms, user, account } from "~/server/db/schema";
 import { auth } from "~/server/better-auth";
 
 export const customerRouter = createTRPCRouter({
-  // Ensure default demo admin and sample customers exist
-  seedAdminIfMissing: publicProcedure.mutation(async ({ ctx }) => {
-    const existingAdmin = await ctx.db.query.user.findFirst({
-      where: eq(user.role, "admin"),
-    });
-
-    if (!existingAdmin) {
-      try {
-        const res = await auth.api.signUpEmail({
-          body: {
-            email: "admin@mdalatsvilla.com",
-            password: "admin123456",
-            name: "Tổng Quản Lý M_Dalats",
-          },
-        });
-
-        if (res?.user?.id) {
-          await ctx.db
-            .update(user)
-            .set({
-              role: "admin",
-              phone: "0939014234",
-            })
-            .where(eq(user.id, res.user.id));
-        }
-      } catch (err) {
-        console.warn("seedAdminIfMissing:", err);
-      }
-    }
-
-    // Seed a staff and VIP demo user if no other users exist
-    const totalUsers = await ctx.db.select({ count: sql<number>`count(*)` }).from(user);
-    if ((totalUsers[0]?.count ?? 0) <= 1) {
-      try {
-        // Staff user
-        const staffRes = await auth.api.signUpEmail({
-          body: {
-            email: "staff@mdalatsvilla.com",
-            password: "staff123456",
-            name: "Lễ Tân Villa",
-          },
-        });
-        if (staffRes?.user?.id) {
-          await ctx.db
-            .update(user)
-            .set({ role: "staff", phone: "0912345678" })
-            .where(eq(user.id, staffRes.user.id));
-        }
-
-        // Regular customer
-        const guestRes = await auth.api.signUpEmail({
-          body: {
-            email: "hoangnam.travel@gmail.com",
-            password: "khach123456",
-            name: "Nguyễn Hoàng Nam",
-          },
-        });
-        if (guestRes?.user?.id) {
-          await ctx.db
-            .update(user)
-            .set({ role: "user", phone: "0987654321" })
-            .where(eq(user.id, guestRes.user.id));
-        }
-      } catch (e) {
-        // Ignore if already exists
-      }
-    }
-
-    return { success: true };
-  }),
-
   // Get all customers (aggregates registered users & guest booking contacts)
-  getAll: publicProcedure.query(async ({ ctx }) => {
+  getAll: staffProcedure.query(async ({ ctx }) => {
     // 1. Get all registered users
     const registeredUsers = await ctx.db.query.user.findMany({
       orderBy: [desc(user.createdAt)],
@@ -195,7 +125,7 @@ export const customerRouter = createTRPCRouter({
   }),
 
   // Update user role (promote to admin/staff, demote to user)
-  updateRole: publicProcedure
+  updateRole: adminProcedure
     .input(
       z.object({
         userId: z.string(),
@@ -203,6 +133,14 @@ export const customerRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // Security Guard: Prevent active admin from accidentally locking out themselves
+      if (input.userId === ctx.session.user.id && input.role !== "admin") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Không thể tự hạ quyền Quản trị viên của chính mình. Vui lòng nhờ một Quản trị viên khác thực hiện nếu cần thiết.",
+        });
+      }
+
       await ctx.db
         .update(user)
         .set({ role: input.role })
@@ -212,7 +150,7 @@ export const customerRouter = createTRPCRouter({
     }),
 
   // Update customer contact info
-  updateInfo: publicProcedure
+  updateInfo: staffProcedure
     .input(
       z.object({
         userId: z.string(),
@@ -233,7 +171,7 @@ export const customerRouter = createTRPCRouter({
     }),
 
   // Toggle user ban status
-  toggleBan: publicProcedure
+  toggleBan: adminProcedure
     .input(
       z.object({
         userId: z.string(),
@@ -242,6 +180,14 @@ export const customerRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // Security Guard: Prevent active admin from accidentally banning their own account
+      if (input.userId === ctx.session.user.id) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Không thể tự khóa tài khoản Quản trị viên đang đăng nhập.",
+        });
+      }
+
       await ctx.db
         .update(user)
         .set({

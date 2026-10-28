@@ -37,6 +37,8 @@ const initialRooms = [
       "Lối ra sân vườn riêng"
     ]),
     isAvailable: true,
+    isFlashSale: true,
+    flashSaleDiscount: 20,
   },
   {
     slug: "la-em-002",
@@ -96,6 +98,8 @@ const initialRooms = [
       "Wifi cực nhanh"
     ]),
     isAvailable: true,
+    isFlashSale: true,
+    flashSaleDiscount: 25,
   },
   {
     slug: "la-em-102",
@@ -236,6 +240,8 @@ const initialRooms = [
       "Rượu vang & trái cây chào đón"
     ]),
     isAvailable: true,
+    isFlashSale: true,
+    flashSaleDiscount: 18,
   },
   {
     slug: "la-em-202",
@@ -331,16 +337,17 @@ export async function seedRooms() {
     console.log("Rooms seeded successfully!");
   } else {
     for (const r of existing) {
-      if (r.name.includes("Là Em") || r.description?.includes("Là Em")) {
-        await db
-          .update(rooms)
-          .set({
-            name: r.name.replace(/Là Em/g, "M_Dalats"),
-            description: r.description ? r.description.replace(/Là Em/g, "M_Dalats") : r.description,
-            shortDescription: r.shortDescription ? r.shortDescription.replace(/Là Em/g, "M_Dalats") : r.shortDescription,
-          })
-          .where(eq(rooms.id, r.id));
-      }
+      const match = initialRooms.find((init) => init.slug === r.slug);
+      await db
+        .update(rooms)
+        .set({
+          isFlashSale: match?.isFlashSale ?? false,
+          flashSaleDiscount: match?.flashSaleDiscount ?? null,
+          name: r.name.replace(/Là Em/g, "M_Dalats"),
+          description: r.description ? r.description.replace(/Là Em/g, "M_Dalats") : r.description,
+          shortDescription: r.shortDescription ? r.shortDescription.replace(/Là Em/g, "M_Dalats") : r.shortDescription,
+        })
+        .where(eq(rooms.id, r.id));
     }
     console.log(`Rooms already seeded (${existing.length} rooms found).`);
   }

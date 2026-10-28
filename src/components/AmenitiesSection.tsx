@@ -15,7 +15,7 @@ import {
   Car,
   UtensilsCrossed,
 } from "lucide-react";
-import { FadeIn, StaggerContainer, StaggerItem } from "./MotionWrapper";
+import { FadeIn, StaggerContainer, StaggerItem, SectionStack } from "./MotionWrapper";
 
 export function AmenitiesSection() {
   const roomAmenities = [
@@ -49,46 +49,44 @@ export function AmenitiesSection() {
   ];
 
   return (
-    <section id="amenities" className="py-16 sm:py-24 bg-white border-b border-[#ece7dd] overflow-hidden scroll-mt-32">
-      <div className="max-w-6xl mx-auto px-4 sm:px-8">
+    /* Chapter 6: Full-bleed True White Canvas Band (#ffffff) */
+    <SectionStack id="amenities" className="py-20 sm:py-28 bg-[#ffffff] text-[#000000] border-b border-[#f3f3f3] overflow-hidden scroll-mt-24">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
           <FadeIn direction="up">
-            <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.3em] text-[#367156] font-semibold block mb-1.5 sm:mb-2">
-              Tiện nghi • Dịch vụ
+            <span className="text-[12px] uppercase tracking-[1.5px] text-[#0070d1] font-bold block mb-2">
+              Concierge & Amenities • Tiện Nghi & Dịch Vụ
             </span>
-            <h2 className="font-serif text-2xl sm:text-4xl md:text-5xl text-[#367156] font-normal mb-3 sm:mb-4">
-              Hoàn Thiện Từng Khoảnh Khắc
+            <h2 className="text-3xl sm:text-4xl md:text-5xl text-[#000000] font-light tracking-tight mb-3 sm:mb-4">
+              Hoàn thiện từng khoảnh khắc nghỉ dưỡng
             </h2>
-            <div className="flex items-center justify-center gap-2.5 mx-auto mb-4 sm:mb-5">
-              <span className="w-10 sm:w-14 h-px bg-gradient-to-r from-transparent to-[#367156]/50" />
-              <span className="text-[10px] text-[#367156] select-none">◆</span>
-              <span className="w-10 sm:w-14 h-px bg-gradient-to-l from-transparent to-[#367156]/50" />
-            </div>
-            <p className="font-sans text-xs sm:text-sm text-[#666666] font-light leading-relaxed">
-              Tại M_Dalats Villa, chúng tôi luôn chăm chút và nâng cấp những tiện nghi cũng như dịch vụ nhằm mang lại cho bạn những trải nghiệm nghỉ dưỡng ngày càng trọn vẹn và thư thái.
+            <p className="text-sm sm:text-base text-[rgba(0,0,0,0.65)] font-normal leading-relaxed">
+              Tại M_Dalats Villa, từng tiện nghi và dịch vụ được chuẩn bị chu đáo nhằm mang lại kỳ nghỉ thoải mái, an tâm và thảnh thơi trọn vẹn.
             </p>
           </FadeIn>
         </div>
 
-        {/* Room & Garden Amenities Grid with Stagger */}
+        {/* Room & Garden Amenities Grid: PlayStation surface-card #f5f7fa */}
         <div className="mb-14 sm:mb-16">
           <FadeIn direction="up" delay={0.1}>
-            <h3 className="font-serif text-xl sm:text-2xl text-[#367156] font-medium mb-5 text-center sm:text-left">
+            <h3 className="text-lg sm:text-xl text-[#000000] font-light mb-5 text-center sm:text-left tracking-wide">
               Tiện nghi phòng & sân vườn
             </h3>
           </FadeIn>
 
           <StaggerContainer
-            staggerChildren={0.05}
+            staggerChildren={0.04}
             className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"
           >
             {roomAmenities.map((item, idx) => {
               const Icon = item.icon;
               return (
                 <StaggerItem key={idx}>
-                  <div className="p-3.5 sm:p-4 rounded-sm bg-[#FAF9F6] border border-[#ece7dd] flex items-center gap-2.5 sm:gap-3 transition-all hover:border-[#367156] hover:shadow-xs hover:bg-white group cursor-default">
-                    <Icon className="w-4 h-4 text-[#367156] flex-shrink-0 group-hover:scale-115 transition-transform" />
-                    <span className="text-[11px] sm:text-xs font-medium text-[#222222] leading-tight">
+                  <div className="p-4 rounded-[8px] bg-[#f5f7fa] border border-[#f3f3f3] flex items-center gap-3 transition-all hover:bg-neutral-100 group cursor-default">
+                    <div className="w-8 h-8 rounded-full bg-[#0070d1]/10 text-[#0070d1] flex items-center justify-center shrink-0 group-hover:bg-[#0070d1] group-hover:text-white transition-colors">
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <span className="text-xs sm:text-sm font-medium text-neutral-800 leading-tight">
                       {item.name}
                     </span>
                   </div>
@@ -99,35 +97,43 @@ export function AmenitiesSection() {
         </div>
 
         {/* Free vs Paid Services */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 pt-8 border-t border-[#ece7dd]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 pt-8 border-t border-[#f3f3f3]">
           <FadeIn direction="right" delay={0.2}>
-            <div className="bg-[#FAF9F6] p-6 sm:p-8 rounded-sm border border-[#ece7dd] h-full shadow-2xs">
-              <div className="flex items-center gap-2.5 mb-4">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#367156]" />
-                <h4 className="font-serif text-xl sm:text-2xl text-[#367156] font-medium">Dịch vụ miễn phí</h4>
-              </div>
+            <div className="bg-[#f5f7fa] p-6 sm:p-8 rounded-[8px] border border-[#f3f3f3] h-full">
+              <span className="text-xs uppercase tracking-[1px] text-[#0070d1] font-bold block mb-2">
+                Dịch vụ tiêu chuẩn
+              </span>
+              <h3 className="text-xl sm:text-2xl font-light text-[#000000] mb-4">
+                Được bao gồm trong kỳ nghỉ
+              </h3>
               <ul className="space-y-3">
-                {freeServices.map((text, idx) => (
-                  <li key={idx} className="flex items-start gap-2.5 text-xs text-[#555555] font-light leading-relaxed">
-                    <Check className="w-3.5 h-3.5 text-[#367156] flex-shrink-0 mt-0.5" />
-                    <span>{text}</span>
+                {freeServices.map((service, idx) => (
+                  <li key={idx} className="flex items-start gap-3 text-xs sm:text-sm text-neutral-700">
+                    <Check className="w-4 h-4 text-[#0070d1] shrink-0 mt-0.5" />
+                    <span>{service}</span>
                   </li>
                 ))}
               </ul>
             </div>
           </FadeIn>
 
-          <FadeIn direction="left" delay={0.3}>
-            <div className="bg-[#FAF9F6] p-6 sm:p-8 rounded-sm border border-[#ece7dd] h-full shadow-2xs">
-              <div className="flex items-center gap-2.5 mb-4">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#F4A261]" />
-                <h4 className="font-serif text-xl sm:text-2xl text-[#584636] font-medium">Dịch vụ theo yêu cầu</h4>
-              </div>
-              <div className="space-y-3.5">
-                {paidServices.map((item, idx) => (
-                  <div key={idx} className="text-xs">
-                    <p className="font-semibold text-[#367156]">{item.title}</p>
-                    <p className="text-[#666666] font-light text-[11px] mt-0.5">{item.desc}</p>
+          <FadeIn direction="left" delay={0.2}>
+            <div className="bg-[#f5f7fa] p-6 sm:p-8 rounded-[8px] border border-[#f3f3f3] h-full">
+              <span className="text-xs uppercase tracking-[1px] text-[#0070d1] font-bold block mb-2">
+                Dịch vụ hỗ trợ thêm
+              </span>
+              <h3 className="text-xl sm:text-2xl font-light text-[#000000] mb-4">
+                Dịch vụ tính phí linh hoạt
+              </h3>
+              <div className="space-y-4">
+                {paidServices.map((service, idx) => (
+                  <div key={idx} className="border-b border-[#e5e7eb] last:border-0 pb-3 last:pb-0">
+                    <h4 className="text-sm sm:text-base font-medium text-neutral-900">
+                      {service.title}
+                    </h4>
+                    <p className="text-xs text-neutral-600 mt-0.5">
+                      {service.desc}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -135,6 +141,6 @@ export function AmenitiesSection() {
           </FadeIn>
         </div>
       </div>
-    </section>
+    </SectionStack>
   );
 }

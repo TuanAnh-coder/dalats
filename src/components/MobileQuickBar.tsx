@@ -13,7 +13,6 @@ export function MobileQuickBar({ onOpenBookingModal }: MobileQuickBarProps) {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Show when scrolled past 300px
       setShow(window.scrollY > 300);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -28,31 +27,31 @@ export function MobileQuickBar({ onOpenBookingModal }: MobileQuickBarProps) {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 80, opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="sm:hidden fixed bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-3 right-3 z-40 bg-white/95 backdrop-blur-md border border-[#ece7dd] rounded-full shadow-2xl p-1.5 flex items-center justify-between gap-2"
+          className="sm:hidden fixed bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-3 right-3 z-40 bg-[#000000]/95 backdrop-blur-md border border-white/20 rounded-full shadow-2xl p-2 flex items-center justify-between gap-3 text-white"
         >
           <a
             href="tel:0939014234"
-            className="w-11 h-11 rounded-full bg-[#faf7f1] border border-[#d6cebf] flex items-center justify-center text-[#367156] flex-shrink-0 active:scale-95 transition-transform"
-            aria-label="Gọi điện thoại"
+            className="w-11 h-11 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:text-[#53b1ff] shrink-0 transition-colors"
+            aria-label="Gọi điện thoại Concierge"
           >
-            <Phone className="w-4 h-4" />
+            <Phone className="w-4 h-4 text-[#53b1ff]" />
           </a>
 
-          <div className="flex flex-col text-left px-1.5 min-w-0 flex-1">
-            <span className="text-[9.5px] uppercase tracking-wider text-[#888888] font-medium leading-none truncate">
+          <div className="flex flex-col text-left px-1 min-w-0 flex-1">
+            <span className="text-[10px] uppercase tracking-[1px] text-neutral-400 font-bold leading-none truncate">
               M_Dalats Boutique Villa
             </span>
-            <span className="text-xs xs:text-sm font-bold text-[#367156] leading-tight truncate mt-0.5">
-              từ 850.000 ₫<span className="text-[10px] font-normal text-[#666666]"> /đêm</span>
+            <span className="text-xs xs:text-sm font-bold text-white leading-tight truncate mt-1">
+              từ 850.000 ₫<span className="text-[10px] font-normal text-neutral-400"> /đêm</span>
             </span>
           </div>
 
           <button
             type="button"
             onClick={onOpenBookingModal}
-            className="bg-gradient-to-r from-[#F4A261] to-[#e05c3c] hover:from-[#e05c3c] hover:to-[#c9492b] text-white text-[11px] uppercase tracking-wider font-semibold px-4 py-2.5 rounded-full shadow-md active:scale-95 transition-all flex items-center gap-1.5 flex-shrink-0 cursor-pointer min-h-[42px]"
+            className="bg-[#d53b00] hover:bg-[#aa2f00] text-white text-xs font-bold px-5 h-11 rounded-full transition-colors flex items-center gap-1.5 shrink-0 cursor-pointer shadow-none"
           >
-            <CalendarCheck className="w-3.5 h-3.5" />
+            <CalendarCheck className="w-4 h-4" />
             <span>Đặt phòng</span>
           </button>
         </motion.div>

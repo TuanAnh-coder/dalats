@@ -1,28 +1,34 @@
-import { relations, sql } from "drizzle-orm";
-import { index, sqliteTable } from "drizzle-orm/sqlite-core";
+import { relations } from "drizzle-orm";
+import {
+  boolean,
+  index,
+  integer,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+  varchar,
+} from "drizzle-orm/pg-core";
 
 // Better Auth core tables
-export const user = sqliteTable("user", (d) => ({
-  id: d
-    .text({ length: 255 })
-    .notNull()
+export const user = pgTable("user", {
+  id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  name: d.text({ length: 255 }),
-  email: d.text({ length: 255 }).notNull().unique(),
-  emailVerified: d.integer({ mode: "boolean" }).default(false),
-  image: d.text({ length: 255 }),
-  role: d.text({ length: 50 }).notNull().default("user"),
-  phone: d.text({ length: 50 }),
-  banned: d.integer({ mode: "boolean" }).default(false),
-  banReason: d.text(),
-  banExpires: d.integer({ mode: "timestamp" }),
-  createdAt: d
-    .integer({ mode: "timestamp" })
-    .default(sql`(unixepoch())`)
+  name: text("name"),
+  email: text("email").notNull().unique(),
+  emailVerified: boolean("emailVerified").default(false),
+  image: text("image"),
+  role: text("role").notNull().default("user"),
+  phone: text("phone"),
+  banned: boolean("banned").default(false),
+  banReason: text("banReason"),
+  banExpires: timestamp("banExpires", { mode: "date" }),
+  createdAt: timestamp("createdAt", { mode: "date" })
+    .defaultNow()
     .notNull(),
-  updatedAt: d.integer({ mode: "timestamp" }).$onUpdate(() => new Date()),
-}));
+  updatedAt: timestamp("updatedAt", { mode: "date" }).$onUpdate(() => new Date()),
+});
 
 export const userRelations = relations(user, ({ many }) => ({
   account: many(account),
@@ -30,33 +36,29 @@ export const userRelations = relations(user, ({ many }) => ({
   bookings: many(bookings),
 }));
 
-export const account = sqliteTable(
+export const account = pgTable(
   "account",
-  (d) => ({
-    id: d
-      .text({ length: 255 })
-      .notNull()
+  {
+    id: text("id")
       .primaryKey()
       .$defaultFn(() => crypto.randomUUID()),
-    userId: d
-      .text({ length: 255 })
+    userId: text("userId")
       .notNull()
-      .references(() => user.id),
-    accountId: d.text({ length: 255 }).notNull(),
-    providerId: d.text({ length: 255 }).notNull(),
-    accessToken: d.text(),
-    refreshToken: d.text(),
-    accessTokenExpiresAt: d.integer({ mode: "timestamp" }),
-    refreshTokenExpiresAt: d.integer({ mode: "timestamp" }),
-    scope: d.text({ length: 255 }),
-    idToken: d.text(),
-    password: d.text(),
-    createdAt: d
-      .integer({ mode: "timestamp" })
-      .default(sql`(unixepoch())`)
+      .references(() => user.id, { onDelete: "cascade" }),
+    accountId: text("accountId").notNull(),
+    providerId: text("providerId").notNull(),
+    accessToken: text("accessToken"),
+    refreshToken: text("refreshToken"),
+    accessTokenExpiresAt: timestamp("accessTokenExpiresAt", { mode: "date" }),
+    refreshTokenExpiresAt: timestamp("refreshTokenExpiresAt", { mode: "date" }),
+    scope: text("scope"),
+    idToken: text("idToken"),
+    password: text("password"),
+    createdAt: timestamp("createdAt", { mode: "date" })
+      .defaultNow()
       .notNull(),
-    updatedAt: d.integer({ mode: "timestamp" }).$onUpdate(() => new Date()),
-  }),
+    updatedAt: timestamp("updatedAt", { mode: "date" }).$onUpdate(() => new Date()),
+  },
   (t) => [index("account_user_id_idx").on(t.userId)]
 );
 
@@ -64,29 +66,25 @@ export const accountRelations = relations(account, ({ one }) => ({
   user: one(user, { fields: [account.userId], references: [user.id] }),
 }));
 
-export const session = sqliteTable(
+export const session = pgTable(
   "session",
-  (d) => ({
-    id: d
-      .text({ length: 255 })
-      .notNull()
+  {
+    id: text("id")
       .primaryKey()
       .$defaultFn(() => crypto.randomUUID()),
-    userId: d
-      .text({ length: 255 })
+    userId: text("userId")
       .notNull()
-      .references(() => user.id),
-    token: d.text({ length: 255 }).notNull().unique(),
-    expiresAt: d.integer({ mode: "timestamp" }).notNull(),
-    ipAddress: d.text({ length: 255 }),
-    userAgent: d.text({ length: 255 }),
-    impersonatedBy: d.text(),
-    createdAt: d
-      .integer({ mode: "timestamp" })
-      .default(sql`(unixepoch())`)
+      .references(() => user.id, { onDelete: "cascade" }),
+    token: text("token").notNull().unique(),
+    expiresAt: timestamp("expiresAt", { mode: "date" }).notNull(),
+    ipAddress: text("ipAddress"),
+    userAgent: text("userAgent"),
+    impersonatedBy: text("impersonatedBy"),
+    createdAt: timestamp("createdAt", { mode: "date" })
+      .defaultNow()
       .notNull(),
-    updatedAt: d.integer({ mode: "timestamp" }).$onUpdate(() => new Date()),
-  }),
+    updatedAt: timestamp("updatedAt", { mode: "date" }).$onUpdate(() => new Date()),
+  },
   (t) => [index("session_user_id_idx").on(t.userId)]
 );
 
@@ -94,52 +92,50 @@ export const sessionRelations = relations(session, ({ one }) => ({
   user: one(user, { fields: [session.userId], references: [user.id] }),
 }));
 
-export const verification = sqliteTable(
+export const verification = pgTable(
   "verification",
-  (d) => ({
-    id: d
-      .text({ length: 255 })
-      .notNull()
+  {
+    id: text("id")
       .primaryKey()
       .$defaultFn(() => crypto.randomUUID()),
-    identifier: d.text({ length: 255 }).notNull(),
-    value: d.text({ length: 255 }).notNull(),
-    expiresAt: d.integer({ mode: "timestamp" }).notNull(),
-    createdAt: d
-      .integer({ mode: "timestamp" })
-      .default(sql`(unixepoch())`)
+    identifier: text("identifier").notNull(),
+    value: text("value").notNull(),
+    expiresAt: timestamp("expiresAt", { mode: "date" }).notNull(),
+    createdAt: timestamp("createdAt", { mode: "date" })
+      .defaultNow()
       .notNull(),
-    updatedAt: d.integer({ mode: "timestamp" }).$onUpdate(() => new Date()),
-  }),
+    updatedAt: timestamp("updatedAt", { mode: "date" }).$onUpdate(() => new Date()),
+  },
   (t) => [index("verification_identifier_idx").on(t.identifier)]
 );
 
 // Villa Rooms table
-export const rooms = sqliteTable(
+export const rooms = pgTable(
   "rooms",
-  (d) => ({
-    id: d.integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
-    slug: d.text({ length: 100 }).notNull().unique(),
-    name: d.text({ length: 150 }).notNull(),
-    roomNumber: d.text({ length: 20 }).notNull(),
-    area: d.integer().notNull(), // m2
-    maxAdults: d.integer().notNull().default(2),
-    maxChildren: d.integer().notNull().default(2),
-    bedType: d.text({ length: 100 }).notNull().default("1 Giường Queen"),
-    viewType: d.text({ length: 100 }).notNull().default("Sân vườn"),
-    pricePerNight: d.integer().notNull(), // VNĐ
-    originalPrice: d.integer(), // VNĐ
-    image: d.text({ length: 500 }).notNull(),
-    gallery: d.text({ mode: "json" }), // array of image urls
-    shortDescription: d.text(),
-    description: d.text(),
-    amenities: d.text({ mode: "json" }), // array of strings
-    isAvailable: d.integer({ mode: "boolean" }).notNull().default(true),
-    createdAt: d
-      .integer({ mode: "timestamp" })
-      .default(sql`(unixepoch())`)
+  {
+    id: serial("id").primaryKey(),
+    slug: varchar("slug", { length: 100 }).notNull().unique(),
+    name: varchar("name", { length: 150 }).notNull(),
+    roomNumber: varchar("roomNumber", { length: 20 }).notNull(),
+    area: integer("area").notNull(), // m2
+    maxAdults: integer("maxAdults").notNull().default(2),
+    maxChildren: integer("maxChildren").notNull().default(2),
+    bedType: varchar("bedType", { length: 100 }).notNull().default("1 Giường Queen"),
+    viewType: varchar("viewType", { length: 100 }).notNull().default("Sân vườn"),
+    pricePerNight: integer("pricePerNight").notNull(), // VNĐ
+    originalPrice: integer("originalPrice"), // VNĐ
+    image: text("image").notNull(),
+    gallery: text("gallery"), // JSON string
+    shortDescription: text("shortDescription"),
+    description: text("description"),
+    amenities: text("amenities"), // JSON string
+    isAvailable: boolean("isAvailable").notNull().default(true),
+    isFlashSale: boolean("isFlashSale").notNull().default(false),
+    flashSaleDiscount: integer("flashSaleDiscount"),
+    createdAt: timestamp("createdAt", { mode: "date" })
+      .defaultNow()
       .notNull(),
-  }),
+  },
   (t) => [index("room_slug_idx").on(t.slug)]
 );
 
@@ -148,36 +144,37 @@ export const roomRelations = relations(rooms, ({ many }) => ({
 }));
 
 // Villa Bookings table
-export const bookings = sqliteTable(
+export const bookings = pgTable(
   "bookings",
-  (d) => ({
-    id: d.integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
-    bookingCode: d.text({ length: 50 }).notNull().unique(),
-    userId: d.text({ length: 255 }).references(() => user.id),
-    roomId: d
-      .integer({ mode: "number" })
+  {
+    id: serial("id").primaryKey(),
+    bookingCode: varchar("bookingCode", { length: 50 }).notNull().unique(),
+    userId: text("userId").references(() => user.id),
+    roomId: integer("roomId")
       .notNull()
       .references(() => rooms.id),
-    customerName: d.text({ length: 150 }).notNull(),
-    customerEmail: d.text({ length: 150 }).notNull(),
-    customerPhone: d.text({ length: 50 }).notNull(),
-    checkIn: d.text({ length: 20 }).notNull(), // YYYY-MM-DD
-    checkOut: d.text({ length: 20 }).notNull(), // YYYY-MM-DD
-    adults: d.integer().notNull().default(2),
-    children: d.integer().notNull().default(0),
-    totalNights: d.integer().notNull().default(1),
-    totalPrice: d.integer().notNull(),
-    status: d.text({ length: 30 }).notNull().default("pending"), // pending, confirmed, cancelled
-    specialRequests: d.text(),
-    createdAt: d
-      .integer({ mode: "timestamp" })
-      .default(sql`(unixepoch())`)
+    customerName: varchar("customerName", { length: 150 }).notNull(),
+    customerEmail: varchar("customerEmail", { length: 150 }).notNull(),
+    customerPhone: varchar("customerPhone", { length: 50 }).notNull(),
+    checkIn: varchar("checkIn", { length: 20 }).notNull(), // YYYY-MM-DD
+    checkOut: varchar("checkOut", { length: 20 }).notNull(), // YYYY-MM-DD
+    adults: integer("adults").notNull().default(2),
+    children: integer("children").notNull().default(0),
+    totalNights: integer("totalNights").notNull().default(1),
+    totalPrice: integer("totalPrice").notNull(),
+    status: varchar("status", { length: 30 }).notNull().default("pending"),
+    specialRequests: text("specialRequests"),
+    createdAt: timestamp("createdAt", { mode: "date" })
+      .defaultNow()
       .notNull(),
-  }),
+  },
   (t) => [
     index("booking_code_idx").on(t.bookingCode),
     index("booking_user_id_idx").on(t.userId),
     index("booking_room_id_idx").on(t.roomId),
+    index("booking_customer_phone_idx").on(t.customerPhone),
+    index("booking_customer_email_idx").on(t.customerEmail),
+    index("booking_checkout_status_idx").on(t.checkOut, t.status),
   ]
 );
 
@@ -187,27 +184,25 @@ export const bookingRelations = relations(bookings, ({ one }) => ({
 }));
 
 // Newsletter Subscribers
-export const subscribers = sqliteTable("subscribers", (d) => ({
-  id: d.integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
-  email: d.text({ length: 255 }).notNull().unique(),
-  createdAt: d
-    .integer({ mode: "timestamp" })
-    .default(sql`(unixepoch())`)
+export const subscribers = pgTable("subscribers", {
+  id: serial("id").primaryKey(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
+  createdAt: timestamp("createdAt", { mode: "date" })
+    .defaultNow()
     .notNull(),
-}));
+});
 
 // Contact Messages
-export const contacts = sqliteTable("contacts", (d) => ({
-  id: d.integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
-  name: d.text({ length: 150 }).notNull(),
-  email: d.text({ length: 150 }).notNull(),
-  phone: d.text({ length: 50 }),
-  message: d.text().notNull(),
-  createdAt: d
-    .integer({ mode: "timestamp" })
-    .default(sql`(unixepoch())`)
+export const contacts = pgTable("contacts", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 150 }).notNull(),
+  email: varchar("email", { length: 150 }).notNull(),
+  phone: varchar("phone", { length: 50 }),
+  message: text("message").notNull(),
+  createdAt: timestamp("createdAt", { mode: "date" })
+    .defaultNow()
     .notNull(),
-}));
+});
 
 export type Room = typeof rooms.$inferSelect;
 export type NewRoom = typeof rooms.$inferInsert;
@@ -215,3 +210,5 @@ export type Booking = typeof bookings.$inferSelect;
 export type NewBooking = typeof bookings.$inferInsert;
 export type User = typeof user.$inferSelect;
 export type NewUser = typeof user.$inferInsert;
+export type Subscriber = typeof subscribers.$inferSelect;
+export type Contact = typeof contacts.$inferSelect;

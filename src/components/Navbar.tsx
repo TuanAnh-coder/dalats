@@ -3,10 +3,38 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Phone, Mail, User as UserIcon, Menu as MenuIcon, X, Calendar, LogOut, ChevronRight, LayoutDashboard } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  Phone,
+  Calendar,
+  Menu as MenuIcon,
+  User as UserIcon,
+  LogOut,
+  LayoutDashboard,
+  MapPin,
+  ChevronRight,
+} from "lucide-react";
+
 import { authClient } from "~/server/better-auth/client";
-import { motion, AnimatePresence } from "motion/react";
+import { normalizeRole, isStaffRole } from "~/lib/roles";
+import { Button } from "~/components/ui/button";
+import { Badge } from "~/components/ui/badge";
+import { Avatar, AvatarFallback } from "~/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "~/components/ui/sheet";
 
 interface NavbarProps {
   onOpenBookingModal?: (roomId?: number) => void;
@@ -14,12 +42,21 @@ interface NavbarProps {
   onOpenMyBookingsModal?: () => void;
 }
 
-export function Navbar({ onOpenBookingModal, onOpenAuthModal, onOpenMyBookingsModal }: NavbarProps) {
+export function Navbar({
+  onOpenBookingModal,
+  onOpenAuthModal,
+  onOpenMyBookingsModal,
+}: NavbarProps) {
   const { data: session } = authClient.useSession();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+
+  const sessionRole = normalizeRole(
+    (session?.user as { role?: string } | undefined)?.role,
+  );
+  const canAccessAdmin = isStaffRole(sessionRole);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,15 +66,6 @@ export function Navbar({ onOpenBookingModal, onOpenAuthModal, onOpenMyBookingsMo
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navLinks = [
-    { label: "Trang chủ", href: "/" },
-    { label: "Giới thiệu", href: "/about" },
-    { label: "Hệ thống phòng", href: "/rooms" },
-    { label: "Ẩm thực", href: "/dining" },
-    { label: "Trải nghiệm", href: "/experiences" },
-    { label: "Liên hệ", href: "/contact" },
-  ];
-
   const handleBookingClick = () => {
     if (onOpenBookingModal) {
       onOpenBookingModal();
@@ -46,280 +74,265 @@ export function Navbar({ onOpenBookingModal, onOpenAuthModal, onOpenMyBookingsMo
     }
   };
 
+  const handleAuthClick = () => {
+    if (onOpenAuthModal) {
+      onOpenAuthModal();
+    } else {
+      router.push("/login");
+    }
+  };
+
+  const handleMyBookingsClick = () => {
+    if (onOpenMyBookingsModal) {
+      onOpenMyBookingsModal();
+    } else {
+      router.push("/my-bookings");
+    }
+  };
+
+  const navLinks = [
+    { label: "Trang chủ", href: "/" },
+    { label: "Phòng nghỉ", href: "/rooms" },
+    { label: "Giới thiệu", href: "/about" },
+    { label: "Ẩm thực", href: "/dining" },
+    { label: "Trải nghiệm", href: "/experiences" },
+    { label: "Liên hệ", href: "/contact" },
+  ];
+
   return (
-    <header className="sticky top-0 z-40 w-full transition-all duration-300">
-      {/* Top Announcement Ribbon with Brand Slogan */}
-      <div className="bg-[#367156] text-[#FAF9F6] text-[11px] sm:text-xs py-2 px-3 sm:px-4 transition-colors border-b border-white/10 shadow-xs">
-        <div className="max-w-6xl mx-auto px-1 sm:px-8 flex items-center justify-between text-center tracking-wide gap-2 sm:gap-4 w-full min-w-0">
-          <span className="font-sans font-light truncate max-w-[190px] xs:max-w-[280px] sm:max-w-none tracking-wider text-left">
-            M_Dalats Villa • STAY CLOSE TO NATURE
-          </span>
-          <span className="hidden md:inline font-script text-lg text-[#F4A261] font-normal">
-            “Đà Lạt – Nơi những kỷ niệm đẹp bắt đầu”
-          </span>
-          <a
-            href="https://zalo.me/0939014234"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="border-b border-[#F4A261] text-[#F4A261] font-medium hover:text-white hover:border-white transition-colors shrink-0 text-[10.5px] sm:text-[11px]"
-          >
-            Liên hệ ngay
-          </a>
+    <header className="sticky top-0 z-40 w-full select-none">
+      {/* Top Utility Ribbon (PlayStation dark sub-nav style) */}
+      <div className="bg-[#000000] text-neutral-400 border-b border-white/10">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-1.5 flex items-center justify-between text-xs tracking-wide">
+          <div className="flex items-center gap-2 truncate">
+            <span className="inline-flex items-center gap-1.5 text-white/90 font-medium">
+              <MapPin className="w-3.5 h-3.5 text-[#0070d1]" />
+              14B Khe Sanh, Phường 10, Đà Lạt
+            </span>
+            <span className="hidden sm:inline text-neutral-600">•</span>
+            <span className="hidden sm:inline text-neutral-400">
+              Boutique Forest Villa Resort
+            </span>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <a
+              href="tel:0939014234"
+              className="inline-flex items-center gap-1.5 text-white/90 hover:text-[#53b1ff] transition-colors"
+            >
+              <Phone className="w-3.5 h-3.5 text-[#0070d1]" />
+              <span className="font-semibold">0939 014 234</span>
+            </a>
+            <span className="hidden xs:inline text-neutral-700">|</span>
+            <span className="hidden xs:inline text-[11px] text-neutral-400 font-medium tracking-wider">
+              VI / EN
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* Main Navbar aligned with 6xl container */}
-      <div
-        className={`bg-white/95 backdrop-blur-md border-b transition-all duration-300 ${
-          scrolled
-            ? "py-2 sm:py-2.5 shadow-md border-[#e5dfd3]"
-            : "py-2.5 sm:py-3 border-[#ece7dd]"
+      {/* Main Navbar (PlayStation primary-nav: height 64px, pure black #000000, hairline border) */}
+      <nav
+        className={`w-full h-16 transition-all duration-300 border-b border-white/10 ${
+          scrolled ? "bg-[#000000]/95 backdrop-blur-md" : "bg-[#000000]"
         }`}
       >
-        <div className="max-w-6xl mx-auto px-4 sm:px-8 flex items-center justify-between w-full min-w-0">
-          {/* Brand Logo M_Dalats Villa Horizontal */}
-          <Link href="/" className="flex items-center group py-0.5 min-w-0 shrink">
-            <div className="relative h-9 xs:h-11 sm:h-14 lg:h-16 w-36 xs:w-48 sm:w-64 lg:w-76 max-w-[155px] xs:max-w-[210px] sm:max-w-none transition-transform duration-300 group-hover:scale-105">
+        <div className="max-w-[1280px] mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+          {/* Logo Left */}
+          <Link href="/" className="inline-flex items-center shrink-0 py-1" aria-label="M_Dalats Villa">
+            <div className="relative h-10 w-44 sm:w-52">
               <Image
                 src="/images/m_dalats_logo_horizontal.svg"
-                alt="M_Dalats Villa - Stay Close to Nature"
+                alt="M_Dalats Villa"
                 fill
-                className="object-contain object-left"
+                className="object-contain object-left invert"
                 priority
               />
             </div>
           </Link>
 
-        {/* Desktop Nav Items */}
-        <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
-          {navLinks.map((link) => {
-            const isActive = pathname === link.href;
-            return (
-              <Link
-                key={link.label}
-                href={link.href}
-                className={`text-[11px] xl:text-xs uppercase tracking-[0.16em] font-medium transition-all relative py-1.5 group/nav ${
-                  isActive
-                    ? "text-[#367156] font-bold"
-                    : "text-[#444444] hover:text-[#367156]"
-                }`}
-              >
-                <span>{link.label}</span>
-                <span
-                  className={`absolute bottom-0 left-0 h-[2px] bg-[#367156] transition-all duration-300 ${
-                    isActive ? "w-full" : "w-0 group-hover/nav:w-full"
+          {/* Center Navigation Links */}
+          <div className="hidden lg:flex items-center gap-8">
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`text-sm font-medium tracking-wide transition-colors relative py-1 ${
+                    isActive
+                      ? "text-white"
+                      : "text-neutral-400 hover:text-white"
                   }`}
-                />
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* Right Action Area */}
-        <div className="flex items-center gap-2 sm:gap-3.5">
-          {/* Hotline link desktop */}
-          <a
-            href="tel:0939014234"
-            className="hidden sm:flex items-center gap-1.5 text-xs text-[#444444] hover:text-[#367156] transition-colors pr-2.5 border-r border-[#ece7dd]"
-          >
-            <Phone className="w-3.5 h-3.5 text-[#367156]" />
-            <span className="font-semibold tracking-wider text-[11px]">0939 014 234</span>
-          </a>
-
-          {/* User Auth Profile / Login */}
-          <div className="relative">
-            {session?.user ? (
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className="flex items-center gap-1.5 text-xs font-medium bg-[#faf7f1] hover:bg-[#ece7dd] text-[#367156] px-2.5 sm:px-3 py-1.5 rounded-full border border-[#d6cebf] transition-colors cursor-pointer"
                 >
-                  <UserIcon className="w-3.5 h-3.5" />
-                  <span className="max-w-[80px] sm:max-w-[110px] truncate text-[11px]">
-                    {session.user.name || session.user.email}
-                  </span>
-                </button>
-
-                {userDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-52 bg-white border border-[#ece7dd] rounded-md shadow-xl py-1.5 z-50 animate-fadeIn">
-                    <div className="px-3.5 py-2 border-b border-[#ece7dd] text-xs">
-                      <p className="font-semibold text-[#367156] truncate">{session.user.name || "Khách hàng"}</p>
-                      <p className="text-[#888888] truncate text-[11px]">{session.user.email}</p>
-                    </div>
-                    {onOpenMyBookingsModal ? (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setUserDropdownOpen(false);
-                          onOpenMyBookingsModal();
-                        }}
-                        className="w-full text-left px-3.5 py-2 text-xs text-[#333333] hover:bg-[#faf7f1] flex items-center gap-2 cursor-pointer"
-                      >
-                        <Calendar className="w-3.5 h-3.5 text-[#367156]" />
-                        Lịch sử đặt phòng
-                      </button>
-                    ) : (
-                      <Link
-                        href="/my-bookings"
-                        className="w-full text-left px-3.5 py-2 text-xs text-[#333333] hover:bg-[#faf7f1] flex items-center gap-2 cursor-pointer"
-                      >
-                        <Calendar className="w-3.5 h-3.5 text-[#367156]" />
-                        Lịch sử đặt phòng
-                      </Link>
-                    )}
-                    <Link
-                      href="/admin"
-                      onClick={() => setUserDropdownOpen(false)}
-                      className="w-full text-left px-3.5 py-2 text-xs text-[#367156] font-semibold hover:bg-[#FAF9F6] flex items-center gap-2 cursor-pointer border-t border-[#ece7dd]/60"
-                    >
-                      <LayoutDashboard className="w-3.5 h-3.5 text-[#367156]" />
-                      Trang quản trị (Admin)
-                    </Link>
-                    <button
-                      type="button"
-                      onClick={async () => {
-                        setUserDropdownOpen(false);
-                        await authClient.signOut();
-                      }}
-                      className="w-full text-left px-3.5 py-2 text-xs text-red-600 hover:bg-red-50 flex items-center gap-2 cursor-pointer border-t border-[#ece7dd]/60"
-                    >
-                      <LogOut className="w-3.5 h-3.5" />
-                      Đăng xuất
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={onOpenAuthModal}
-                className="hidden sm:flex items-center gap-1.5 text-xs text-[#333333] hover:text-[#367156] font-medium py-1 px-2 transition-colors cursor-pointer"
-              >
-                <UserIcon className="w-3.5 h-3.5" />
-                <span className="text-[11px] uppercase tracking-wider">Đăng nhập</span>
-              </button>
-            )}
+                  {link.label}
+                  {isActive && (
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#0070d1] rounded-full" />
+                  )}
+                </Link>
+              );
+            })}
           </div>
 
-          {/* Primary CTA Book Room Button */}
-          <button
-            type="button"
-            onClick={handleBookingClick}
-            className="bg-[#f27052] hover:bg-[#e05c3c] text-white text-[10px] xs:text-[11px] sm:text-xs uppercase tracking-wider font-semibold px-2.5 xs:px-3 sm:px-4 py-1.5 sm:py-2.5 rounded-sm shadow-xs hover:shadow-md transition-all active:scale-95 cursor-pointer shrink-0"
-          >
-            Đặt phòng
-          </button>
-
-          {/* Mobile Hamburger Button */}
-          <button
-            type="button"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2.5 -mr-2 text-[#222222] hover:text-[#367156] transition-colors cursor-pointer"
-            aria-label="Menu"
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <MenuIcon className="w-5 h-5" />}
-          </button>
-        </div>
-        </div>
-      </div>
-
-      {/* Animated Mobile Drawer */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="lg:hidden bg-white/98 backdrop-blur-xl border-b border-[#ece7dd] px-6 py-5 shadow-2xl flex flex-col gap-3 overflow-hidden"
-          >
-            <nav className="flex flex-col divide-y divide-[#ece7dd]/50">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="text-[13px] uppercase tracking-wider font-medium text-[#333333] hover:text-[#367156] py-3 min-h-[44px] flex items-center justify-between"
-                >
-                  <span>{link.label}</span>
-                  <ChevronRight className="w-4 h-4 text-[#aaaaaa]" />
-                </Link>
-              ))}
-            </nav>
-
-            <div className="pt-2 flex flex-col gap-2.5 text-xs text-[#555555]">
-              <a href="tel:0939014234" className="flex items-center gap-2 py-1 text-[#367156] font-medium">
-                <Phone className="w-3.5 h-3.5" /> Hotline: 0939 014 234
-              </a>
-
-              {session?.user ? (
-                <div className="pt-2 border-t border-[#ece7dd] flex flex-col gap-2">
-                  <p className="text-[11px] font-semibold text-[#367156]">
-                    Tài khoản: {session.user.name || session.user.email}
-                  </p>
-                  <Link
-                    href="/my-bookings"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="text-left text-xs text-[#333333] flex items-center gap-2 py-1"
+          {/* Right Action Cluster */}
+          <div className="flex items-center gap-3">
+            {/* User Profile or Login */}
+            {session?.user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="h-10 px-4 gap-2 border-white/20 text-xs font-bold text-white bg-transparent hover:bg-white/10 rounded-full"
                   >
-                    <Calendar className="w-3.5 h-3.5 text-[#367156]" /> Lịch sử đặt phòng
-                  </Link>
-                  <Link
-                    href="/admin"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="text-left text-xs text-[#367156] font-semibold flex items-center gap-2 py-1"
+                    <Avatar className="h-5 w-5 rounded-full border border-white/30">
+                      <AvatarFallback className="text-[10px] bg-[#0070d1] text-white font-bold">
+                        {(session.user.name || session.user.email || "U").charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="max-w-[90px] truncate font-medium">
+                      {session.user.name || session.user.email}
+                    </span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 bg-[#121314] border-white/15 text-white rounded-[8px] p-2 shadow-2xl">
+                  <DropdownMenuLabel className="p-2 space-y-1">
+                    <p className="font-semibold text-white text-xs truncate">
+                      {session.user.name || "Hội viên"}
+                    </p>
+                    <p className="text-[11px] text-neutral-400 truncate font-normal">
+                      {session.user.email}
+                    </p>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator className="bg-white/10" />
+                  <DropdownMenuItem
+                    onClick={handleMyBookingsClick}
+                    className="cursor-pointer text-xs text-neutral-300 hover:text-white focus:bg-white/10 focus:text-white rounded-[6px] gap-2 py-2"
                   >
-                    <LayoutDashboard className="w-3.5 h-3.5 text-[#367156]" /> Trang quản trị (Admin)
-                  </Link>
-                  <button
-                    type="button"
+                    <Calendar className="w-3.5 h-3.5 text-[#0070d1]" />
+                    <span>Lịch sử đặt phòng</span>
+                  </DropdownMenuItem>
+                  {canAccessAdmin && (
+                    <DropdownMenuItem
+                      onClick={() => router.push("/admin")}
+                      className="cursor-pointer text-xs text-white focus:bg-white/10 focus:text-white rounded-[6px] gap-2 py-2"
+                    >
+                      <LayoutDashboard className="w-3.5 h-3.5 text-[#0070d1]" />
+                      <span>Trang quản trị (Admin)</span>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator className="bg-white/10" />
+                  <DropdownMenuItem
                     onClick={async () => {
-                      setMobileMenuOpen(false);
                       await authClient.signOut();
+                      router.refresh();
                     }}
-                    className="text-left text-xs text-red-600 flex items-center gap-2 py-1"
+                    className="cursor-pointer text-xs text-[#ef4444] focus:bg-red-950/40 focus:text-white rounded-[6px] gap-2 py-2"
                   >
-                    <LogOut className="w-3.5 h-3.5" /> Đăng xuất
-                  </button>
-                </div>
-              ) : (
-                <div className="flex flex-col gap-2 pt-2 border-t border-[#ece7dd]">
-                  <Link
-                    href="/admin"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="w-full text-center border border-[#ece7dd] text-[#367156] bg-[#FAF9F6] py-2 text-xs uppercase font-medium rounded-sm flex items-center justify-center gap-1.5"
-                  >
-                    <LayoutDashboard className="w-3.5 h-3.5 text-[#367156]" />
-                    <span>Trang quản trị (Admin)</span>
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      onOpenAuthModal?.();
-                    }}
-                    className="w-full text-center border border-[#367156] text-[#367156] py-2 text-xs uppercase font-medium rounded-sm"
-                  >
-                    Đăng nhập / Đăng ký
-                  </button>
-                </div>
-              )}
-
-              <button
-                type="button"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  handleBookingClick();
-                }}
-                className="w-full text-center bg-[#f27052] text-white py-3 min-h-[46px] text-[13px] uppercase font-semibold tracking-wider rounded-sm shadow-sm"
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>Đăng xuất</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button
+                variant="outline"
+                onClick={handleAuthClick}
+                className="hidden sm:inline-flex border-white/20 bg-transparent text-white hover:bg-white/10 h-10 px-5 text-xs font-bold rounded-full"
               >
-                Đặt phòng trực tiếp
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                <UserIcon className="w-3.5 h-3.5 text-[#0070d1]" />
+                <span>Đăng nhập</span>
+              </Button>
+            )}
+
+            {/* PlayStation Commerce CTA Pill (Commerce Orange #d53b00, fully-rounded pill) */}
+            <Button
+              variant="commerce"
+              onClick={handleBookingClick}
+              className="bg-[#d53b00] hover:bg-[#aa2f00] text-white h-10 px-6 text-xs sm:text-sm font-bold rounded-full shadow-none"
+            >
+              <Calendar className="w-3.5 h-3.5" />
+              <span>Đặt phòng ngay</span>
+            </Button>
+
+            {/* Mobile Navigation Drawer Trigger */}
+            <Sheet open={mobileSheetOpen} onOpenChange={setMobileSheetOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="lg:hidden text-white hover:bg-white/10 h-10 w-10 p-0 rounded-full"
+                  aria-label="Menu"
+                >
+                  <MenuIcon className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="bg-[#000000] border-l border-white/10 text-white p-0 flex flex-col justify-between w-80">
+                <SheetHeader className="p-6 border-b border-white/10 text-left">
+                  <SheetTitle>
+                    <div className="relative h-9 w-40">
+                      <Image
+                        src="/images/m_dalats_logo_horizontal.svg"
+                        alt="M_Dalats Villa"
+                        fill
+                        className="object-contain object-left invert"
+                      />
+                    </div>
+                  </SheetTitle>
+                </SheetHeader>
+
+                <div className="p-6 flex-1 flex flex-col gap-1 overflow-y-auto custom-scrollbar">
+                  <span className="text-[11px] uppercase tracking-wider text-neutral-400 font-semibold mb-3">
+                    Menu điều hướng
+                  </span>
+                  <nav className="flex flex-col divide-y divide-white/10">
+                    {navLinks.map((item, idx) => {
+                      const isActive = pathname === item.href;
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setMobileSheetOpen(false)}
+                          className={`flex items-center justify-between py-4 text-sm font-medium transition-colors ${
+                            isActive ? "text-[#53b1ff]" : "text-neutral-300 hover:text-white"
+                          }`}
+                        >
+                          <span>{item.label}</span>
+                          <span className="text-xs text-neutral-500 font-mono">0{idx + 1}</span>
+                        </Link>
+                      );
+                    })}
+                  </nav>
+                </div>
+
+                <div className="p-6 border-t border-white/10 space-y-3 bg-[#121314]">
+                  {!session?.user && (
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setMobileSheetOpen(false);
+                        handleAuthClick();
+                      }}
+                      className="w-full h-11 border-white/20 bg-transparent text-white rounded-full text-sm font-bold"
+                    >
+                      Đăng nhập tài khoản
+                    </Button>
+                  )}
+                  <Button
+                    variant="commerce"
+                    onClick={() => {
+                      setMobileSheetOpen(false);
+                      handleBookingClick();
+                    }}
+                    className="w-full h-11 bg-[#d53b00] hover:bg-[#aa2f00] text-white rounded-full text-sm font-bold"
+                  >
+                    Đặt phòng trực tuyến
+                  </Button>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+        </div>
+      </nav>
     </header>
   );
 }

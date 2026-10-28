@@ -1,74 +1,66 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+/**
+ * Checks whether any Better Auth session cookie is present on the incoming request.
+ * Matches `better-auth.session_token`, `__Secure-better-auth.session_token`, etc.
+ */
+function hasSessionCookie(request: NextRequest): boolean {
+  return request.cookies
+    .getAll()
+    .some((c) => c.name.includes("session_token") && Boolean(c.value));
+}
 
-  // Only handle admin routes
-  if (!pathname.startsWith("/admin")) {
+function redirectToLogin(
+  request: NextRequest,
+  options: { callbackUrl?: string; error?: "unauthorized" | "forbidden" } = {}
+) {
+  const url = request.nextUrl.clone();
+  url.pathname = "/login";
+  url.search = "";
+  url.searchParams.set(
+    "callbackUrl",
+    options.callbackUrl ?? `${request.nextUrl.pathname}${request.nextUrl.search}`
+  );
+  if (options.error) url.searchParams.set("error", options.error);
+
+  return NextResponse.redirect(url);
+}
+
+export function middleware(request: NextRequest) {
+  const { pathname, searchParams } = request.nextUrl;
+
+  // Legacy admin login route redirects to /login
+  if (pathname === "/admin/login") {
+    return redirectToLogin(request, { callbackUrl: "/admin" });
+  }
+
+  const hasCookie = hasSessionCookie(request);
+
+  // Guest order lookup by phone/code must remain reachable after a booking.
+  if (pathname === "/my-bookings" || pathname.startsWith("/my-bookings/")) {
+    const isGuestLookup = searchParams.has("code") || searchParams.has("phone");
+    if (!hasCookie && !isGuestLookup) {
+      return redirectToLogin(request, { error: "unauthorized" });
+    }
     return NextResponse.next();
   }
 
-  // Check for better-auth session cookie
-  const sessionToken =
-    request.cookies.get("better-auth.session_token")?.value ||
-    request.cookies.get("__Secure-better-auth.session_token")?.value;
-
-  const isLoginPage = pathname === "/admin/login";
-
-  // Case 1: No session token
-  if (!sessionToken) {
-    if (isLoginPage) {
-      return NextResponse.next();
+  // Admin routes:
+  // - If user has no session cookie at all, redirect to /login immediately.
+  // - If user has session cookie, allow access to /admin.
+  // Real authorization & role validation is strictly enforced on the page and backend tRPC procedures.
+  if (pathname === "/admin" || pathname.startsWith("/admin/")) {
+    if (!hasCookie) {
+      return redirectToLogin(request, { error: "unauthorized" });
     }
-    const loginUrl = new URL("/admin/login", request.url);
-    loginUrl.searchParams.set("callbackUrl", pathname);
-    return NextResponse.redirect(loginUrl);
-  }
-
-  // Case 2: Session token exists -> verify role with better-auth session endpoint
-  try {
-    const origin = request.nextUrl.origin;
-    const sessionRes = await fetch(`${origin}/api/auth/get-session`, {
-      headers: {
-        cookie: request.headers.get("cookie") ?? "",
-      },
-      cache: "no-store",
-    });
-
-    if (!sessionRes.ok) {
-      if (isLoginPage) return NextResponse.next();
-      const loginUrl = new URL("/admin/login", request.url);
-      loginUrl.searchParams.set("callbackUrl", pathname);
-      return NextResponse.redirect(loginUrl);
-    }
-
-    const sessionData = await sessionRes.json();
-    const userRole = sessionData?.user?.role;
-
-    // If logged in as admin and trying to visit login page -> redirect to admin dashboard
-    if (isLoginPage && userRole === "admin") {
-      return NextResponse.redirect(new URL("/admin", request.url));
-    }
-
-    // If visiting protected admin pages but not an admin -> redirect to login with error
-    if (!isLoginPage && userRole !== "admin") {
-      const loginUrl = new URL("/admin/login", request.url);
-      loginUrl.searchParams.set("error", "forbidden");
-      loginUrl.searchParams.set("callbackUrl", pathname);
-      return NextResponse.redirect(loginUrl);
-    }
-  } catch (error) {
-    console.warn("Middleware auth check fallback:", error);
-    // On unexpected fetch failure, allow login page, or require re-auth
-    if (!isLoginPage && !sessionToken) {
-      return NextResponse.redirect(new URL("/admin/login", request.url));
-    }
+    return NextResponse.next();
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  // Only the routes that need authorization checks.
+  matcher: ["/admin/:path*", "/my-bookings/:path*"],
 };

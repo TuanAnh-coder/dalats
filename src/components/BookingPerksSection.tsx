@@ -39,21 +39,21 @@ export function BookingPerksSection({ onOpenBookingModal }: BookingPerksSectionP
 
   return (
     /* Chapter 7: Signature Full-Bleed PlayStation Blue Action Band (hero-band-blue #0070d1) */
-    <SectionStack index={10} className="py-20 sm:py-28 bg-[#0070d1] text-white overflow-hidden w-full max-w-full">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <SectionStack index={10} className="py-16 md:py-0 pt-20 md:pt-24 md:pb-8 bg-[#0070d1] text-white overflow-hidden w-full max-w-full">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 text-center w-full">
         <FadeIn direction="up">
           <span className="text-[12px] uppercase tracking-[2px] text-white/80 font-bold block mb-2">
             Exclusive Privileges • Đặc Quyền Đặt Trực Tiếp
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl text-white font-light tracking-tight mb-4 leading-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl text-white font-light tracking-tight mb-3 leading-tight">
             Khởi đầu kỳ nghỉ đáng nhớ cùng M_Dalats Villa
           </h2>
-          <p className="text-sm sm:text-base text-white/85 font-normal max-w-2xl mx-auto mb-10 sm:mb-14 leading-relaxed">
+          <p className="text-sm sm:text-base text-white/85 font-normal max-w-2xl mx-auto mb-6 sm:mb-8 leading-relaxed">
             Đặt phòng trực tiếp trên website chính thức để nhận trọn vẹn dịch vụ Concierge tận tâm và những đặc quyền riêng tư cao cấp nhất.
           </p>
 
           {/* 4 Pillars Stagger (PlayStation In-Band Dark Cards: #121314, 8px radius) */}
-          <StaggerContainer staggerChildren={0.06} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 text-left mb-10 sm:mb-12">
+          <StaggerContainer staggerChildren={0.06} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 text-left mb-6 sm:mb-8">
             {perks.map((perk, i) => {
               const Icon = perk.icon;
               return (

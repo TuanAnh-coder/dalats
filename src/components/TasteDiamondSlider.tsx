@@ -75,15 +75,15 @@ export function TasteDiamondSlider() {
 
   return (
     /* Chapter 4: Full-bleed True White Canvas Band (#ffffff) */
-    <SectionStack index={4} className="py-20 sm:py-28 bg-[#ffffff] text-[#000000] border-b border-[#f3f3f3] overflow-hidden w-full max-w-full">
+    <SectionStack index={4} className="py-16 md:py-0 pt-20 md:pt-24 md:pb-8 bg-[#ffffff] text-[#000000] border-b border-[#f3f3f3] overflow-hidden w-full max-w-full">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 w-full min-w-0">
         {/* Section Header: PlayStation SST 300 Light */}
-        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
+        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
           <FadeIn direction="up">
             <span className="text-[12px] uppercase tracking-[1.5px] text-[#0070d1] font-bold block mb-2">
               Visual Narrative • Bộ Sưu Tập Không Gian
             </span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl text-[#000000] font-light tracking-tight mb-3 sm:mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl text-[#000000] font-light tracking-tight mb-2 sm:mb-3">
               Góc thơ mộng tại M_Dalats Villa
             </h2>
             <p className="text-sm sm:text-base text-[rgba(0,0,0,0.65)] font-normal leading-relaxed">
@@ -94,7 +94,7 @@ export function TasteDiamondSlider() {
 
         {/* Showcase Card: PlayStation surface-card #f5f7fa, 8px radius */}
         <div className="border border-[#f3f3f3] rounded-[8px] overflow-hidden bg-[#f5f7fa] shadow-none">
-          <div className="relative h-[340px] xs:h-[400px] sm:h-[480px] md:h-[560px] w-full bg-neutral-900">
+          <div className="relative h-[320px] xs:h-[380px] sm:h-[420px] md:h-[450px] w-full bg-neutral-900">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeVista.id}

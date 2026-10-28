@@ -239,25 +239,25 @@ img, svg, video, canvas, audio, iframe, embed, object {
 }
 
 /* ============================================================
-   Luxury Boutique Overlapping Card Stack Effect (Scroll Parallax)
-   Each succeeding section gracefully stacks and glides over the previous one.
+   Luxury Boutique Pinned Scroll Panels / Sticky Stacking Sections
+   Each succeeding section locks at top: 0 and glides over the previous one.
    ============================================================ */
 .section-stack {
   position: relative;
   border-top-left-radius: 1.75rem;
   border-top-right-radius: 1.75rem;
   border-top: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 -24px 60px -15px rgba(0, 0, 0, 0.45);
-  margin-top: -2rem;
+  box-shadow: 0 -25px 60px -15px rgba(0, 0, 0, 0.45);
+  margin-top: 0;
   will-change: transform;
 }
 
 @media (min-width: 768px) {
   .section-stack {
-    border-top-left-radius: 2.75rem;
-    border-top-right-radius: 2.75rem;
+    border-top-left-radius: 2.5rem;
+    border-top-right-radius: 2.5rem;
     box-shadow: 0 -35px 80px -20px rgba(0, 0, 0, 0.55);
-    margin-top: -3rem;
+    margin-top: 0;
   }
 }
 
@@ -267,16 +267,16 @@ img, svg, video, canvas, audio, iframe, embed, object {
   border-top-right-radius: 1.75rem;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 -26px 65px -15px rgba(0, 0, 0, 0.65);
-  margin-top: -2rem;
+  margin-top: 0;
   will-change: transform;
 }
 
 @media (min-width: 768px) {
   .section-stack-dark {
-    border-top-left-radius: 2.75rem;
-    border-top-right-radius: 2.75rem;
+    border-top-left-radius: 2.5rem;
+    border-top-right-radius: 2.5rem;
     box-shadow: 0 -40px 90px -20px rgba(0, 0, 0, 0.75);
-    margin-top: -3rem;
+    margin-top: 0;
   }
 }
 
@@ -286,16 +286,16 @@ img, svg, video, canvas, audio, iframe, embed, object {
   border-top-right-radius: 1.75rem;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 -30px 70px -15px rgba(0, 0, 0, 0.6);
-  margin-top: -2rem;
+  margin-top: 0;
   will-change: transform;
 }
 
 @media (min-width: 768px) {
   .section-stack-blue {
-    border-top-left-radius: 2.75rem;
-    border-top-right-radius: 2.75rem;
+    border-top-left-radius: 2.5rem;
+    border-top-right-radius: 2.5rem;
     box-shadow: 0 -45px 95px -20px rgba(0, 0, 0, 0.75);
-    margin-top: -3rem;
+    margin-top: 0;
   }
 }
 

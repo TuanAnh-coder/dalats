@@ -12,7 +12,7 @@ export function Footer() {
 
   return (
     /* Chapter 8: Signature PlayStation Blue Full-Bleed Footer (footer-section spec: #0070d1) */
-    <footer style={{ zIndex: 13 }} className="relative z-[13] section-stack-blue rounded-t-[1.75rem] md:rounded-t-[2.75rem] shadow-[0_-35px_80px_-20px_rgba(0,0,0,0.7)] -mt-8 md:-mt-12 bg-[#0070d1] text-white pt-16 sm:pt-20 pb-28 sm:pb-16 w-full max-w-full overflow-hidden">
+    <footer style={{ zIndex: 13 }} className="relative z-[13] section-stack-blue rounded-t-[1.75rem] md:rounded-t-[2.5rem] shadow-[0_-35px_80px_-20px_rgba(0,0,0,0.7)] bg-[#0070d1] text-white pt-16 sm:pt-20 pb-28 sm:pb-16 w-full max-w-full overflow-hidden">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 w-full min-w-0">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-white/20">
           {/* Col 1: Brand & Logo */}

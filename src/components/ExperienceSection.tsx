@@ -32,10 +32,10 @@ export function ExperienceSection() {
 
   return (
     /* Chapter 5: Full-bleed Dark Canvas Band (#121314 / #000000) */
-    <SectionStack id="experiences" index={7} dark className="py-20 sm:py-28 bg-[#000000] text-white border-b border-white/10 overflow-hidden scroll-mt-24">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
+    <SectionStack id="experiences" index={7} dark className="py-16 md:py-0 pt-20 md:pt-24 md:pb-8 bg-[#000000] text-white border-b border-white/10 overflow-hidden scroll-mt-24">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
         {/* Header: PlayStation SST 300 Light */}
-        <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
           <FadeIn direction="up">
             <span className="text-[12px] uppercase tracking-[1.5px] text-[#53b1ff] font-bold block mb-2">
               Experiences • Trải Nghiệm Độc Bản

@@ -61,25 +61,25 @@ export function HowItWorksSection({ onOpenBookingModal }: HowItWorksSectionProps
   ];
 
   return (
-    <SectionStack id="how-it-works" index={3} className="py-20 sm:py-28 bg-[#ffffff] text-[#000000] border-b border-[#e5e5e5] overflow-hidden scroll-mt-20">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
+    <SectionStack id="how-it-works" index={3} className="py-16 md:py-0 pt-20 md:pt-24 md:pb-8 bg-[#ffffff] text-[#000000] border-b border-[#e5e5e5] overflow-hidden scroll-mt-20">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
         {/* Editorial Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14 sm:mb-20">
+        <div className="text-center max-w-3xl mx-auto mb-8 md:mb-10">
           <FadeIn direction="up">
-            <span className="text-[11px] uppercase tracking-[1.5px] text-[#0070d1] font-bold block mb-2.5">
+            <span className="text-[11px] uppercase tracking-[1.5px] text-[#0070d1] font-bold block mb-2">
               Quy Trình Đặt Phòng Tinh Gọn • How It Works
             </span>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-[#000000] tracking-[-0.1px] leading-[1.18]">
               4 Bước Để Bắt Đầu Kỳ Nghỉ An Yên
             </h2>
-            <p className="text-sm sm:text-base text-[#000000]/65 font-normal leading-relaxed mt-3 max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base text-[#000000]/65 font-normal leading-relaxed mt-2 max-w-2xl mx-auto">
               Trải nghiệm đặt phòng trực tiếp nhanh chóng, rõ ràng và uy tín như một nền tảng chuyên nghiệp, giúp bạn an tâm tuyệt đối trước chuyến đi.
             </p>
           </FadeIn>
         </div>
 
         {/* 4 Steps Grid: PlayStation 8px Cool-Blue Tinted Cards */}
-        <StaggerContainer staggerChildren={0.12} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-6 mb-14">
+        <StaggerContainer staggerChildren={0.12} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-6 md:mb-8">
           {steps.map((item, idx) => {
             const Icon = item.icon;
             return (

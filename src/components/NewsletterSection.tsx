@@ -24,8 +24,8 @@ export function NewsletterSection() {
   };
 
   return (
-    <SectionStack index={12} dark className="py-16 sm:py-20 bg-[#000000] border-b border-white/10 overflow-hidden text-white">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
+    <SectionStack index={12} dark className="py-16 md:py-0 pt-20 md:pt-24 md:pb-8 bg-[#000000] border-b border-white/10 overflow-hidden text-white">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="max-w-xl mx-auto text-center">
           <FadeIn direction="up">
             <div className="w-12 h-12 rounded-full bg-[#0070d1]/15 text-[#53b1ff] flex items-center justify-center mx-auto mb-4">

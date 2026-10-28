@@ -16,15 +16,15 @@ export function StorySection() {
 
   return (
     /* Chapter 2: Full-bleed True White Canvas Band */
-    <SectionStack id="story" index={2} className="py-20 sm:py-28 bg-[#ffffff] text-[#000000] overflow-hidden scroll-mt-20">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+    <SectionStack id="story" index={2} className="py-16 md:py-0 pt-20 md:pt-24 md:pb-8 bg-[#ffffff] text-[#000000] overflow-hidden scroll-mt-20">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
           {/* Photo Showcase Left (Console/Product Style Glamour Shots) */}
           <div ref={collageRef} className="lg:col-span-6 relative">
             <FadeIn direction="right" duration={0.8}>
               <div className="relative mx-auto max-w-md lg:max-w-none">
                 {/* Main Photo (8px radius) */}
-                <div className="relative h-[340px] sm:h-[480px] w-full rounded-[8px] overflow-hidden border border-[#f3f3f3] shadow-none">
+                <div className="relative h-[300px] sm:h-[380px] md:h-[400px] w-full rounded-[8px] overflow-hidden border border-[#f3f3f3] shadow-none">
                   <Image
                     src="/images/DH_01328_2-pgvj0qxon4n8u4tqnzxuo0cafocg3jtjqw7qfalgc0.jpg"
                     alt="Không gian bên trong M_Dalats Villa"

@@ -246,12 +246,13 @@ export interface SectionStackProps extends React.HTMLAttributes<HTMLElement> {
   id?: string;
   index?: number;
   sticky?: boolean;
+  fullHeight?: boolean;
 }
 
 /**
- * Signature Boutique Overlapping Section Card Stack Component
+ * Signature Boutique Pinned Scroll Panel / Sticky Stacking Section
  * Pure CSS hardware-accelerated stacking & elevation shadows for buttery smooth 60-120fps scrolling.
- * When scrolling down, each succeeding section gracefully slides up and stacks over the previous one.
+ * Each section pins at top: 0 with 100svh height, while the subsequent panel slides up and stacks over it.
  */
 export function SectionStack({
   children,
@@ -260,6 +261,7 @@ export function SectionStack({
   id,
   index = 1,
   sticky = true,
+  fullHeight = true,
   style,
   ...props
 }: SectionStackProps) {
@@ -277,15 +279,19 @@ export function SectionStack({
       const height = sectionRef.current.offsetHeight;
       const viewportHeight = window.innerHeight;
       const isDesktop = window.innerWidth >= 768;
-      // Allow sticking if section fits comfortably within 1.35x viewport height (prevents clipping excessively tall sections like rooms)
-      const fitsScreen = height <= viewportHeight * 1.35;
+      // On desktop, pin when fullHeight is set or when content fits within 1.25x screen height
+      const fitsScreen = fullHeight || height <= viewportHeight * 1.25;
       setCanStick(isDesktop && fitsScreen);
     };
 
     checkSticky();
     window.addEventListener("resize", checkSticky);
     return () => window.removeEventListener("resize", checkSticky);
-  }, [sticky]);
+  }, [sticky, fullHeight]);
+
+  const heightClasses = fullHeight
+    ? "h-auto md:h-screen md:h-[100svh] md:min-h-[640px] flex flex-col justify-center"
+    : "";
 
   return (
     <section
@@ -297,7 +303,7 @@ export function SectionStack({
       }}
       className={`relative w-full ${canStick ? "md:sticky md:top-0" : ""} ${
         dark ? "section-stack-dark" : "section-stack"
-      } ${className}`}
+      } ${heightClasses} ${className}`}
       {...props}
     >
       {children}

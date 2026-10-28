@@ -244,23 +244,60 @@ export interface SectionStackProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   dark?: boolean;
   id?: string;
+  index?: number;
+  sticky?: boolean;
 }
 
 /**
  * Signature Boutique Overlapping Section Card Stack Component
  * Pure CSS hardware-accelerated stacking & elevation shadows for buttery smooth 60-120fps scrolling.
+ * When scrolling down, each succeeding section gracefully slides up and stacks over the previous one.
  */
 export function SectionStack({
   children,
   className = "",
   dark = false,
   id,
+  index = 1,
+  sticky = true,
+  style,
   ...props
 }: SectionStackProps) {
+  const sectionRef = React.useRef<HTMLElement>(null);
+  const [canStick, setCanStick] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!sticky) {
+      setCanStick(false);
+      return;
+    }
+
+    const checkSticky = () => {
+      if (!sectionRef.current) return;
+      const height = sectionRef.current.offsetHeight;
+      const viewportHeight = window.innerHeight;
+      const isDesktop = window.innerWidth >= 768;
+      // Allow sticking if section fits comfortably within 1.35x viewport height (prevents clipping excessively tall sections like rooms)
+      const fitsScreen = height <= viewportHeight * 1.35;
+      setCanStick(isDesktop && fitsScreen);
+    };
+
+    checkSticky();
+    window.addEventListener("resize", checkSticky);
+    return () => window.removeEventListener("resize", checkSticky);
+  }, [sticky]);
+
   return (
     <section
+      ref={sectionRef}
       id={id}
-      className={`${dark ? "section-stack-dark" : "section-stack"} ${className}`}
+      style={{
+        zIndex: index,
+        ...style,
+      }}
+      className={`relative w-full ${canStick ? "md:sticky md:top-0" : ""} ${
+        dark ? "section-stack-dark" : "section-stack"
+      } ${className}`}
       {...props}
     >
       {children}

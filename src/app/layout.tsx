@@ -132,7 +132,7 @@ export default function RootLayout({
       </head>
       <body
         suppressHydrationWarning
-        className="min-h-screen bg-[#000000] text-white antialiased selection:bg-[#0070d1] selection:text-white font-sans w-full max-w-full overflow-x-hidden min-w-0"
+        className="min-h-screen bg-[#000000] text-white antialiased selection:bg-[#0070d1] selection:text-white font-sans w-full max-w-full overflow-x-clip min-w-0"
       >
         <TRPCReactProvider>
           <SmoothScrollProvider>

@@ -197,7 +197,7 @@ export function RoomsSection({
 
   return (
     /* Chapter 3: Full-bleed Dark Canvas Band (Pure Black #000000, PlayStation Games Rail Style) */
-    <SectionStack id="rooms" className="py-20 sm:py-28 bg-[#000000] text-white border-b border-white/10 scroll-mt-20">
+    <SectionStack id="rooms" index={5} sticky={false} dark className="py-20 sm:py-28 bg-[#000000] text-white border-b border-white/10 scroll-mt-20">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header: PlayStation SST 300 Light Headline */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
@@ -347,9 +347,9 @@ export function RoomsSection({
           <div className="flex overflow-x-auto no-scrollbar items-center gap-2 p-1 w-full md:w-auto max-w-full min-w-0">
             {[
               { id: "all", label: "Tất cả phòng" },
-              { id: "0", label: "Tầng trệt & Sân vườn" },
-              { id: "1", label: "Tầng 1 ban công" },
-              { id: "2", label: "Tầng 2 áp mái" },
+              { id: "0", label: "Tầng trệt & Ban công sân vườn" },
+              { id: "1", label: "Tầng 1 (View Rừng Thông)" },
+              { id: "2", label: "Tầng 2 (Áp mái Suite lãng mạn)" },
             ].map((tab) => {
               const isSelected = filterFloor === tab.id;
               return (

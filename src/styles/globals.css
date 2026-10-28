@@ -244,39 +244,58 @@ img, svg, video, canvas, audio, iframe, embed, object {
    ============================================================ */
 .section-stack {
   position: relative;
-  z-index: 10;
-  margin-top: -1.75rem; /* -mt-7: 28px physical overlap on mobile */
   border-top-left-radius: 1.75rem;
   border-top-right-radius: 1.75rem;
-  border-top: 1px solid #ece7dd;
-  box-shadow: 0 -22px 50px -15px rgba(27, 48, 47, 0.08);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 -24px 60px -15px rgba(0, 0, 0, 0.45);
+  margin-top: -2rem;
+  will-change: transform;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .section-stack {
-    margin-top: -2.5rem; /* -mt-10: 40px physical overlap on desktop */
-    border-top-left-radius: 2.5rem;
-    border-top-right-radius: 2.5rem;
-    box-shadow: 0 -28px 65px -18px rgba(27, 48, 47, 0.1);
+    border-top-left-radius: 2.75rem;
+    border-top-right-radius: 2.75rem;
+    box-shadow: 0 -35px 80px -20px rgba(0, 0, 0, 0.55);
+    margin-top: -3rem;
   }
 }
 
 .section-stack-dark {
   position: relative;
-  z-index: 10;
-  margin-top: -1.75rem;
   border-top-left-radius: 1.75rem;
   border-top-right-radius: 1.75rem;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 -25px 60px -15px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 -26px 65px -15px rgba(0, 0, 0, 0.65);
+  margin-top: -2rem;
+  will-change: transform;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .section-stack-dark {
-    margin-top: -2.5rem;
-    border-top-left-radius: 2.5rem;
-    border-top-right-radius: 2.5rem;
-    box-shadow: 0 -32px 75px -18px rgba(0, 0, 0, 0.36);
+    border-top-left-radius: 2.75rem;
+    border-top-right-radius: 2.75rem;
+    box-shadow: 0 -40px 90px -20px rgba(0, 0, 0, 0.75);
+    margin-top: -3rem;
+  }
+}
+
+.section-stack-blue {
+  position: relative;
+  border-top-left-radius: 1.75rem;
+  border-top-right-radius: 1.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 -30px 70px -15px rgba(0, 0, 0, 0.6);
+  margin-top: -2rem;
+  will-change: transform;
+}
+
+@media (min-width: 768px) {
+  .section-stack-blue {
+    border-top-left-radius: 2.75rem;
+    border-top-right-radius: 2.75rem;
+    box-shadow: 0 -45px 95px -20px rgba(0, 0, 0, 0.75);
+    margin-top: -3rem;
   }
 }
 

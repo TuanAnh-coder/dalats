@@ -16,7 +16,7 @@ export function StorySection() {
 
   return (
     /* Chapter 2: Full-bleed True White Canvas Band */
-    <SectionStack id="story" className="py-20 sm:py-28 bg-[#ffffff] text-[#000000] overflow-hidden scroll-mt-20">
+    <SectionStack id="story" index={2} className="py-20 sm:py-28 bg-[#ffffff] text-[#000000] overflow-hidden scroll-mt-20">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
           {/* Photo Showcase Left (Console/Product Style Glamour Shots) */}

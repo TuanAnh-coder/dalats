@@ -5,6 +5,7 @@ import { api } from "~/trpc/react";
 import { Navbar } from "~/components/Navbar";
 import { HeroSection } from "~/components/HeroSection";
 import { StorySection } from "~/components/StorySection";
+import { HowItWorksSection } from "~/components/HowItWorksSection";
 import { RoomsSection } from "~/components/RoomsSection";
 import { RoomDetailModal } from "~/components/RoomDetailModal";
 import { BookingModal } from "~/components/BookingModal";
@@ -74,7 +75,7 @@ export function VillaClientPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen w-full max-w-full overflow-x-hidden min-w-0">
+    <div className="flex flex-col min-h-screen w-full max-w-full overflow-x-clip min-w-0">
       {/* Navigation Header */}
       <Navbar
         onOpenBookingModal={() => handleOpenBooking()}
@@ -87,6 +88,9 @@ export function VillaClientPage() {
 
       {/* Story Section - Architectural Narrative & Core Values */}
       <StorySection />
+
+      {/* 4-Step Booking Process Guide & Direct Guarantees */}
+      <HowItWorksSection onOpenBookingModal={() => handleOpenBooking()} />
 
       {/* Signature Tactile Diamond Vista Slider (Hôtel Fantaisie Heritage) */}
       <TasteDiamondSlider />

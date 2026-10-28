@@ -65,7 +65,7 @@ export function TestimonialSection() {
   const activeReview = REVIEWS[current]!;
 
   return (
-    <SectionStack dark className="py-20 sm:py-28 bg-[#000000] text-white relative overflow-hidden w-full max-w-full border-b border-white/10">
+    <SectionStack index={9} dark className="py-20 sm:py-28 bg-[#000000] text-white relative overflow-hidden w-full max-w-full border-b border-white/10">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full min-w-0">
         <div className="max-w-3xl mx-auto text-center">
           <FadeIn direction="up">

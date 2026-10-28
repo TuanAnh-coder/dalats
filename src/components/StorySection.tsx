@@ -16,33 +16,40 @@ export function StorySection() {
 
   return (
     /* Chapter 2: Full-bleed True White Canvas Band */
-    <SectionStack id="story" index={20} fullHeight={true} sticky={true} className="py-16 md:py-0 pt-20 md:pt-24 md:pb-8 bg-[#ffffff] text-[#000000] overflow-hidden scroll-mt-20">
+    <SectionStack id="story" index={20} fullHeight={true} sticky={true} className="py-12 xs:py-16 md:py-0 pt-16 md:pt-24 md:pb-8 bg-[#ffffff] text-[#000000] overflow-hidden scroll-mt-20">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
-          {/* Photo Showcase Left (Console/Product Style Glamour Shots) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-14 items-center">
+          {/* Photo Showcase Left */}
           <div ref={collageRef} className="lg:col-span-6 relative">
             <FadeIn direction="right" duration={0.8}>
               <div className="relative mx-auto max-w-md lg:max-w-none">
-                {/* Main Photo (8px radius) */}
-                <div className="relative h-[300px] sm:h-[380px] md:h-[400px] w-full rounded-[8px] overflow-hidden border border-[#f3f3f3] shadow-none">
+                {/* Main Photo */}
+                <div className="relative h-[240px] xs:h-[280px] sm:h-[360px] md:h-[400px] w-full rounded-2xl overflow-hidden border border-[#f0f0f0] shadow-sm">
                   <Image
                     src="/images/DH_01328_2-pgvj0qxon4n8u4tqnzxuo0cafocg3jtjqw7qfalgc0.jpg"
-                    alt="Không gian bên trong M_Dalats Villa"
+                    alt="Không gian kiến trúc M_Dalats Villa"
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover"
                   />
-                  <div className="absolute inset-0 bg-black/5" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                  
+                  {/* Floating Caption on Mobile */}
+                  <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] xs:text-xs text-white/90 border border-white/20">
+                    Triền đồi Khe Sanh • Đà Lạt
+                  </div>
                 </div>
 
-                {/* Overlapping Secondary Photo with Scroll Parallax */}
+                {/* Overlapping Secondary Photo (Hidden on narrow mobile, visible sm+) */}
                 <motion.div
                   style={{ y: smallPhotoY }}
-                  className="absolute -bottom-6 -right-3 sm:-bottom-8 sm:-right-6 w-44 sm:w-60 h-48 sm:h-68 rounded-[8px] overflow-hidden border-4 border-white hidden sm:block z-10 shadow-md"
+                  className="absolute -bottom-5 -right-3 sm:-bottom-8 sm:-right-6 w-36 sm:w-56 h-40 sm:h-64 rounded-xl overflow-hidden border-4 border-white hidden sm:block z-10 shadow-lg"
                 >
                   <Image
                     src="/images/DSCF1106-1024x683.jpg"
-                    alt="Sân vườn M_Dalats Villa"
+                    alt="Sân vườn hoa hồng M_Dalats Villa"
                     fill
+                    sizes="(max-width: 768px) 30vw, 25vw"
                     className="object-cover"
                   />
                 </motion.div>
@@ -50,61 +57,58 @@ export function StorySection() {
             </FadeIn>
           </div>
 
-          {/* Text Editorial Right Side: PlayStation SST Light 300 Headline */}
+          {/* Text Editorial Right Side */}
           <div className="lg:col-span-6 flex flex-col justify-center">
             <FadeIn direction="left" delay={0.1}>
-              <span className="text-[12px] font-bold uppercase tracking-[1.5px] text-[#0070d1] block mb-3">
+              <span className="text-[11px] xs:text-xs font-bold uppercase tracking-[1.5px] text-[#0070d1] block mb-2 sm:mb-3">
                 L&apos;Esprit M_Dalats • Câu chuyện kiến trúc
               </span>
             </FadeIn>
 
-            <FadeIn direction="left" delay={0.2}>
-              <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl text-[#000000] font-light leading-[1.2] tracking-tight mb-6">
+            <FadeIn direction="left" delay={0.15}>
+              <h2 className="font-serif text-2xl xs:text-3xl sm:text-4xl lg:text-5xl text-neutral-900 font-normal leading-[1.25] tracking-tight mb-3 sm:mb-5">
                 Kiến trúc mộc mạc giao hòa cùng rừng thông
               </h2>
             </FadeIn>
 
-            <FadeIn direction="left" delay={0.3}>
-              <div className="space-y-4 text-sm sm:text-base text-[rgba(0,0,0,0.65)] font-normal leading-relaxed">
+            <FadeIn direction="left" delay={0.25}>
+              <div className="space-y-3 text-xs xs:text-sm sm:text-base text-neutral-600 font-normal leading-relaxed">
                 <p>
-                  Lấy cảm hứng từ nét duyên dáng của những boutique hotel cổ điển vùng Tuscany nước Ý, <strong className="font-medium text-[#000000]">M_Dalats Boutique Villa</strong> được dựng xây như một chốn trú ẩn an yên nép mình bên triền đồi thông cao nguyên Đà Lạt.
+                  Lấy cảm hứng từ nét mộc mạc của những boutique villa vùng đồi Tuscany nước Ý, <strong className="font-semibold text-neutral-900">M_Dalats Boutique Villa</strong> được dựng xây như một chốn trú ẩn an yên nép mình bên triền đồi thông cao nguyên Đà Lạt.
                 </p>
                 <p>
-                  Từng bức tường gạch nung mộc, khung cửa kính lớn đón trọn sương mai và ban công riêng tư mở ra thung lũng Khe Sanh mang đến một cảm giác tĩnh tại, tách biệt hoàn toàn khỏi nhịp sống phố thị ồn ã.
-                </p>
-                <p>
-                  Tại M_Dalats Villa, chúng tôi chú trọng từng trải nghiệm giác quan: từ tách trà thơm ấm áp bên ban công sớm đến tiệc nướng BBQ ấm cúng trong tiết trời se lạnh 15°C.
+                  Từng bức tường gạch nung ấm áp, khung cửa kính đón trọn sương mai và ban công riêng tư mở ra thung lũng thông reo mang lại sự tĩnh tại, tách biệt hoàn toàn khỏi nhịp sống phố thị ồn ã.
                 </p>
               </div>
             </FadeIn>
 
-            {/* Core Values Specs (PlayStation surface-card: #f5f7fa cool-blue tinted, 8px radius) */}
-            <FadeIn direction="up" delay={0.4}>
-              <div className="grid grid-cols-3 gap-3 sm:gap-4 mt-8 pt-6 border-t border-[#f3f3f3]">
-                <div className="bg-[#f5f7fa] border border-[#f3f3f3] rounded-[8px] p-3 sm:p-4 text-center sm:text-left">
-                  <span className="text-2xl sm:text-3xl font-light text-[#0070d1] font-sans tracking-tight block">
+            {/* Core Values Specs */}
+            <FadeIn direction="up" delay={0.35}>
+              <div className="grid grid-cols-3 gap-2 xs:gap-3 sm:gap-4 mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-[#f0f0f0]">
+                <div className="bg-[#fcfaf7] border border-[#f0ede6] rounded-xl p-2.5 xs:p-3 sm:p-4 text-center sm:text-left">
+                  <span className="text-xl xs:text-2xl sm:text-3xl font-light text-[#0070d1] font-sans tracking-tight block">
                     11
                   </span>
-                  <span className="text-[11px] uppercase tracking-[1px] text-[#6b6b6b] font-medium block mt-1">
-                    Phòng nghỉ độc bản
+                  <span className="text-[10px] xs:text-[11px] uppercase tracking-[0.5px] text-neutral-500 font-medium block mt-0.5">
+                    Phòng độc bản
                   </span>
                 </div>
 
-                <div className="bg-[#f5f7fa] border border-[#f3f3f3] rounded-[8px] p-3 sm:p-4 text-center sm:text-left">
-                  <span className="text-2xl sm:text-3xl font-light text-[#0070d1] font-sans tracking-tight block">
+                <div className="bg-[#fcfaf7] border border-[#f0ede6] rounded-xl p-2.5 xs:p-3 sm:p-4 text-center sm:text-left">
+                  <span className="text-xl xs:text-2xl sm:text-3xl font-light text-[#0070d1] font-sans tracking-tight block">
                     100%
                   </span>
-                  <span className="text-[11px] uppercase tracking-[1px] text-[#6b6b6b] font-medium block mt-1">
+                  <span className="text-[10px] xs:text-[11px] uppercase tracking-[0.5px] text-neutral-500 font-medium block mt-0.5">
                     View rừng thông
                   </span>
                 </div>
 
-                <div className="bg-[#f5f7fa] border border-[#f3f3f3] rounded-[8px] p-3 sm:p-4 text-center sm:text-left">
-                  <span className="text-2xl sm:text-3xl font-light text-[#0070d1] font-sans tracking-tight block">
+                <div className="bg-[#fcfaf7] border border-[#f0ede6] rounded-xl p-2.5 xs:p-3 sm:p-4 text-center sm:text-left">
+                  <span className="text-xl xs:text-2xl sm:text-3xl font-light text-[#0070d1] font-sans tracking-tight block">
                     4.9★
                   </span>
-                  <span className="text-[11px] uppercase tracking-[1px] text-[#6b6b6b] font-medium block mt-1">
-                    Đánh giá từ khách
+                  <span className="text-[10px] xs:text-[11px] uppercase tracking-[0.5px] text-neutral-500 font-medium block mt-0.5">
+                    Đánh giá khách
                   </span>
                 </div>
               </div>

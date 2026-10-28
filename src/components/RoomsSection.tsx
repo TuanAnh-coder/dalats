@@ -197,23 +197,23 @@ export function RoomsSection({
 
   return (
     /* Chapter 3: Full-bleed Dark Canvas Band (Pure Black #000000, PlayStation Games Rail Style) */
-    <SectionStack id="rooms" index={50} sticky={false} fullHeight={false} dark className="section-stack-dark py-20 sm:py-28 bg-[#000000] text-white border-b border-white/10 scroll-mt-20">
+    <SectionStack id="rooms" index={50} sticky={false} fullHeight={false} dark className="section-stack-dark py-16 sm:py-24 md:py-28 bg-[#000000] text-white border-b border-white/10 scroll-mt-20">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header: PlayStation SST 300 Light Headline */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        {/* Section Header: Editorial Headline */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 sm:gap-6 mb-8 sm:mb-12">
           <div>
             <FadeIn direction="up">
-              <span className="text-[12px] font-bold uppercase tracking-[1.5px] text-[#53b1ff] block mb-2">
-                Hệ thống phòng nghỉ độc bản
+              <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[2px] text-[#53b1ff] block mb-2">
+                Hệ Thống Phòng Nghỉ Độc Bản • Accommodations
               </span>
             </FadeIn>
             <FadeIn direction="up" delay={0.1}>
-              <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-light text-white tracking-tight leading-[1.2]">
-                Khám phá các hạng phòng tại M_Dalats
+              <h2 className="font-serif text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-normal text-white tracking-tight leading-[1.2]">
+                Khám Phá Các Hạng Phòng Tại M_Dalats
               </h2>
             </FadeIn>
             <FadeIn direction="up" delay={0.15}>
-              <p className="text-neutral-400 text-sm sm:text-base mt-2 max-w-2xl font-normal leading-relaxed">
+              <p className="text-neutral-400 text-xs sm:text-sm md:text-base mt-2 max-w-2xl font-normal leading-relaxed">
                 Tất cả 11 phòng nghỉ đều sở hữu ban công hoặc cửa kính lớn hướng đồi thông Khe Sanh, trang bị đầy đủ tiện nghi tiêu chuẩn cao cấp.
               </p>
             </FadeIn>
@@ -224,7 +224,7 @@ export function RoomsSection({
             <Button
               variant="outline"
               onClick={() => setShowSearchBox(!showSearchBox)}
-              className="border-white/20 text-white hover:bg-white/10 rounded-full h-11 px-5 text-xs font-bold gap-2"
+              className="border-white/20 text-white hover:bg-white/10 rounded-full h-11 px-5 text-xs font-bold gap-2 cursor-pointer"
             >
               <Calendar className="w-3.5 h-3.5 text-[#53b1ff]" />
               <span>{showSearchBox ? "Thu gọn ngày tìm kiếm" : "Đổi ngày & số lượng khách"}</span>
@@ -276,7 +276,7 @@ export function RoomsSection({
                   value={localCheckIn}
                   min={today}
                   onChange={(e) => handleCheckInChange(e.target.value)}
-                  className="w-full bg-[#121314] border border-white/20 px-3 py-2 text-xs text-white font-medium rounded-[4px] focus:outline-none focus:border-[#0070d1] min-h-[44px]"
+                  className="w-full bg-[#121314] border border-white/20 px-3 py-2 text-base sm:text-xs text-white font-medium rounded-[4px] focus:outline-none focus:border-[#0070d1] min-h-[44px]"
                 />
               </div>
 
@@ -289,7 +289,7 @@ export function RoomsSection({
                   value={localCheckOut}
                   min={localCheckIn || today}
                   onChange={(e) => setLocalCheckOut(e.target.value)}
-                  className="w-full bg-[#121314] border border-white/20 px-3 py-2 text-xs text-white font-medium rounded-[4px] focus:outline-none focus:border-[#0070d1] min-h-[44px]"
+                  className="w-full bg-[#121314] border border-white/20 px-3 py-2 text-base sm:text-xs text-white font-medium rounded-[4px] focus:outline-none focus:border-[#0070d1] min-h-[44px]"
                 />
               </div>
 
@@ -300,7 +300,7 @@ export function RoomsSection({
                 <select
                   value={localAdults}
                   onChange={(e) => setLocalAdults(Number(e.target.value))}
-                  className="w-full bg-[#121314] border border-white/20 px-3 py-2 text-xs text-white font-medium rounded-[4px] focus:outline-none focus:border-[#0070d1] min-h-[44px]"
+                  className="w-full bg-[#121314] border border-white/20 px-3 py-2 text-base sm:text-xs text-white font-medium rounded-[4px] focus:outline-none focus:border-[#0070d1] min-h-[44px]"
                 >
                   {[1, 2, 3, 4, 5, 6].map((num) => (
                     <option key={num} value={num} className="bg-[#181818] text-white">
@@ -317,7 +317,7 @@ export function RoomsSection({
                 <select
                   value={localChildren}
                   onChange={(e) => setLocalChildren(Number(e.target.value))}
-                  className="w-full bg-[#121314] border border-white/20 px-3 py-2 text-xs text-white font-medium rounded-[4px] focus:outline-none focus:border-[#0070d1] min-h-[44px]"
+                  className="w-full bg-[#121314] border border-white/20 px-3 py-2 text-base sm:text-xs text-white font-medium rounded-[4px] focus:outline-none focus:border-[#0070d1] min-h-[44px]"
                 >
                   {[0, 1, 2, 3].map((num) => (
                     <option key={num} value={num} className="bg-[#181818] text-white">
@@ -331,7 +331,7 @@ export function RoomsSection({
                 <Button
                   type="submit"
                   variant="commerce"
-                  className="w-full h-11 bg-[#d53b00] hover:bg-[#aa2f00] text-white text-xs font-bold rounded-full gap-2"
+                  className="w-full h-11 bg-[#d53b00] hover:bg-[#aa2f00] text-white text-xs font-bold rounded-full gap-2 cursor-pointer"
                 >
                   <Search className="w-3.5 h-3.5" />
                   <span>Cập nhật tìm kiếm</span>
@@ -343,13 +343,13 @@ export function RoomsSection({
 
         {/* Filter and Sorting Toolbar: PlayStation Filter Pills */}
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 mb-8 pb-4 border-b border-white/10 w-full min-w-0">
-          {/* Floor Filter Tabs (filter-pill style) */}
-          <div className="flex overflow-x-auto no-scrollbar items-center gap-2 p-1 w-full md:w-auto max-w-full min-w-0">
+          {/* Floor Filter Tabs with full bleed on mobile */}
+          <div className="flex overflow-x-auto no-scrollbar items-center gap-2 p-1 -mx-4 px-4 sm:mx-0 sm:px-0 w-auto max-w-full min-w-0">
             {[
               { id: "all", label: "Tất cả phòng" },
-              { id: "0", label: "Tầng trệt & Ban công sân vườn" },
+              { id: "0", label: "Tầng trệt & Sân vườn" },
               { id: "1", label: "Tầng 1 (View Rừng Thông)" },
-              { id: "2", label: "Tầng 2 (Áp mái Suite lãng mạn)" },
+              { id: "2", label: "Tầng 2 (Áp Mái Suite)" },
             ].map((tab) => {
               const isSelected = filterFloor === tab.id;
               return (
@@ -468,14 +468,15 @@ export function RoomsSection({
 
               return (
                 <StaggerItem key={room.id} className="h-full">
-                  <div className="group bg-[#181818] rounded-[8px] border border-white/10 hover:border-white/20 transition-all duration-300 flex flex-col h-full relative overflow-hidden shadow-none">
-                    {/* 16:9 Cover Art */}
-                    <div className="relative h-60 sm:h-64 w-full overflow-hidden bg-neutral-900">
+                  <div className="group bg-[#181818] rounded-[12px] sm:rounded-[8px] border border-white/10 hover:border-white/20 transition-all duration-300 flex flex-col h-full relative overflow-hidden shadow-none">
+                    {/* Cover Art */}
+                    <div className="relative h-56 xs:h-60 sm:h-64 w-full overflow-hidden bg-neutral-900">
                       <Image
                         src={room.image}
                         alt={room.name}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       />
 
                       {/* Room Number Chip */}
@@ -523,7 +524,7 @@ export function RoomsSection({
                     </div>
 
                     {/* Room Details Content */}
-                    <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between">
+                    <div className="p-4 xs:p-5 sm:p-6 flex-1 flex flex-col justify-between">
                       <div>
                         {/* Rating Row */}
                         <div className="flex items-center justify-between text-xs mb-2">
@@ -531,7 +532,7 @@ export function RoomsSection({
                             <span className="bg-[#0070d1] text-white px-2 py-0.5 rounded-full font-bold text-[10px]">
                               {room.reviewScore || 9.6}
                             </span>
-                            <span className="font-medium text-neutral-200">
+                            <span className="font-medium text-neutral-200 text-xs">
                               {(room.reviewScore || 9.6) >= 9.5 ? "Xuất sắc" : "Tuyệt vời"}
                             </span>
                             <span className="text-neutral-500 text-[11px]">({room.reviewCount || 128})</span>
@@ -543,13 +544,13 @@ export function RoomsSection({
                           )}
                         </div>
 
-                        {/* Title: PlayStation SST Light */}
-                        <h3 className="text-xl sm:text-2xl text-white group-hover:text-[#53b1ff] transition-colors font-light tracking-[0.1px]">
+                        {/* Title: Editorial Serif */}
+                        <h3 className="font-serif text-lg xs:text-xl sm:text-2xl text-white group-hover:text-[#53b1ff] transition-colors font-normal tracking-tight">
                           {room.name}
                         </h3>
 
                         {/* Room Specs */}
-                        <div className="flex items-center gap-4 text-xs text-neutral-400 my-3 py-2 border-y border-white/10">
+                        <div className="flex items-center gap-3 sm:gap-4 text-xs text-neutral-400 my-3 py-2 border-y border-white/10">
                           <span className="flex items-center gap-1">
                             <Maximize2 className="w-3.5 h-3.5 text-[#53b1ff]" />
                             {room.area} m²
@@ -569,14 +570,14 @@ export function RoomsSection({
                         </p>
                       </div>
 
-                      {/* Action Pill Buttons: Secondary Outline + Commerce Orange */}
-                      <div className="grid grid-cols-2 gap-3 mt-6 pt-2 w-full min-w-0">
+                      {/* Action Pill Buttons */}
+                      <div className="grid grid-cols-2 gap-2.5 sm:gap-3 mt-5 sm:mt-6 pt-2 w-full min-w-0">
                         <Button
                           type="button"
                           variant="outline"
                           size="sm"
                           onClick={() => onSelectRoom(room)}
-                          className="w-full text-xs font-bold border-white/20 bg-transparent text-white hover:bg-white/10 rounded-full h-10 truncate cursor-pointer"
+                          className="w-full text-xs font-bold border-white/20 bg-transparent text-white hover:bg-white/10 rounded-full h-11 sm:h-10 truncate cursor-pointer transition-colors"
                         >
                           <Eye className="w-3.5 h-3.5 shrink-0 mr-1" />
                           <span className="truncate">Chi tiết</span>
@@ -588,7 +589,7 @@ export function RoomsSection({
                           size="sm"
                           onClick={() => onBookRoom(room, searchParams || undefined)}
                           disabled={room.isBooked || !room.isAvailable}
-                          className="w-full text-xs font-bold bg-[#d53b00] hover:bg-[#aa2f00] text-white rounded-full h-10 truncate cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="w-full text-xs font-bold bg-[#d53b00] hover:bg-[#aa2f00] text-white rounded-full h-11 sm:h-10 truncate cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           <CalendarCheck className="w-3.5 h-3.5 shrink-0 mr-1" />
                           <span className="truncate">

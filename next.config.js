@@ -8,6 +8,7 @@ import "./src/env.js";
 const config = {
   output: process.env.BUILD_STANDALONE === "true" ? "standalone" : undefined,
   images: {
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
         protocol: "https",

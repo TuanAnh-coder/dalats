@@ -38,35 +38,42 @@ export function BookingPerksSection({ onOpenBookingModal }: BookingPerksSectionP
   ];
 
   return (
-    /* Chapter 7: Signature Full-Bleed PlayStation Blue Action Band (hero-band-blue #0070d1) */
-    <SectionStack index={100} fullHeight={true} sticky={true} className="section-stack-blue py-16 md:py-0 pt-20 md:pt-24 md:pb-8 bg-[#0070d1] text-white overflow-hidden w-full max-w-full">
+    <SectionStack
+      index={100}
+      fullHeight={true}
+      sticky={true}
+      className="section-stack-blue py-12 xs:py-16 md:py-0 pt-16 xs:pt-20 md:pt-24 md:pb-8 bg-[#0070d1] text-white overflow-hidden w-full max-w-full"
+    >
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 text-center w-full">
         <FadeIn direction="up">
-          <span className="text-[12px] uppercase tracking-[2px] text-white/80 font-bold block mb-2">
+          <span className="text-[11px] sm:text-xs uppercase tracking-[2px] text-white/80 font-bold block mb-2">
             Exclusive Privileges • Đặc Quyền Đặt Trực Tiếp
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl text-white font-light tracking-tight mb-3 leading-tight">
-            Khởi đầu kỳ nghỉ đáng nhớ cùng M_Dalats Villa
+          <h2 className="font-serif text-2xl xs:text-3xl sm:text-4xl lg:text-5xl text-white font-normal tracking-tight mb-2 sm:mb-3 leading-tight">
+            Khởi Đầu Kỳ Nghỉ Đáng Nhớ Cùng M_Dalats Villa
           </h2>
-          <p className="text-sm sm:text-base text-white/85 font-normal max-w-2xl mx-auto mb-6 sm:mb-8 leading-relaxed">
+          <p className="text-xs sm:text-sm md:text-base text-white/85 font-normal max-w-2xl mx-auto mb-6 sm:mb-8 leading-relaxed">
             Đặt phòng trực tiếp trên website chính thức để nhận trọn vẹn dịch vụ Concierge tận tâm và những đặc quyền riêng tư cao cấp nhất.
           </p>
 
-          {/* 4 Pillars Stagger (PlayStation In-Band Dark Cards: #121314, 8px radius) */}
-          <StaggerContainer staggerChildren={0.06} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 text-left mb-6 sm:mb-8">
+          {/* 4 Pillars Stagger: 2-col on mobile xs, 4-col on lg */}
+          <StaggerContainer
+            staggerChildren={0.06}
+            className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 text-left mb-6 sm:mb-8"
+          >
             {perks.map((perk, i) => {
               const Icon = perk.icon;
               return (
                 <StaggerItem key={i}>
-                  <div className="p-5 sm:p-6 rounded-[8px] bg-[#000000]/30 backdrop-blur-md border border-white/20 hover:border-white/40 transition-all h-full group flex flex-col justify-between">
+                  <div className="p-4 sm:p-6 rounded-[12px] sm:rounded-[8px] bg-[#000000]/30 backdrop-blur-md border border-white/20 hover:border-white/40 transition-all h-full group flex flex-col justify-between">
                     <div>
-                      <div className="w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
-                        <Icon className="w-5 h-5" />
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/20 text-white flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+                        <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                       </div>
-                      <h4 className="text-base sm:text-lg text-white font-medium mb-0.5">
+                      <h4 className="font-serif text-base sm:text-lg text-white font-normal mb-0.5">
                         {perk.title}
                       </h4>
-                      <span className="text-[11px] uppercase tracking-[1px] text-white/70 font-normal block mb-2">
+                      <span className="text-[10px] sm:text-[11px] uppercase tracking-[1px] text-white/70 font-normal block mb-1.5 sm:mb-2">
                         {perk.subtitle}
                       </span>
                       <p className="text-xs sm:text-sm text-white/80 font-normal leading-relaxed">
@@ -79,12 +86,12 @@ export function BookingPerksSection({ onOpenBookingModal }: BookingPerksSectionP
             })}
           </StaggerContainer>
 
-          {/* Signature Pure White Button on PlayStation Blue Band */}
+          {/* Action CTA */}
           <Button
             type="button"
             size="lg"
             onClick={onOpenBookingModal}
-            className="gap-2 bg-white hover:bg-neutral-100 text-[#0070d1] rounded-full font-bold text-sm sm:text-base h-12 px-9 shadow-none transition-colors cursor-pointer"
+            className="w-full sm:w-auto gap-2 bg-white hover:bg-neutral-100 text-[#0070d1] rounded-full font-bold text-xs sm:text-base h-12 px-8 sm:px-9 shadow-none transition-colors cursor-pointer justify-center"
           >
             <span>Đặt phòng trực tiếp ngay</span>
             <ArrowRight className="w-4 h-4" />

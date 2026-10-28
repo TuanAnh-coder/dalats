@@ -5,9 +5,10 @@ import Lenis from "lenis";
 
 export function SmoothScrollProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    // Check if user prefers reduced motion
+    // Check if user prefers reduced motion or is on mobile touch screen
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) return;
+    const isTouch = window.matchMedia("(pointer: coarse)").matches;
+    if (prefersReducedMotion || isTouch) return;
 
     const lenis = new Lenis({
       duration: 0.85, // Snappy & ultra-responsive momentum

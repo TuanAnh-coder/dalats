@@ -1,13 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { FadeIn, SectionStack } from "./MotionWrapper";
-import { Card, CardContent } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
 
 interface VistaItem {
   id: number;
@@ -64,6 +62,7 @@ const VISTAS: VistaItem[] = [
 export function TasteDiamondSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const activeVista = VISTAS[currentIndex] ?? VISTAS[0]!;
+  const touchStartX = useRef<number | null>(null);
 
   const handleNext = () => {
     setCurrentIndex((prev) => (prev + 1) % VISTAS.length);
@@ -73,35 +72,60 @@ export function TasteDiamondSlider() {
     setCurrentIndex((prev) => (prev - 1 + VISTAS.length) % VISTAS.length);
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0]?.clientX ?? null;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const touchEndX = e.changedTouches[0]?.clientX ?? 0;
+    const diff = touchStartX.current - touchEndX;
+
+    if (diff > 45) {
+      handleNext();
+    } else if (diff < -45) {
+      handlePrev();
+    }
+    touchStartX.current = null;
+  };
+
   return (
-    /* Chapter 4: Full-bleed True White Canvas Band (#ffffff) */
-    <SectionStack index={40} fullHeight={true} sticky={true} className="py-16 md:py-0 pt-20 md:pt-24 md:pb-8 bg-[#ffffff] text-[#000000] border-b border-[#f3f3f3] overflow-hidden w-full max-w-full">
+    <SectionStack
+      index={40}
+      fullHeight={true}
+      sticky={true}
+      className="py-12 xs:py-16 md:py-0 pt-16 xs:pt-20 md:pt-24 md:pb-8 bg-[#ffffff] text-[#000000] border-b border-[#f3f3f3] overflow-hidden w-full max-w-full"
+    >
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 w-full min-w-0">
-        {/* Section Header: PlayStation SST 300 Light */}
+        {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
           <FadeIn direction="up">
-            <span className="text-[12px] uppercase tracking-[1.5px] text-[#0070d1] font-bold block mb-2">
+            <span className="text-[11px] sm:text-xs uppercase tracking-[2px] text-[#0070d1] font-bold block mb-2">
               Visual Narrative • Bộ Sưu Tập Không Gian
             </span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl text-[#000000] font-light tracking-tight mb-2 sm:mb-3">
-              Góc thơ mộng tại M_Dalats Villa
+            <h2 className="font-serif text-2xl xs:text-3xl sm:text-4xl md:text-5xl text-[#000000] font-normal tracking-tight mb-2 sm:mb-3">
+              Góc Thơ Mộng Tại M_Dalats Villa
             </h2>
-            <p className="text-sm sm:text-base text-[rgba(0,0,0,0.65)] font-normal leading-relaxed">
+            <p className="text-xs sm:text-sm md:text-base text-[rgba(0,0,0,0.65)] font-normal leading-relaxed">
               Mỗi góc nhỏ tại biệt thự là một khoảnh khắc tĩnh lặng mộc mạc, nơi thiên nhiên và cảnh quan giao hòa trong từng ánh ban mai xứ sở sương mù.
             </p>
           </FadeIn>
         </div>
 
-        {/* Showcase Card: PlayStation surface-card #f5f7fa, 8px radius */}
-        <div className="border border-[#f3f3f3] rounded-[8px] overflow-hidden bg-[#f5f7fa] shadow-none">
-          <div className="relative h-[320px] xs:h-[380px] sm:h-[420px] md:h-[450px] w-full bg-neutral-900">
+        {/* Showcase Card: PlayStation surface-card #f5f7fa */}
+        <div className="border border-[#e5e5e5] rounded-[12px] sm:rounded-[8px] overflow-hidden bg-[#f5f7fa] shadow-none">
+          <div
+            className="relative h-[300px] xs:h-[360px] sm:h-[420px] md:h-[450px] w-full bg-neutral-900 select-none cursor-grab active:cursor-grabbing"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeVista.id}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.4 }}
+                transition={{ duration: 0.35 }}
                 className="absolute inset-0"
               >
                 <Image
@@ -110,58 +134,62 @@ export function TasteDiamondSlider() {
                   fill
                   priority
                   className="object-cover object-center"
+                  sizes="(max-width: 768px) 100vw, 1280px"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/20" />
               </motion.div>
             </AnimatePresence>
 
             {/* Top Badge: Category & Counter */}
-            <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-10 flex items-center gap-2">
-              <Badge className="bg-[#0070d1] text-white rounded-full text-[11px] uppercase tracking-[1px] font-bold px-3 py-1">
+            <div className="absolute top-3.5 left-3.5 sm:top-6 sm:left-6 z-10 flex items-center gap-2">
+              <Badge className="bg-[#0070d1] text-white rounded-full text-[10px] sm:text-[11px] uppercase tracking-[1px] font-bold px-2.5 sm:px-3 py-1">
                 {activeVista.category}
               </Badge>
-              <Badge variant="outline" className="border-white/30 text-white bg-black/50 backdrop-blur-md rounded-full text-[11px] font-mono px-3">
+              <Badge
+                variant="outline"
+                className="border-white/30 text-white bg-black/60 backdrop-blur-md rounded-full text-[10px] sm:text-[11px] font-mono px-2.5 sm:px-3"
+              >
                 {currentIndex + 1} / {VISTAS.length}
               </Badge>
             </div>
 
             {/* Bottom Caption Overlay */}
-            <div className="absolute bottom-6 left-6 right-24 sm:bottom-8 sm:left-8 sm:right-36 z-10 max-w-xl text-white">
-              <span className="text-xs uppercase tracking-[1px] text-[#53b1ff] font-bold block mb-1 truncate">
+            <div className="absolute bottom-3.5 left-3.5 right-24 xs:right-28 sm:bottom-8 sm:left-8 sm:right-36 z-10 max-w-xl text-white">
+              <span className="text-[10px] sm:text-xs uppercase tracking-[1px] text-[#53b1ff] font-bold block mb-1 truncate">
                 {activeVista.tagline}
               </span>
-              <h3 className="text-2xl sm:text-3xl lg:text-4xl text-white font-light mb-2 tracking-tight">
+              <h3 className="font-serif text-lg xs:text-xl sm:text-3xl lg:text-4xl text-white font-normal mb-1 sm:mb-2 tracking-tight leading-tight">
                 {activeVista.title}
               </h3>
-              <p className="text-xs sm:text-sm text-neutral-300 font-normal leading-relaxed hidden sm:block">
+              <p className="text-xs sm:text-sm text-neutral-200/90 font-normal leading-relaxed line-clamp-2 sm:line-clamp-none">
                 {activeVista.desc}
               </p>
             </div>
 
-            {/* Carousel Paddles: 48px circle, PlayStation carousel-paddle spec */}
-            <div className="absolute bottom-6 right-6 sm:bottom-8 sm:right-8 z-20 flex items-center gap-2">
+            {/* Carousel Paddles */}
+            <div className="absolute bottom-3.5 right-3.5 sm:bottom-8 sm:right-8 z-20 flex items-center gap-1.5 sm:gap-2">
               <button
                 type="button"
                 onClick={handlePrev}
                 aria-label="Previous view"
-                className="w-12 h-12 rounded-full bg-white/20 hover:bg-[#0070d1] text-white flex items-center justify-center backdrop-blur-md transition-colors cursor-pointer"
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/50 hover:bg-[#0070d1] active:bg-[#004d8d] text-white flex items-center justify-center backdrop-blur-md border border-white/20 transition-colors cursor-pointer"
               >
-                <ChevronLeft className="w-5 h-5" />
+                <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
               <button
                 type="button"
                 onClick={handleNext}
                 aria-label="Next view"
-                className="w-12 h-12 rounded-full bg-white/20 hover:bg-[#0070d1] text-white flex items-center justify-center backdrop-blur-md transition-colors cursor-pointer"
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/50 hover:bg-[#0070d1] active:bg-[#004d8d] text-white flex items-center justify-center backdrop-blur-md border border-white/20 transition-colors cursor-pointer"
               >
-                <ChevronRight className="w-5 h-5" />
+                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
           </div>
 
           {/* Thumbnail Navigation Strip */}
-          <div className="p-3 sm:p-4 bg-[#f5f7fa] border-t border-[#f3f3f3]">
-            <div className="grid grid-cols-5 gap-2 sm:gap-3">
+          <div className="p-2.5 sm:p-4 bg-[#f5f7fa] border-t border-[#e5e5e5]">
+            <div className="grid grid-cols-5 gap-1.5 sm:gap-3">
               {VISTAS.map((item, idx) => {
                 const isActive = idx === currentIndex;
                 return (

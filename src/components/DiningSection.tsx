@@ -3,10 +3,9 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Coffee, Utensils, Flame, Sun, Clock, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Coffee, Utensils, Flame, Sun, Clock, ArrowRight, CheckCircle2, Phone } from "lucide-react";
 import { FadeIn, motion, AnimatePresence, SectionStack } from "./MotionWrapper";
 import { Button } from "~/components/ui/button";
-import { Badge } from "~/components/ui/badge";
 
 export function DiningSection() {
   const [activeTab, setActiveTab] = useState<"coffee" | "breakfast" | "bbq">("coffee");
@@ -59,26 +58,31 @@ export function DiningSection() {
   const current = tabsData[activeTab];
 
   return (
-    /* Chapter 4B: Full-bleed True White Canvas Band (#ffffff) */
-    <SectionStack id="dining" index={60} fullHeight={true} sticky={true} className="py-16 md:py-0 pt-20 md:pt-24 md:pb-8 bg-[#ffffff] text-[#000000] border-b border-[#f3f3f3] overflow-hidden scroll-mt-24 w-full max-w-full">
+    <SectionStack
+      id="dining"
+      index={60}
+      fullHeight={true}
+      sticky={true}
+      className="py-12 xs:py-16 md:py-0 pt-16 xs:pt-20 md:pt-24 md:pb-8 bg-[#ffffff] text-[#000000] border-b border-[#f3f3f3] overflow-hidden scroll-mt-24 w-full max-w-full"
+    >
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 w-full min-w-0">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8 min-w-0">
           <FadeIn direction="up">
-            <span className="text-[12px] uppercase tracking-[1.5px] text-[#0070d1] font-bold block mb-2">
+            <span className="text-[11px] sm:text-xs uppercase tracking-[2px] text-[#0070d1] font-bold block mb-2">
               Culinary & Lounge • Ẩm Thực & Cà Phê
             </span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl text-[#000000] font-light tracking-tight mb-3 sm:mb-4">
-              Hương vị nồng nàn nơi phố sương
+            <h2 className="font-serif text-2xl xs:text-3xl sm:text-4xl md:text-5xl text-[#000000] font-normal tracking-tight mb-2 sm:mb-3">
+              Hương Vị Nồng Nàn Nơi Phố Sương
             </h2>
-            <p className="text-sm sm:text-base text-[rgba(0,0,0,0.65)] font-normal leading-relaxed">
+            <p className="text-xs sm:text-sm md:text-base text-[rgba(0,0,0,0.65)] font-normal leading-relaxed">
               Mỗi món ngon và tách cà phê là một câu chuyện hòa quyện giữa đất trời cao nguyên và bàn tay tinh tế của nghệ nhân.
             </p>
           </FadeIn>
 
-          {/* Filter Pills (PlayStation filter-pill style) */}
+          {/* Filter Pills with horizontal scroll on mobile */}
           <FadeIn direction="up" delay={0.15}>
-            <div className="inline-flex overflow-x-auto no-scrollbar sm:flex-wrap items-center justify-start sm:justify-center mt-6 sm:mt-8 gap-2 max-w-full min-w-0 mx-auto">
+            <div className="flex overflow-x-auto no-scrollbar sm:flex-wrap items-center justify-start sm:justify-center mt-5 sm:mt-8 gap-2 max-w-full min-w-0 -mx-4 px-4 sm:mx-auto sm:px-0">
               {[
                 { id: "coffee", label: "Cà phê Ngày 4 Mùa", icon: Coffee },
                 { id: "breakfast", label: "Điểm tâm sáng kiểu Âu", icon: Sun },
@@ -91,7 +95,7 @@ export function DiningSection() {
                     key={tab.id}
                     type="button"
                     onClick={() => setActiveTab(tab.id as any)}
-                    className={`px-5 py-2.5 text-xs font-bold transition-all cursor-pointer flex items-center gap-2 whitespace-nowrap shrink-0 rounded-full ${
+                    className={`px-4 sm:px-5 py-2 sm:py-2.5 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2 whitespace-nowrap shrink-0 rounded-full ${
                       isSelected
                         ? "bg-[#0070d1] text-white shadow-sm"
                         : "bg-[#f5f7fa] text-neutral-700 hover:bg-[#e5e7eb] hover:text-black border border-[#e5e7eb]"
@@ -113,67 +117,69 @@ export function DiningSection() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10 lg:gap-14 items-center bg-[#f5f7fa] p-6 sm:p-10 lg:p-12 rounded-[8px] border border-[#f3f3f3]"
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8 lg:gap-14 items-center bg-[#f5f7fa] p-4 xs:p-6 sm:p-10 lg:p-12 rounded-[12px] sm:rounded-[8px] border border-[#f3f3f3]"
           >
-            {/* Visual Photo (8px radius) */}
+            {/* Visual Photo */}
             <div className="lg:col-span-6 relative">
-              <div className="relative h-[320px] sm:h-[420px] w-full rounded-[8px] overflow-hidden border border-[#f3f3f3] group">
+              <div className="relative h-[220px] xs:h-[260px] sm:h-[400px] lg:h-[420px] w-full rounded-[10px] sm:rounded-[8px] overflow-hidden border border-[#e5e5e5] group">
                 <Image
                   src={current.image}
                   alt={current.title}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                 />
-                <div className="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/15 text-[11px] font-bold text-white flex items-center gap-1.5">
+                <div className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-black/80 backdrop-blur-md px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full border border-white/15 text-[10px] sm:text-[11px] font-bold text-white flex items-center gap-1.5">
                   <Clock className="w-3.5 h-3.5 text-[#53b1ff]" />
                   <span>{current.time}</span>
                 </div>
 
-                <div className="absolute bottom-4 right-4 bg-[#0070d1] px-3.5 py-1 rounded-full text-[11px] font-bold text-white">
+                <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 bg-[#0070d1] px-3 py-0.5 sm:px-3.5 sm:py-1 rounded-full text-[10px] sm:text-[11px] font-bold text-white">
                   {current.badge}
                 </div>
               </div>
             </div>
 
-            {/* Content Details: PlayStation SST 300 Light */}
-            <div className="lg:col-span-6 space-y-4">
-              <span className="text-[12px] uppercase tracking-[1.5px] text-[#0070d1] font-bold block">
+            {/* Content Details */}
+            <div className="lg:col-span-6 space-y-3 sm:space-y-4">
+              <span className="text-[11px] sm:text-xs uppercase tracking-[1.5px] text-[#0070d1] font-bold block">
                 {current.tag}
               </span>
-              <h3 className="text-2xl sm:text-3xl lg:text-4xl text-[#000000] font-light leading-tight">
+              <h3 className="font-serif text-xl xs:text-2xl sm:text-3xl lg:text-4xl text-[#000000] font-normal leading-tight">
                 {current.title}
               </h3>
-              <p className="text-sm sm:text-base text-[rgba(0,0,0,0.65)] font-normal leading-relaxed">
+              <p className="text-xs sm:text-sm md:text-base text-[rgba(0,0,0,0.65)] font-normal leading-relaxed">
                 {current.desc}
               </p>
 
               {/* Highlights List */}
               <div className="pt-2">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div className="grid grid-cols-1 xs:grid-cols-2 gap-2 sm:gap-2.5">
                   {current.highlights.map((item, idx) => (
                     <div key={idx} className="flex items-center gap-2 text-xs sm:text-sm text-neutral-800">
-                      <CheckCircle2 className="w-4 h-4 text-[#0070d1] shrink-0" />
+                      <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#0070d1] shrink-0" />
                       <span>{item}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Action Buttons: PlayStation Blue Pill */}
-              <div className="pt-4 flex flex-wrap items-center gap-3">
+              {/* Action Buttons: 44px+ touch targets */}
+              <div className="pt-3 sm:pt-4 flex flex-col xs:flex-row items-stretch xs:items-center gap-3">
                 <Link
                   href="/dining"
-                  className="inline-flex items-center gap-2 bg-[#0070d1] hover:bg-[#0064b7] active:bg-[#004d8d] text-white text-xs sm:text-sm font-bold px-7 h-12 rounded-full transition-colors cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 bg-[#0070d1] hover:bg-[#0064b7] active:bg-[#004d8d] text-white text-xs sm:text-sm font-bold px-6 h-11 xs:h-12 rounded-full transition-colors cursor-pointer"
                 >
                   <span>Xem thực đơn & bảng giá</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <a
                   href="tel:0939014234"
-                  className="text-xs sm:text-sm font-bold text-neutral-600 hover:text-[#0070d1] px-4 py-2 transition-colors"
+                  className="inline-flex items-center justify-center gap-1.5 text-xs sm:text-sm font-bold text-neutral-700 hover:text-[#0070d1] px-4 h-11 xs:h-12 transition-colors border border-neutral-300 xs:border-transparent rounded-full"
                 >
-                  Đặt tiệc: 0939 014 234
+                  <Phone className="w-3.5 h-3.5 text-[#0070d1]" />
+                  <span>Đặt tiệc: 0939 014 234</span>
                 </a>
               </div>
             </div>

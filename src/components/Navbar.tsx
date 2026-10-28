@@ -140,7 +140,7 @@ export function Navbar({
         <div className="max-w-[1280px] mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
           {/* Logo Left */}
           <Link href="/" className="inline-flex items-center shrink-0 py-1" aria-label="M_Dalats Villa">
-            <div className="relative h-10 w-44 sm:w-52">
+            <div className="relative h-9 xs:h-10 w-36 xs:w-44 sm:w-52">
               <Image
                 src="/images/m_dalats_logo_horizontal.svg"
                 alt="M_Dalats Villa"
@@ -248,10 +248,11 @@ export function Navbar({
             <Button
               variant="commerce"
               onClick={handleBookingClick}
-              className="bg-[#d53b00] hover:bg-[#aa2f00] text-white h-10 px-6 text-xs sm:text-sm font-bold rounded-full shadow-none"
+              className="bg-[#d53b00] hover:bg-[#aa2f00] text-white h-9 xs:h-10 px-3 xs:px-5 sm:px-6 text-xs sm:text-sm font-bold rounded-full shadow-none whitespace-nowrap cursor-pointer shrink-0"
             >
               <Calendar className="w-3.5 h-3.5" />
-              <span>Đặt phòng ngay</span>
+              <span className="hidden xs:inline">Đặt phòng ngay</span>
+              <span className="xs:hidden">Đặt phòng</span>
             </Button>
 
             {/* Mobile Navigation Drawer Trigger */}

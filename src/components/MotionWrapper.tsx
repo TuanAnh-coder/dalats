@@ -271,7 +271,7 @@ export const SectionStack = React.forwardRef<HTMLElement, SectionStackProps>(
   ) {
     const stickyClasses = sticky ? "relative md:sticky md:top-0" : "relative";
     const heightClasses = fullHeight
-      ? "min-h-screen md:h-screen md:h-[100svh] md:min-h-[640px] flex flex-col justify-center"
+      ? "h-auto py-12 xs:py-16 md:h-screen md:h-[100svh] md:min-h-[640px] md:py-0 flex flex-col justify-center"
       : "relative";
 
     return (

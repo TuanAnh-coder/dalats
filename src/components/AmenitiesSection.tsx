@@ -42,48 +42,53 @@ export function AmenitiesSection() {
   ];
 
   const paidServices = [
-    { title: "Cho thuê xe máy đời mới", desc: "Xe ga, xe số được bảo dưỡng kỹ càng, tặng kèm mũ bảo hiểm & áo mưa" },
-    { title: "Set up tiệc nướng BBQ sân vườn", desc: "Chuẩn bị lò than hồng, vỉ nướng, bát đĩa và thực phẩm ướp sẵn theo yêu cầu" },
+    { title: "Cho thuê xe máy đời mới", desc: "Xe ga, xe số bảo dưỡng kỹ càng, kèm mũ bảo hiểm & áo mưa" },
+    { title: "Set up tiệc nướng BBQ sân vườn", desc: "Lò than hồng, vỉ nướng, bát đĩa và thực phẩm ướp theo yêu cầu" },
     { title: "Dịch vụ giặt sấy thơm tho", desc: "Giao nhận nhanh trong ngày, quần áo phẳng phiu sạch sẽ" },
     { title: "Đón tiễn sân bay Liên Khương", desc: "Xe ô tô đời mới 4-7-16 chỗ đón tận cửa, đúng giờ chu đáo" },
   ];
 
   return (
-    /* Chapter 6: Full-bleed True White Canvas Band (#ffffff) */
-    <SectionStack id="amenities" index={80} fullHeight={true} sticky={true} className="py-16 md:py-0 pt-20 md:pt-24 md:pb-8 bg-[#ffffff] text-[#000000] border-b border-[#f3f3f3] overflow-hidden scroll-mt-24">
+    <SectionStack
+      id="amenities"
+      index={80}
+      fullHeight={true}
+      sticky={true}
+      className="py-12 xs:py-16 md:py-0 pt-16 xs:pt-20 md:pt-24 md:pb-8 bg-[#ffffff] text-[#000000] border-b border-[#f3f3f3] overflow-hidden scroll-mt-24"
+    >
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="text-center max-w-2xl mx-auto mb-4 sm:mb-6">
+        <div className="text-center max-w-2xl mx-auto mb-5 sm:mb-6">
           <FadeIn direction="up">
-            <span className="text-[12px] uppercase tracking-[1.5px] text-[#0070d1] font-bold block mb-1">
+            <span className="text-[11px] sm:text-xs uppercase tracking-[2px] text-[#0070d1] font-bold block mb-1">
               Concierge & Amenities • Tiện Nghi & Dịch Vụ
             </span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl text-[#000000] font-light tracking-tight mb-2 sm:mb-3">
-              Hoàn thiện từng khoảnh khắc nghỉ dưỡng
+            <h2 className="font-serif text-2xl xs:text-3xl sm:text-4xl md:text-5xl text-[#000000] font-normal tracking-tight mb-2 sm:mb-3">
+              Hoàn Thiện Từng Khoảnh Khắc Nghỉ Dưỡng
             </h2>
-            <p className="text-xs sm:text-sm text-[rgba(0,0,0,0.65)] font-normal leading-relaxed">
+            <p className="text-xs sm:text-sm md:text-base text-[rgba(0,0,0,0.65)] font-normal leading-relaxed">
               Tại M_Dalats Villa, từng tiện nghi và dịch vụ được chuẩn bị chu đáo nhằm mang lại kỳ nghỉ thoải mái, an tâm và thảnh thơi trọn vẹn.
             </p>
           </FadeIn>
         </div>
 
-        {/* Room & Garden Amenities Grid: PlayStation surface-card #f5f7fa */}
+        {/* Room & Garden Amenities Grid */}
         <div className="mb-6 sm:mb-8">
           <FadeIn direction="up" delay={0.1}>
-            <h3 className="text-base sm:text-lg text-[#000000] font-light mb-3 text-center sm:text-left tracking-wide">
+            <h3 className="font-serif text-base sm:text-lg text-[#000000] font-normal mb-3 text-center sm:text-left tracking-wide">
               Tiện nghi phòng & sân vườn
             </h3>
           </FadeIn>
 
           <StaggerContainer
             staggerChildren={0.03}
-            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3"
+            className="grid grid-cols-2 xs:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3"
           >
             {roomAmenities.map((item, idx) => {
               const Icon = item.icon;
               return (
                 <StaggerItem key={idx}>
-                  <div className="p-2.5 sm:p-3 rounded-[8px] bg-[#f5f7fa] border border-[#f3f3f3] flex items-center gap-2.5 transition-all hover:bg-neutral-100 group cursor-default">
-                    <div className="w-7 h-7 rounded-full bg-[#0070d1]/10 text-[#0070d1] flex items-center justify-center shrink-0 group-hover:bg-[#0070d1] group-hover:text-white transition-colors">
+                  <div className="p-2.5 xs:p-3 rounded-[10px] sm:rounded-[8px] bg-[#f5f7fa] border border-[#f3f3f3] flex items-center gap-2 sm:gap-2.5 transition-all hover:bg-neutral-100 group cursor-default">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#0070d1]/10 text-[#0070d1] flex items-center justify-center shrink-0 group-hover:bg-[#0070d1] group-hover:text-white transition-colors">
                       <Icon className="w-3.5 h-3.5" />
                     </div>
                     <span className="text-xs font-medium text-neutral-800 leading-tight">
@@ -99,11 +104,11 @@ export function AmenitiesSection() {
         {/* Free vs Paid Services */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 pt-4 border-t border-[#f3f3f3]">
           <FadeIn direction="right" delay={0.2}>
-            <div className="bg-[#f5f7fa] p-4 sm:p-6 rounded-[8px] border border-[#f3f3f3] h-full">
-              <span className="text-[11px] uppercase tracking-[1px] text-[#0070d1] font-bold block mb-1">
+            <div className="bg-[#f5f7fa] p-4 xs:p-5 sm:p-6 rounded-[12px] sm:rounded-[8px] border border-[#f3f3f3] h-full">
+              <span className="text-[10px] sm:text-[11px] uppercase tracking-[1px] text-[#0070d1] font-bold block mb-1">
                 Dịch vụ tiêu chuẩn
               </span>
-              <h3 className="text-lg sm:text-xl font-light text-[#000000] mb-3">
+              <h3 className="font-serif text-lg sm:text-xl font-normal text-[#000000] mb-3">
                 Được bao gồm trong kỳ nghỉ
               </h3>
               <ul className="space-y-2">
@@ -118,11 +123,11 @@ export function AmenitiesSection() {
           </FadeIn>
 
           <FadeIn direction="left" delay={0.2}>
-            <div className="bg-[#f5f7fa] p-4 sm:p-6 rounded-[8px] border border-[#f3f3f3] h-full">
-              <span className="text-[11px] uppercase tracking-[1px] text-[#0070d1] font-bold block mb-1">
+            <div className="bg-[#f5f7fa] p-4 xs:p-5 sm:p-6 rounded-[12px] sm:rounded-[8px] border border-[#f3f3f3] h-full">
+              <span className="text-[10px] sm:text-[11px] uppercase tracking-[1px] text-[#0070d1] font-bold block mb-1">
                 Dịch vụ hỗ trợ thêm
               </span>
-              <h3 className="text-lg sm:text-xl font-light text-[#000000] mb-3">
+              <h3 className="font-serif text-lg sm:text-xl font-normal text-[#000000] mb-3">
                 Dịch vụ tính phí linh hoạt
               </h3>
               <div className="space-y-2.5">

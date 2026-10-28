@@ -91,7 +91,7 @@ export function HowItWorksSection({ onOpenBookingModal }: HowItWorksSectionProps
       index={30}
       fullHeight={true}
       sticky={true}
-      className="py-12 xs:py-16 md:py-0 pt-16 xs:pt-20 md:pt-24 md:pb-8 bg-[#ffffff] text-[#000000] border-b border-[#e5e5e5] overflow-hidden scroll-mt-20"
+      className="bg-[#ffffff] text-[#000000] border-b border-[#e5e5e5] overflow-hidden scroll-mt-20"
     >
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
         {/* Editorial Header */}

@@ -56,7 +56,7 @@ export function HeroSection({ onSearch }: HeroSectionProps) {
       className="bg-[#000000] overflow-hidden"
     >
       {/* Chapter 1: Full-bleed Cinematic Dark Hero Band */}
-      <div className="relative min-h-[100svh] md:h-full w-full overflow-hidden flex flex-col justify-between py-6 xs:py-8 sm:py-12 md:py-16">
+      <div className="relative min-h-[calc(100svh-3.5rem)] md:h-full w-full overflow-hidden flex flex-col justify-between py-4 xs:py-6 sm:py-10 md:py-14">
         <motion.div
           style={{ y: heroImageY, opacity: heroOpacity }}
           initial={{ scale: 1.08, filter: "brightness(0.72)" }}
@@ -77,9 +77,6 @@ export function HeroSection({ onSearch }: HeroSectionProps) {
 
         {/* Ambient Darkened Gradient for Text Legibility */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/85 -z-10" />
-
-        {/* Top Spacer for Navbar */}
-        <div className="h-6 sm:h-8" />
 
         {/* Editorial Headlines */}
         <div className="flex flex-col items-center justify-center text-center px-4 sm:px-6 z-10 max-w-4xl mx-auto w-full my-auto">

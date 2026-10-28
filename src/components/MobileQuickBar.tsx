@@ -27,7 +27,7 @@ export function MobileQuickBar({ onOpenBookingModal }: MobileQuickBarProps) {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 80, opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="sm:hidden fixed bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-3 right-3 z-40 bg-[#000000]/95 backdrop-blur-md border border-white/20 rounded-full shadow-2xl p-2 flex items-center justify-between gap-3 text-white"
+          className="sm:hidden fixed bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-3 right-3 z-[150] bg-[#000000]/95 backdrop-blur-md border border-white/20 rounded-full shadow-2xl p-2 flex items-center justify-between gap-3 text-white"
         >
           <a
             href="tel:0939014234"

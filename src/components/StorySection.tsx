@@ -16,7 +16,7 @@ export function StorySection() {
 
   return (
     /* Chapter 2: Full-bleed True White Canvas Band */
-    <SectionStack id="story" index={20} fullHeight={true} sticky={true} className="py-12 xs:py-16 md:py-0 pt-16 md:pt-24 md:pb-8 bg-[#ffffff] text-[#000000] overflow-hidden scroll-mt-20">
+    <SectionStack id="story" index={20} fullHeight={true} sticky={true} className="bg-[#ffffff] text-[#000000] overflow-hidden scroll-mt-20">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-14 items-center">
           {/* Photo Showcase Left */}

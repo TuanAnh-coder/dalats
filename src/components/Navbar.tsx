@@ -100,44 +100,45 @@ export function Navbar({
   ];
 
   return (
-    <header className="sticky top-0 z-40 w-full select-none">
-      {/* Top Utility Ribbon (PlayStation dark sub-nav style) */}
-      <div className="bg-[#000000] text-neutral-400 border-b border-white/10">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-1.5 flex items-center justify-between text-xs tracking-wide">
-          <div className="flex items-center gap-2 truncate">
-            <span className="inline-flex items-center gap-1.5 text-white/90 font-medium">
-              <MapPin className="w-3.5 h-3.5 text-[#0070d1]" />
-              14B Khe Sanh, Phường 10, Đà Lạt
-            </span>
-            <span className="hidden sm:inline text-neutral-600">•</span>
-            <span className="hidden sm:inline text-neutral-400">
-              Boutique Forest Villa Resort
-            </span>
-          </div>
+    <>
+      <header className="fixed top-0 left-0 right-0 z-[200] w-full select-none">
+        {/* Top Utility Ribbon (PlayStation dark sub-nav style, hidden on narrow mobile for compact fixed bar) */}
+        <div className="bg-[#000000] text-neutral-400 border-b border-white/10 hidden sm:block">
+          <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-1.5 flex items-center justify-between text-xs tracking-wide">
+            <div className="flex items-center gap-2 truncate">
+              <span className="inline-flex items-center gap-1.5 text-white/90 font-medium">
+                <MapPin className="w-3.5 h-3.5 text-[#0070d1]" />
+                14B Khe Sanh, Phường 10, Đà Lạt
+              </span>
+              <span className="hidden sm:inline text-neutral-600">•</span>
+              <span className="hidden sm:inline text-neutral-400">
+                Boutique Forest Villa Resort
+              </span>
+            </div>
 
-          <div className="flex items-center gap-4">
-            <a
-              href="tel:0939014234"
-              className="inline-flex items-center gap-1.5 text-white/90 hover:text-[#53b1ff] transition-colors"
-            >
-              <Phone className="w-3.5 h-3.5 text-[#0070d1]" />
-              <span className="font-semibold">0939 014 234</span>
-            </a>
-            <span className="hidden xs:inline text-neutral-700">|</span>
-            <span className="hidden xs:inline text-[11px] text-neutral-400 font-medium tracking-wider">
-              VI / EN
-            </span>
+            <div className="flex items-center gap-4">
+              <a
+                href="tel:0939014234"
+                className="inline-flex items-center gap-1.5 text-white/90 hover:text-[#53b1ff] transition-colors"
+              >
+                <Phone className="w-3.5 h-3.5 text-[#0070d1]" />
+                <span className="font-semibold">0939 014 234</span>
+              </a>
+              <span className="hidden xs:inline text-neutral-700">|</span>
+              <span className="hidden xs:inline text-[11px] text-neutral-400 font-medium tracking-wider">
+                VI / EN
+              </span>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Main Navbar (PlayStation primary-nav: height 64px, pure black #000000, hairline border) */}
-      <nav
-        className={`w-full h-16 transition-all duration-300 border-b border-white/10 ${
-          scrolled ? "bg-[#000000]/95 backdrop-blur-md" : "bg-[#000000]"
-        }`}
-      >
-        <div className="max-w-[1280px] mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+        {/* Main Navbar (Height 56px on mobile, 64px on desktop) */}
+        <nav
+          className={`w-full h-14 sm:h-16 transition-all duration-300 border-b border-white/10 ${
+            scrolled ? "bg-[#000000]/95 backdrop-blur-md shadow-lg" : "bg-[#000000]"
+          }`}
+        >
+          <div className="max-w-[1280px] mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 sm:gap-4">
           {/* Logo Left */}
           <Link href="/" className="inline-flex items-center shrink-0 py-1" aria-label="M_Dalats Villa">
             <div className="relative h-9 xs:h-10 w-36 xs:w-44 sm:w-52">
@@ -335,5 +336,8 @@ export function Navbar({
         </div>
       </nav>
     </header>
+    {/* Spacer to prevent page content from hiding behind the fixed header */}
+    <div className="h-14 sm:h-[97px] w-full shrink-0" aria-hidden="true" />
+  </>
   );
 }

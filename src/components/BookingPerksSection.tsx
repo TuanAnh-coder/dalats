@@ -42,7 +42,7 @@ export function BookingPerksSection({ onOpenBookingModal }: BookingPerksSectionP
       index={100}
       fullHeight={true}
       sticky={true}
-      className="section-stack-blue py-12 xs:py-16 md:py-0 pt-16 xs:pt-20 md:pt-24 md:pb-8 bg-[#0070d1] text-white overflow-hidden w-full max-w-full"
+      className="section-stack-blue bg-[#0070d1] text-white overflow-hidden w-full max-w-full"
     >
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 text-center w-full">
         <FadeIn direction="up">

@@ -63,7 +63,7 @@ export function DiningSection() {
       index={60}
       fullHeight={true}
       sticky={true}
-      className="py-12 xs:py-16 md:py-0 pt-16 xs:pt-20 md:pt-24 md:pb-8 bg-[#ffffff] text-[#000000] border-b border-[#f3f3f3] overflow-hidden scroll-mt-24 w-full max-w-full"
+      className="bg-[#ffffff] text-[#000000] border-b border-[#f3f3f3] overflow-hidden scroll-mt-24 w-full max-w-full"
     >
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 w-full min-w-0">
         {/* Header */}

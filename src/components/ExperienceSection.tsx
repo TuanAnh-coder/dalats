@@ -37,7 +37,7 @@ export function ExperienceSection() {
       fullHeight={true}
       sticky={true}
       dark
-      className="py-12 xs:py-16 md:py-0 pt-16 xs:pt-20 md:pt-24 md:pb-8 bg-[#000000] text-white border-b border-white/10 overflow-hidden scroll-mt-24"
+      className="bg-[#000000] text-white border-b border-white/10 overflow-hidden scroll-mt-24"
     >
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
         {/* Header */}

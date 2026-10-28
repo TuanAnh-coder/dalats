@@ -197,7 +197,7 @@ export function RoomsSection({
 
   return (
     /* Chapter 3: Full-bleed Dark Canvas Band (Pure Black #000000, PlayStation Games Rail Style) */
-    <SectionStack id="rooms" index={50} sticky={false} fullHeight={false} dark className="section-stack-dark py-16 sm:py-24 md:py-28 bg-[#000000] text-white border-b border-white/10 scroll-mt-20">
+    <SectionStack id="rooms" index={50} sticky={false} fullHeight={false} dark className="section-stack-dark py-10 xs:py-12 sm:py-20 md:py-28 bg-[#000000] text-white border-b border-white/10 scroll-mt-20">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header: Editorial Headline */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 sm:gap-6 mb-8 sm:mb-12">
@@ -341,15 +341,15 @@ export function RoomsSection({
           </FadeIn>
         )}
 
-        {/* Filter and Sorting Toolbar: PlayStation Filter Pills */}
-        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 mb-8 pb-4 border-b border-white/10 w-full min-w-0">
-          {/* Floor Filter Tabs with full bleed on mobile */}
-          <div className="flex overflow-x-auto no-scrollbar items-center gap-2 p-1 -mx-4 px-4 sm:mx-0 sm:px-0 w-auto max-w-full min-w-0">
+        {/* Filter and Sorting Toolbar */}
+        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8 pb-3 sm:pb-4 border-b border-white/10 w-full min-w-0">
+          {/* Floor Filter Tabs with horizontal touch scroll */}
+          <div className="flex overflow-x-auto no-scrollbar items-center gap-1.5 sm:gap-2 py-1 -mx-4 px-4 sm:mx-0 sm:px-0 w-auto max-w-full min-w-0">
             {[
-              { id: "all", label: "Tất cả phòng" },
-              { id: "0", label: "Tầng trệt & Sân vườn" },
-              { id: "1", label: "Tầng 1 (View Rừng Thông)" },
-              { id: "2", label: "Tầng 2 (Áp Mái Suite)" },
+              { id: "all", label: "Tất cả (11)" },
+              { id: "0", label: "Tầng trệt" },
+              { id: "1", label: "Tầng 1 (View thông)" },
+              { id: "2", label: "Tầng 2 (Áp mái)" },
             ].map((tab) => {
               const isSelected = filterFloor === tab.id;
               return (
@@ -357,7 +357,7 @@ export function RoomsSection({
                   key={tab.id}
                   type="button"
                   onClick={() => setFilterFloor(tab.id)}
-                  className={`px-4 py-2 text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 rounded-full ${
+                  className={`px-3.5 sm:px-4 py-1.5 sm:py-2 text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 rounded-full ${
                     isSelected
                       ? "bg-white text-black shadow-sm"
                       : "bg-white/10 text-neutral-300 hover:bg-white/15 hover:text-white"
@@ -370,33 +370,39 @@ export function RoomsSection({
           </div>
 
           {/* Sorting & Availability Toggle */}
-          <div className="flex items-center justify-between md:justify-end gap-4 self-end md:self-auto w-full md:w-auto">
-            {searchParams && (
-              <label className="flex items-center gap-2 text-xs text-neutral-400 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={onlyAvailable}
-                  onChange={(e) => setOnlyAvailable(e.target.checked)}
-                  className="w-3.5 h-3.5 accent-[#0070d1] rounded-[2px] cursor-pointer"
-                />
-                <span className="text-[12px] font-medium text-white">Chỉ phòng còn trống</span>
-              </label>
-            )}
+          <div className="flex items-center justify-between md:justify-end gap-3 w-full md:w-auto">
+            <span className="text-xs text-neutral-400 font-normal">
+              {displayRooms.length} phòng khả dụng
+            </span>
 
-            {/* Sort Dropdown */}
-            <div className="relative inline-flex items-center">
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
-                className="bg-[#181818] border border-white/20 px-4 py-2 text-xs text-white font-medium rounded-full focus:outline-none focus:border-[#0070d1] cursor-pointer pr-8 appearance-none"
-              >
-                <option value="default">Sắp xếp: Mặc định</option>
-                <option value="popular">Nổi bật nhất</option>
-                <option value="rating-desc">Đánh giá cao nhất</option>
-                <option value="price-asc">Giá: Thấp đến cao</option>
-                <option value="price-desc">Giá: Cao đến thấp</option>
-              </select>
-              <ChevronDown className="w-3.5 h-3.5 text-neutral-400 absolute right-3 pointer-events-none" />
+            <div className="flex items-center gap-3">
+              {searchParams && (
+                <label className="flex items-center gap-1.5 text-xs text-neutral-400 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={onlyAvailable}
+                    onChange={(e) => setOnlyAvailable(e.target.checked)}
+                    className="w-3.5 h-3.5 accent-[#0070d1] rounded-[2px] cursor-pointer"
+                  />
+                  <span className="text-[11px] font-medium text-white hidden xs:inline">Còn trống</span>
+                </label>
+              )}
+
+              {/* Sort Dropdown */}
+              <div className="relative inline-flex items-center">
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as any)}
+                  className="bg-[#181818] border border-white/20 px-3.5 py-1.5 text-xs text-white font-medium rounded-full focus:outline-none focus:border-[#0070d1] cursor-pointer pr-7 appearance-none"
+                >
+                  <option value="default">Sắp xếp: Mặc định</option>
+                  <option value="popular">Nổi bật nhất</option>
+                  <option value="rating-desc">Đánh giá cao nhất</option>
+                  <option value="price-asc">Giá: Thấp đến cao</option>
+                  <option value="price-desc">Giá: Cao đến thấp</option>
+                </select>
+                <ChevronDown className="w-3.5 h-3.5 text-neutral-400 absolute right-2.5 pointer-events-none" />
+              </div>
             </div>
           </div>
         </div>

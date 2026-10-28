@@ -50,43 +50,43 @@ export function AmenitiesSection() {
 
   return (
     /* Chapter 6: Full-bleed True White Canvas Band (#ffffff) */
-    <SectionStack id="amenities" index={60} fullHeight={true} sticky={true} className="py-16 md:py-0 pt-20 md:pt-24 md:pb-8 bg-[#ffffff] text-[#000000] border-b border-[#f3f3f3] overflow-hidden scroll-mt-24">
+    <SectionStack id="amenities" index={80} fullHeight={true} sticky={true} className="py-16 md:py-0 pt-20 md:pt-24 md:pb-8 bg-[#ffffff] text-[#000000] border-b border-[#f3f3f3] overflow-hidden scroll-mt-24">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
+        <div className="text-center max-w-2xl mx-auto mb-4 sm:mb-6">
           <FadeIn direction="up">
-            <span className="text-[12px] uppercase tracking-[1.5px] text-[#0070d1] font-bold block mb-2">
+            <span className="text-[12px] uppercase tracking-[1.5px] text-[#0070d1] font-bold block mb-1">
               Concierge & Amenities • Tiện Nghi & Dịch Vụ
             </span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl text-[#000000] font-light tracking-tight mb-3 sm:mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl text-[#000000] font-light tracking-tight mb-2 sm:mb-3">
               Hoàn thiện từng khoảnh khắc nghỉ dưỡng
             </h2>
-            <p className="text-sm sm:text-base text-[rgba(0,0,0,0.65)] font-normal leading-relaxed">
+            <p className="text-xs sm:text-sm text-[rgba(0,0,0,0.65)] font-normal leading-relaxed">
               Tại M_Dalats Villa, từng tiện nghi và dịch vụ được chuẩn bị chu đáo nhằm mang lại kỳ nghỉ thoải mái, an tâm và thảnh thơi trọn vẹn.
             </p>
           </FadeIn>
         </div>
 
         {/* Room & Garden Amenities Grid: PlayStation surface-card #f5f7fa */}
-        <div className="mb-14 sm:mb-16">
+        <div className="mb-6 sm:mb-8">
           <FadeIn direction="up" delay={0.1}>
-            <h3 className="text-lg sm:text-xl text-[#000000] font-light mb-5 text-center sm:text-left tracking-wide">
+            <h3 className="text-base sm:text-lg text-[#000000] font-light mb-3 text-center sm:text-left tracking-wide">
               Tiện nghi phòng & sân vườn
             </h3>
           </FadeIn>
 
           <StaggerContainer
-            staggerChildren={0.04}
-            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"
+            staggerChildren={0.03}
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3"
           >
             {roomAmenities.map((item, idx) => {
               const Icon = item.icon;
               return (
                 <StaggerItem key={idx}>
-                  <div className="p-4 rounded-[8px] bg-[#f5f7fa] border border-[#f3f3f3] flex items-center gap-3 transition-all hover:bg-neutral-100 group cursor-default">
-                    <div className="w-8 h-8 rounded-full bg-[#0070d1]/10 text-[#0070d1] flex items-center justify-center shrink-0 group-hover:bg-[#0070d1] group-hover:text-white transition-colors">
-                      <Icon className="w-4 h-4" />
+                  <div className="p-2.5 sm:p-3 rounded-[8px] bg-[#f5f7fa] border border-[#f3f3f3] flex items-center gap-2.5 transition-all hover:bg-neutral-100 group cursor-default">
+                    <div className="w-7 h-7 rounded-full bg-[#0070d1]/10 text-[#0070d1] flex items-center justify-center shrink-0 group-hover:bg-[#0070d1] group-hover:text-white transition-colors">
+                      <Icon className="w-3.5 h-3.5" />
                     </div>
-                    <span className="text-xs sm:text-sm font-medium text-neutral-800 leading-tight">
+                    <span className="text-xs font-medium text-neutral-800 leading-tight">
                       {item.name}
                     </span>
                   </div>
@@ -97,19 +97,19 @@ export function AmenitiesSection() {
         </div>
 
         {/* Free vs Paid Services */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 pt-8 border-t border-[#f3f3f3]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 pt-4 border-t border-[#f3f3f3]">
           <FadeIn direction="right" delay={0.2}>
-            <div className="bg-[#f5f7fa] p-6 sm:p-8 rounded-[8px] border border-[#f3f3f3] h-full">
-              <span className="text-xs uppercase tracking-[1px] text-[#0070d1] font-bold block mb-2">
+            <div className="bg-[#f5f7fa] p-4 sm:p-6 rounded-[8px] border border-[#f3f3f3] h-full">
+              <span className="text-[11px] uppercase tracking-[1px] text-[#0070d1] font-bold block mb-1">
                 Dịch vụ tiêu chuẩn
               </span>
-              <h3 className="text-xl sm:text-2xl font-light text-[#000000] mb-4">
+              <h3 className="text-lg sm:text-xl font-light text-[#000000] mb-3">
                 Được bao gồm trong kỳ nghỉ
               </h3>
-              <ul className="space-y-3">
+              <ul className="space-y-2">
                 {freeServices.map((service, idx) => (
-                  <li key={idx} className="flex items-start gap-3 text-xs sm:text-sm text-neutral-700">
-                    <Check className="w-4 h-4 text-[#0070d1] shrink-0 mt-0.5" />
+                  <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-neutral-700">
+                    <Check className="w-3.5 h-3.5 text-[#0070d1] shrink-0 mt-0.5" />
                     <span>{service}</span>
                   </li>
                 ))}
@@ -118,20 +118,20 @@ export function AmenitiesSection() {
           </FadeIn>
 
           <FadeIn direction="left" delay={0.2}>
-            <div className="bg-[#f5f7fa] p-6 sm:p-8 rounded-[8px] border border-[#f3f3f3] h-full">
-              <span className="text-xs uppercase tracking-[1px] text-[#0070d1] font-bold block mb-2">
+            <div className="bg-[#f5f7fa] p-4 sm:p-6 rounded-[8px] border border-[#f3f3f3] h-full">
+              <span className="text-[11px] uppercase tracking-[1px] text-[#0070d1] font-bold block mb-1">
                 Dịch vụ hỗ trợ thêm
               </span>
-              <h3 className="text-xl sm:text-2xl font-light text-[#000000] mb-4">
+              <h3 className="text-lg sm:text-xl font-light text-[#000000] mb-3">
                 Dịch vụ tính phí linh hoạt
               </h3>
-              <div className="space-y-4">
+              <div className="space-y-2.5">
                 {paidServices.map((service, idx) => (
-                  <div key={idx} className="border-b border-[#e5e7eb] last:border-0 pb-3 last:pb-0">
-                    <h4 className="text-sm sm:text-base font-medium text-neutral-900">
+                  <div key={idx} className="border-b border-[#e5e7eb] last:border-0 pb-2 last:pb-0">
+                    <h4 className="text-xs sm:text-sm font-medium text-neutral-900">
                       {service.title}
                     </h4>
-                    <p className="text-xs text-neutral-600 mt-0.5">
+                    <p className="text-[11px] sm:text-xs text-neutral-600 mt-0.5">
                       {service.desc}
                     </p>
                   </div>

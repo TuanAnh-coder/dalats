@@ -39,7 +39,7 @@ export function BookingPerksSection({ onOpenBookingModal }: BookingPerksSectionP
 
   return (
     /* Chapter 7: Signature Full-Bleed PlayStation Blue Action Band (hero-band-blue #0070d1) */
-    <SectionStack index={80} sticky={false} fullHeight={false} className="py-20 sm:py-24 bg-[#0070d1] text-white overflow-hidden w-full max-w-full">
+    <SectionStack index={100} fullHeight={true} sticky={true} className="section-stack-blue py-16 md:py-0 pt-20 md:pt-24 md:pb-8 bg-[#0070d1] text-white overflow-hidden w-full max-w-full">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 text-center w-full">
         <FadeIn direction="up">
           <span className="text-[12px] uppercase tracking-[2px] text-white/80 font-bold block mb-2">

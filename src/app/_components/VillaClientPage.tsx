@@ -83,22 +83,22 @@ export function VillaClientPage() {
         onOpenMyBookingsModal={() => setMyBookingsModalOpen(true)}
       />
 
-      {/* Hero Section with Quick Booking Bar */}
-      <HeroSection onSearch={handleSearch} />
-
-      {/* Chapter Group 1: Pinned Viewport Stacking Panels (Story -> HowItWorks -> Diamond Vista) */}
+      {/* Chapter Cluster 1: Pinned Viewport Stacking Panels (Hero -> Story -> HowItWorks -> Diamond Vista) */}
       <div className="relative w-full">
-        {/* Story Section - Architectural Narrative & Core Values */}
+        {/* 1. Hero Section with Quick Booking Bar */}
+        <HeroSection onSearch={handleSearch} />
+
+        {/* 2. Story Section - Architectural Narrative & Core Values */}
         <StorySection />
 
-        {/* 4-Step Booking Process Guide & Direct Guarantees */}
+        {/* 3. 4-Step Booking Process Guide & Direct Guarantees */}
         <HowItWorksSection onOpenBookingModal={() => handleOpenBooking()} />
 
-        {/* Signature Tactile Diamond Vista Slider (Hôtel Fantaisie Heritage) */}
+        {/* 4. Signature Tactile Diamond Vista Slider (Hôtel Fantaisie Heritage) */}
         <TasteDiamondSlider />
       </div>
 
-      {/* 11 Rooms Section with Filters & Real-time Search */}
+      {/* 5. 11 Rooms Section with Filters & Real-time Search */}
       <RoomsSection
         rooms={rooms}
         isLoading={isLoading}
@@ -109,31 +109,31 @@ export function VillaClientPage() {
         onClearSearch={() => setSearchParams(null)}
       />
 
-      {/* Chapter Group 2: Pinned Lifestyle & Concierge Stacking Panels (Dining -> Experiences -> Amenities) */}
+      {/* Chapter Cluster 2: Pinned Lifestyle, Testimonials, Perks, Location & Newsletter Stacking Panels */}
       <div className="relative w-full">
-        {/* Unified Dining & Cafe Section (Coffee, Breakfast, BBQ) */}
+        {/* 6. Unified Dining & Cafe Section (Coffee, Breakfast, BBQ) */}
         <DiningSection />
 
-        {/* Experience (Campfire, Lounge, Garden, Transfers) */}
+        {/* 7. Experience (Campfire, Lounge, Garden, Transfers) */}
         <ExperienceSection />
 
-        {/* Amenities & Services */}
+        {/* 8. Amenities & Services */}
         <AmenitiesSection />
+
+        {/* 9. Testimonials & Awards */}
+        <TestimonialSection />
+
+        {/* 10. Direct Booking Perks */}
+        <BookingPerksSection onOpenBookingModal={() => handleOpenBooking()} />
+
+        {/* 11. Location, Google Map & Contact */}
+        <LocationSection />
+
+        {/* 12. Newsletter */}
+        <NewsletterSection />
       </div>
 
-      {/* Testimonials & Awards */}
-      <TestimonialSection />
-
-      {/* Direct Booking Perks */}
-      <BookingPerksSection onOpenBookingModal={() => handleOpenBooking()} />
-
-      {/* Location, Google Map & Contact */}
-      <LocationSection />
-
-      {/* Newsletter */}
-      <NewsletterSection />
-
-      {/* Footer */}
+      {/* 13. Concluding Footer */}
       <Footer />
 
       {/* Modals */}

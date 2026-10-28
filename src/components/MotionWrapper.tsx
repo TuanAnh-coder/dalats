@@ -254,38 +254,45 @@ export interface SectionStackProps extends React.HTMLAttributes<HTMLElement> {
  * Pure CSS hardware-accelerated stacking & elevation shadows for buttery smooth 60-120fps scrolling.
  * On desktop (md:), locks at top: 0 with 100svh height while subsequent panels slide up and stack over it.
  */
-export function SectionStack({
-  children,
-  className = "",
-  dark = false,
-  id,
-  index = 1,
-  sticky = true,
-  fullHeight = true,
-  style,
-  ...props
-}: SectionStackProps) {
-  const stickyClasses = sticky ? "relative md:sticky md:top-0" : "relative";
-  const heightClasses = fullHeight
-    ? "min-h-screen md:h-screen md:h-[100svh] md:min-h-[640px] flex flex-col justify-center"
-    : "relative";
+export const SectionStack = React.forwardRef<HTMLElement, SectionStackProps>(
+  function SectionStack(
+    {
+      children,
+      className = "",
+      dark = false,
+      id,
+      index = 1,
+      sticky = true,
+      fullHeight = true,
+      style,
+      ...props
+    },
+    ref
+  ) {
+    const stickyClasses = sticky ? "relative md:sticky md:top-0" : "relative";
+    const heightClasses = fullHeight
+      ? "min-h-screen md:h-screen md:h-[100svh] md:min-h-[640px] flex flex-col justify-center"
+      : "relative";
 
-  return (
-    <section
-      id={id}
-      style={{
-        zIndex: index,
-        ...style,
-      }}
-      className={`w-full ${stickyClasses} ${heightClasses} ${
-        sticky ? (dark ? "section-stack-dark" : "section-stack") : ""
-      } ${className}`}
-      {...props}
-    >
-      {children}
-    </section>
-  );
-}
+    return (
+      <section
+        ref={ref}
+        id={id}
+        style={{
+          zIndex: index,
+          ...style,
+        }}
+        className={`w-full ${stickyClasses} ${heightClasses} ${
+          sticky ? (dark ? "section-stack-dark" : "section-stack") : ""
+        } ${className}`}
+        {...props}
+      >
+        {children}
+      </section>
+    );
+  }
+);
+SectionStack.displayName = "SectionStack";
 
 export { motion, AnimatePresence, useInView };
 

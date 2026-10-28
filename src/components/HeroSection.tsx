@@ -14,6 +14,7 @@ import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
+import { SectionStack } from "./MotionWrapper";
 
 interface HeroSectionProps {
   onSearch: (params: { checkIn: string; checkOut: string; adults: number; children: number }) => void;
@@ -45,9 +46,17 @@ export function HeroSection({ onSearch }: HeroSectionProps) {
   };
 
   return (
-    <section ref={heroRef} id="hero" style={{ zIndex: 1 }} className="relative z-[1] w-full overflow-hidden bg-[#000000]">
+    <SectionStack
+      ref={heroRef as any}
+      id="hero"
+      index={10}
+      sticky={true}
+      fullHeight={true}
+      dark
+      className="bg-[#000000] overflow-hidden"
+    >
       {/* Chapter 1: Full-bleed Cinematic Dark Hero Band */}
-      <div className="relative h-screen h-[100svh] min-h-[640px] w-full overflow-hidden flex flex-col justify-center">
+      <div className="relative h-full w-full overflow-hidden flex flex-col justify-center">
         <motion.div
           style={{ y: heroImageY, opacity: heroOpacity }}
           initial={{ scale: 1.08, filter: "brightness(0.72)" }}
@@ -266,6 +275,6 @@ export function HeroSection({ onSearch }: HeroSectionProps) {
           </div>
         </div>
       </div>
-    </section>
+    </SectionStack>
   );
 }

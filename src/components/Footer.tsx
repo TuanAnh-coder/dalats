@@ -20,10 +20,10 @@ export function Footer() {
             <Link href="/" className="inline-block group py-1">
               <div className="relative h-12 sm:h-14 w-52 sm:w-64 max-w-[220px] sm:max-w-none transition-transform duration-300 group-hover:scale-105">
                 <Image
-                  src="/images/m_dalats_logo_horizontal.svg"
+                  src="/images/m_dalats_logo_white.svg"
                   alt="M_Dalats Villa - Stay Close To Nature"
                   fill
-                  className="object-contain object-left invert brightness-200"
+                  className="object-contain object-left"
                 />
               </div>
             </Link>

@@ -145,7 +145,7 @@ export function Navbar({
                 src="/images/m_dalats_logo_horizontal.svg"
                 alt="M_Dalats Villa"
                 fill
-                className="object-contain object-left invert"
+                className="object-contain object-left"
                 priority
               />
             </div>
@@ -274,7 +274,7 @@ export function Navbar({
                         src="/images/m_dalats_logo_horizontal.svg"
                         alt="M_Dalats Villa"
                         fill
-                        className="object-contain object-left invert"
+                        className="object-contain object-left"
                       />
                     </div>
                   </SheetTitle>

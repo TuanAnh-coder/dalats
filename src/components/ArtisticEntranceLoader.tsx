@@ -65,45 +65,38 @@ export function ArtisticEntranceLoader() {
     <AnimatePresence onExitComplete={handleExitComplete}>
       {!isExiting && (
         <motion.div
-          key="artistic-loader-wrap"
-          initial={{ y: "0%" }}
+          key="artistic-entrance-curtain"
+          initial={{ opacity: 1 }}
           exit={{
-            y: "-100%",
-            transition: {
-              duration: 1.05,
-              ease: [0.76, 0, 0.24, 1], // Silk curtain slide-up
-            },
+            opacity: 0,
+            scale: 1.04,
+            filter: "blur(8px)",
           }}
-          className="fixed inset-0 z-[99999] flex flex-col items-center justify-center overflow-hidden cursor-pointer select-none"
+          transition={{
+            duration: 0.75,
+            ease: [0.76, 0, 0.24, 1],
+          }}
           onClick={triggerExit}
+          className="fixed inset-0 z-[999999] flex flex-col items-center justify-center cursor-pointer select-none overflow-hidden bg-[#000000]"
+          role="dialog"
+          aria-label="M_Dalats Entrance Curtain"
         >
-          {/* Deep Botanical Green Curtain Canvas (#244b39 -> #367156) */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#1b3a2c] via-[#244b39] to-[#367156]" />
+          {/* Deep Cinematic Black Canvas with PlayStation Blue Subtle Glow */}
+          <div className="absolute inset-0 bg-[#000000]" />
+          <div className="absolute inset-0 opacity-30 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(0,112,209,0.22)_0%,transparent_70%)]" />
 
-          {/* Luxury Ambient Radial Vignette & Texture */}
-          <div className="absolute inset-0 opacity-25 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(217,201,167,0.18)_0%,transparent_70%)]" />
-          <div className="absolute inset-0 opacity-5 pointer-events-none bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px]" />
+          {/* Minimal PlayStation Hairline Corner Brackets */}
+          <div className="absolute top-4 left-4 sm:top-8 sm:left-8 w-8 h-8 sm:w-10 sm:h-10 border-t border-l border-white/20 pointer-events-none" />
+          <div className="absolute top-4 right-4 sm:top-8 sm:right-8 w-8 h-8 sm:w-10 sm:h-10 border-t border-r border-white/20 pointer-events-none" />
+          <div className="absolute bottom-4 left-4 sm:bottom-8 sm:left-8 w-8 h-8 sm:w-10 sm:h-10 border-b border-l border-white/20 pointer-events-none" />
+          <div className="absolute bottom-4 right-4 sm:bottom-8 sm:right-8 w-8 h-8 sm:w-10 sm:h-10 border-b border-r border-white/20 pointer-events-none" />
 
-          {/* French Boutique Four-Corner Flourish Brackets */}
-          <div className="absolute top-3 left-3 sm:top-6 sm:left-6 w-8 h-8 sm:w-12 sm:h-12 border-t border-l border-[#D9C9A7]/40 pointer-events-none flex items-start justify-start p-1 sm:p-1.5">
-            <span className="text-[7px] sm:text-[8px] text-[#D9C9A7]/60">◆</span>
-          </div>
-          <div className="absolute top-3 right-3 sm:top-6 sm:right-6 w-8 h-8 sm:w-12 sm:h-12 border-t border-r border-[#D9C9A7]/40 pointer-events-none flex items-start justify-end p-1 sm:p-1.5">
-            <span className="text-[7px] sm:text-[8px] text-[#D9C9A7]/60">◆</span>
-          </div>
-          <div className="absolute bottom-3 left-3 sm:bottom-6 sm:left-6 w-8 h-8 sm:w-12 sm:h-12 border-b border-l border-[#D9C9A7]/40 pointer-events-none flex items-end justify-start p-1 sm:p-1.5">
-            <span className="text-[7px] sm:text-[8px] text-[#D9C9A7]/60">◆</span>
-          </div>
-          <div className="absolute bottom-3 right-3 sm:bottom-6 sm:right-6 w-8 h-8 sm:w-12 sm:h-12 border-b border-r border-[#D9C9A7]/40 pointer-events-none flex items-end justify-end p-1 sm:p-1.5">
-            <span className="text-[7px] sm:text-[8px] text-[#D9C9A7]/60">◆</span>
-          </div>
-
-          {/* Header Rotating Mini Heritage Seal */}
+          {/* Rotating Seal */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="relative w-16 h-16 sm:w-20 sm:h-20 mb-2 sm:mb-4 flex items-center justify-center"
+            className="relative w-16 h-16 sm:w-20 sm:h-20 mb-3 sm:mb-5 flex items-center justify-center"
           >
             <svg
               viewBox="0 0 100 100"
@@ -114,21 +107,21 @@ export function ArtisticEntranceLoader() {
                 d="M 50, 50 m -36, 0 a 36,36 0 1,1 72,0 a 36,36 0 1,1 -72,0"
                 fill="none"
               />
-              <text className="text-[7.4px] uppercase tracking-[0.24em] font-serif fill-[#D9C9A7]">
+              <text className="text-[7.4px] uppercase tracking-[0.24em] font-sans fill-[#53b1ff]">
                 <textPath href="#loaderCirclePath" startOffset="0%">
                   • M_DALATS BOUTIQUE VILLA • ĐÀ LẠT •
                 </textPath>
               </text>
             </svg>
             <div className="absolute inset-0 flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-[#D9C9A7]" />
+              <Sparkles className="w-4 h-4 text-[#0070d1]" />
             </div>
           </motion.div>
 
-          {/* Central Logo with Two-Layer Clip-Path Reveal (Hôtel Fantaisie Signature) */}
+          {/* Central Logo with Clip-Path Reveal */}
           <div className="relative w-56 h-28 xs:w-72 xs:h-36 sm:w-96 sm:h-48 flex items-center justify-center">
             {/* Base Layer: Ghosted Base Silhouette (opacity 20%) */}
-            <div className="absolute inset-0 opacity-20 pointer-events-none filter drop-shadow">
+            <div className="absolute inset-0 opacity-20 pointer-events-none">
               <Image
                 src="/images/m_dalats_logo_vertical_white.svg"
                 alt="M_Dalats Boutique Villa"
@@ -140,7 +133,7 @@ export function ArtisticEntranceLoader() {
 
             {/* Top Layer: Clip-Path Fill from Bottom to Top (0% to 100%) */}
             <div
-              className="absolute inset-0 pointer-events-none filter drop-shadow-[0_4px_20px_rgba(217,201,167,0.35)] transition-[clip-path] duration-75 ease-linear"
+              className="absolute inset-0 pointer-events-none transition-[clip-path] duration-75 ease-linear"
               style={{
                 clipPath: `inset(${100 - progress}% 0% 0% 0%)`,
                 WebkitClipPath: `inset(${100 - progress}% 0% 0% 0%)`,
@@ -156,42 +149,34 @@ export function ArtisticEntranceLoader() {
             </div>
           </div>
 
-          {/* Poetic Subtitle & Heritage Flourish */}
+          {/* Subtitle in PlayStation SST Light Typography */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
             className="text-center mt-3 sm:mt-5 max-w-md px-6 z-10"
           >
-            <p className="font-script text-xl xs:text-2xl sm:text-3xl text-[#F4A261] font-normal drop-shadow-md">
+            <p className="text-xl sm:text-2xl font-light text-white tracking-[-0.1px]">
               “Đà Lạt – Nơi những kỷ niệm đẹp bắt đầu”
             </p>
 
-            <p className="font-sans text-[9px] xs:text-[10px] uppercase tracking-[0.35em] text-[#D9C9A7] font-semibold mt-2">
-              EST. 1893 • TUSCANY BOUTIQUE RESORT
+            <p className="text-[10px] uppercase tracking-[0.35em] text-[#53b1ff] font-semibold mt-2">
+              BOUTIQUE VILLA • STAY CLOSE TO NATURE
             </p>
           </motion.div>
 
-          {/* Hôtel Fantaisie Diamond Progress Gauge */}
+          {/* PlayStation Progress Line */}
           <div className="mt-8 sm:mt-10 w-48 sm:w-64 flex flex-col items-center gap-2">
-            <div className="relative w-full h-[2px] bg-[#D9C9A7]/25 rounded-full overflow-visible flex items-center">
+            <div className="relative w-full h-[2px] bg-white/20 rounded-full overflow-hidden flex items-center">
               {/* Progress Line */}
               <div
-                className="h-full bg-gradient-to-r from-[#D9C9A7]/40 via-[#F4A261] to-[#D9C9A7] transition-all duration-75 rounded-full"
+                className="h-full bg-gradient-to-r from-[#0070d1] to-[#53b1ff] transition-all duration-75 rounded-full"
                 style={{ width: `${progress}%` }}
               />
-
-              {/* Sliding Brass Diamond Indicator */}
-              <div
-                className="absolute transform -translate-x-1/2 flex items-center justify-center transition-all duration-75"
-                style={{ left: `${progress}%` }}
-              >
-                <div className="w-2.5 h-2.5 bg-[#FAF7F1] rotate-45 shadow-[0_0_8px_rgba(244,162,97,0.8)] border border-[#D9C9A7]" />
-              </div>
             </div>
 
-            <div className="flex items-center justify-between w-full text-[9px] uppercase tracking-[0.25em] text-[#D9C9A7]/75 font-mono pt-1">
-              <span>Đang mở cửa</span>
+            <div className="flex items-center justify-between w-full text-[9px] uppercase tracking-[0.25em] text-white/60 font-mono pt-1">
+              <span>Đang tải</span>
               <span>{progress}%</span>
             </div>
           </div>
@@ -203,7 +188,7 @@ export function ArtisticEntranceLoader() {
             transition={{ delay: 0.6, duration: 0.5 }}
             className="absolute bottom-4 sm:bottom-8 pb-[max(0.5rem,env(safe-area-inset-bottom))] text-center px-4"
           >
-            <span className="text-[10px] uppercase tracking-[0.25em] text-[#FAF7F1]/80 hover:text-white transition-colors border-b border-[#D9C9A7]/30 pb-0.5">
+            <span className="text-[10px] uppercase tracking-[0.25em] text-white/60 hover:text-white transition-colors border-b border-white/20 pb-0.5">
               Chạm bất kỳ đâu để vào ngay • Click to enter
             </span>
           </motion.div>

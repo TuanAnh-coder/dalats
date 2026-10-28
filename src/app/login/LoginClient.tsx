@@ -62,7 +62,7 @@ export function LoginClient() {
                 alt="M_Dalats Boutique Villa"
                 fill
                 priority
-                className="object-contain object-left brightness-0 invert"
+                className="object-contain object-left"
               />
             </div>
           </div>
@@ -100,7 +100,7 @@ export function LoginClient() {
                   alt="M_Dalats Boutique Villa"
                   fill
                   priority
-                  className="object-contain brightness-0 invert"
+                  className="object-contain"
                   sizes="288px"
                 />
               </div>

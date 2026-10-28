@@ -1,52 +1,56 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 15 380 240" width="100%" height="100%">
   <defs>
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&amp;family=Montserrat:wght@500;600;700&amp;family=Caveat:wght@400;600&amp;display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&amp;family=Montserrat:wght@500;600;700&amp;display=swap');
       .v-title-w {
-        font-family: 'Playfair Display', Georgia, serif;
+        font-family: 'Playfair Display', Georgia, -apple-system, sans-serif;
         font-size: 38px;
         font-weight: 700;
-        fill: #FAF9F6;
+        fill: #ffffff;
         text-anchor: middle;
         letter-spacing: 0.03em;
       }
       .v-tagline-w {
-        font-family: 'Montserrat', sans-serif;
+        font-family: 'Montserrat', -apple-system, sans-serif;
         font-size: 11.5px;
         font-weight: 600;
         letter-spacing: 0.38em;
-        fill: #D9C9A7;
+        fill: #53b1ff;
         text-anchor: middle;
       }
     </style>
+    <linearGradient id="vSunGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#53b1ff" />
+      <stop offset="100%" stop-color="#0070d1" />
+    </linearGradient>
   </defs>
 
-  <!-- Centered Emblem (White with Sunset Sun) -->
+  <!-- Centered Emblem (PlayStation Blue Sun + White Villa) -->
   <g transform="translate(115, 18)">
-    <!-- Sun (Warm Sunset Orange) -->
-    <circle cx="82" cy="46" r="23" fill="#F4A261" />
+    <!-- Sun (Signature PlayStation Blue Gradient) -->
+    <circle cx="82" cy="46" r="23" fill="url(#vSunGrad)" />
 
     <!-- Left Pine Tree 1 -->
-    <path d="M 28 42 L 23 51 H 25 L 20 62 H 23 L 16 75 H 36 L 31 62 H 34 L 29 51 H 31 Z" fill="#FAF9F6" />
+    <path d="M 28 42 L 23 51 H 25 L 20 62 H 23 L 16 75 H 36 L 31 62 H 34 L 29 51 H 31 Z" fill="#ffffff" />
 
     <!-- Left Pine Tree 2 -->
-    <path d="M 44 26 L 37 38 H 40 L 33 52 H 37 L 28 68 H 54 L 47 52 H 51 L 45 38 H 48 Z" fill="#FAF9F6" />
+    <path d="M 44 26 L 37 38 H 40 L 33 52 H 37 L 28 68 H 54 L 47 52 H 51 L 45 38 H 48 Z" fill="#ffffff" />
 
     <!-- Right Pine Tree 1 -->
-    <path d="M 104 38 L 100 46 H 102 L 97 56 H 100 L 94 68 H 112 L 107 56 H 110 L 106 46 H 108 Z" fill="#FAF9F6" />
+    <path d="M 104 38 L 100 46 H 102 L 97 56 H 100 L 94 68 H 112 L 107 56 H 110 L 106 46 H 108 Z" fill="#ffffff" />
 
     <!-- Right Pine Tree 2 -->
-    <path d="M 118 28 L 112 39 H 115 L 108 53 H 112 L 103 69 H 128 L 122 53 H 126 L 120 39 H 123 Z" fill="#FAF9F6" />
+    <path d="M 118 28 L 112 39 H 115 L 108 53 H 112 L 103 69 H 128 L 122 53 H 126 L 120 39 H 123 Z" fill="#ffffff" />
 
     <!-- Villa Roof -->
-    <path d="M 67 36 L 42 66 H 49 L 67 44 L 88 66 H 96 L 67 36 Z" fill="#FAF9F6" />
-    <rect x="52" y="38" width="4.5" height="12" fill="#FAF9F6" />
+    <path d="M 67 36 L 42 66 H 49 L 67 44 L 88 66 H 96 L 67 36 Z" fill="#ffffff" />
+    <rect x="52" y="38" width="4.5" height="12" fill="#ffffff" />
 
     <!-- Villa Front Facade Wall -->
-    <path d="M 50 66 L 50 78 H 85 L 85 66 Z" fill="#FAF9F6" />
+    <path d="M 50 66 L 50 78 H 85 L 85 66 Z" fill="#ffffff" />
 
     <!-- 4-Pane Window on Facade (Dark cutout) -->
-    <g fill="#367156">
+    <g fill="#000000">
       <rect x="63" y="68" width="4.5" height="4.5" rx="0.5" />
       <rect x="69" y="68" width="4.5" height="4.5" rx="0.5" />
       <rect x="63" y="74" width="4.5" height="4.5" rx="0.5" />
@@ -54,8 +58,8 @@
     </g>
 
     <!-- Hill Baseline Curves -->
-    <path d="M 8 78 Q 45 68 85 75 Q 120 82 142 74" fill="none" stroke="#D9C9A7" stroke-width="2.5" stroke-linecap="round" />
-    <path d="M 6 82 C 45 68 85 70 144 80 C 85 92 45 88 6 82 Z" fill="#FAF9F6" />
+    <path d="M 8 78 Q 45 68 85 75 Q 120 82 142 74" fill="none" stroke="#53b1ff" stroke-width="2.5" stroke-linecap="round" />
+    <path d="M 6 82 C 45 68 85 70 144 80 C 85 92 45 88 6 82 Z" fill="#ffffff" />
   </g>
 
   <!-- Typography Below -->

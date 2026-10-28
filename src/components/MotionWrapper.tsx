@@ -252,7 +252,7 @@ export interface SectionStackProps extends React.HTMLAttributes<HTMLElement> {
 /**
  * Signature Boutique Pinned Scroll Panel / Sticky Stacking Section
  * Pure CSS hardware-accelerated stacking & elevation shadows for buttery smooth 60-120fps scrolling.
- * Each section pins at top: 0 with 100svh height, while the subsequent panel slides up and stacks over it.
+ * On desktop (md:), locks at top: 0 with 100svh height while subsequent panels slide up and stack over it.
  */
 export function SectionStack({
   children,
@@ -265,45 +265,21 @@ export function SectionStack({
   style,
   ...props
 }: SectionStackProps) {
-  const sectionRef = React.useRef<HTMLElement>(null);
-  const [canStick, setCanStick] = React.useState(false);
-
-  React.useEffect(() => {
-    if (!sticky) {
-      setCanStick(false);
-      return;
-    }
-
-    const checkSticky = () => {
-      if (!sectionRef.current) return;
-      const height = sectionRef.current.offsetHeight;
-      const viewportHeight = window.innerHeight;
-      const isDesktop = window.innerWidth >= 768;
-      // On desktop, pin when fullHeight is set or when content fits within 1.25x screen height
-      const fitsScreen = fullHeight || height <= viewportHeight * 1.25;
-      setCanStick(isDesktop && fitsScreen);
-    };
-
-    checkSticky();
-    window.addEventListener("resize", checkSticky);
-    return () => window.removeEventListener("resize", checkSticky);
-  }, [sticky, fullHeight]);
-
+  const stickyClasses = sticky ? "relative md:sticky md:top-0" : "relative";
   const heightClasses = fullHeight
-    ? "h-auto md:h-screen md:h-[100svh] md:min-h-[640px] flex flex-col justify-center"
-    : "";
+    ? "min-h-screen md:h-screen md:h-[100svh] md:min-h-[640px] flex flex-col justify-center"
+    : "relative";
 
   return (
     <section
-      ref={sectionRef}
       id={id}
       style={{
         zIndex: index,
         ...style,
       }}
-      className={`relative w-full ${canStick ? "md:sticky md:top-0" : ""} ${
-        dark ? "section-stack-dark" : "section-stack"
-      } ${heightClasses} ${className}`}
+      className={`w-full ${stickyClasses} ${heightClasses} ${
+        sticky ? (dark ? "section-stack-dark" : "section-stack") : ""
+      } ${className}`}
       {...props}
     >
       {children}

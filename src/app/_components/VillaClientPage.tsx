@@ -86,14 +86,17 @@ export function VillaClientPage() {
       {/* Hero Section with Quick Booking Bar */}
       <HeroSection onSearch={handleSearch} />
 
-      {/* Story Section - Architectural Narrative & Core Values */}
-      <StorySection />
+      {/* Chapter Group 1: Pinned Viewport Stacking Panels (Story -> HowItWorks -> Diamond Vista) */}
+      <div className="relative w-full">
+        {/* Story Section - Architectural Narrative & Core Values */}
+        <StorySection />
 
-      {/* 4-Step Booking Process Guide & Direct Guarantees */}
-      <HowItWorksSection onOpenBookingModal={() => handleOpenBooking()} />
+        {/* 4-Step Booking Process Guide & Direct Guarantees */}
+        <HowItWorksSection onOpenBookingModal={() => handleOpenBooking()} />
 
-      {/* Signature Tactile Diamond Vista Slider (Hôtel Fantaisie Heritage) */}
-      <TasteDiamondSlider />
+        {/* Signature Tactile Diamond Vista Slider (Hôtel Fantaisie Heritage) */}
+        <TasteDiamondSlider />
+      </div>
 
       {/* 11 Rooms Section with Filters & Real-time Search */}
       <RoomsSection
@@ -106,14 +109,17 @@ export function VillaClientPage() {
         onClearSearch={() => setSearchParams(null)}
       />
 
-      {/* Unified Dining & Cafe Section (Coffee, Breakfast, BBQ) */}
-      <DiningSection />
+      {/* Chapter Group 2: Pinned Lifestyle & Concierge Stacking Panels (Dining -> Experiences -> Amenities) */}
+      <div className="relative w-full">
+        {/* Unified Dining & Cafe Section (Coffee, Breakfast, BBQ) */}
+        <DiningSection />
 
-      {/* Experience (Campfire, Lounge, Garden, Transfers) */}
-      <ExperienceSection />
+        {/* Experience (Campfire, Lounge, Garden, Transfers) */}
+        <ExperienceSection />
 
-      {/* Amenities & Services */}
-      <AmenitiesSection />
+        {/* Amenities & Services */}
+        <AmenitiesSection />
+      </div>
 
       {/* Testimonials & Awards */}
       <TestimonialSection />

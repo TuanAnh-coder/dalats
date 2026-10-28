@@ -45,7 +45,7 @@ export function HeroSection({ onSearch }: HeroSectionProps) {
   };
 
   return (
-    <section ref={heroRef} id="hero" style={{ zIndex: 1 }} className="relative md:sticky md:top-0 z-[1] w-full overflow-hidden bg-[#000000]">
+    <section ref={heroRef} id="hero" style={{ zIndex: 1 }} className="relative z-[1] w-full overflow-hidden bg-[#000000]">
       {/* Chapter 1: Full-bleed Cinematic Dark Hero Band */}
       <div className="relative h-screen h-[100svh] min-h-[640px] w-full overflow-hidden flex flex-col justify-center">
         <motion.div

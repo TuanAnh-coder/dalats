@@ -9,7 +9,7 @@ export default async function Home() {
 
   return (
     <HydrateClient>
-      <main className="w-full max-w-full overflow-x-hidden min-w-0">
+      <main className="w-full max-w-full overflow-x-clip min-w-0">
         <VillaClientPage />
       </main>
     </HydrateClient>

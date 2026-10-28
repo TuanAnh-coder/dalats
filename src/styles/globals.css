@@ -133,13 +133,13 @@ html.lenis body {
 html {
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-overflow-scrolling: touch;
   position: relative;
 }
@@ -243,7 +243,6 @@ img, svg, video, canvas, audio, iframe, embed, object {
    Each succeeding section locks at top: 0 and glides over the previous one.
    ============================================================ */
 .section-stack {
-  position: relative;
   border-top-left-radius: 1.75rem;
   border-top-right-radius: 1.75rem;
   border-top: 1px solid rgba(0, 0, 0, 0.08);
@@ -262,7 +261,6 @@ img, svg, video, canvas, audio, iframe, embed, object {
 }
 
 .section-stack-dark {
-  position: relative;
   border-top-left-radius: 1.75rem;
   border-top-right-radius: 1.75rem;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
@@ -281,7 +279,6 @@ img, svg, video, canvas, audio, iframe, embed, object {
 }
 
 .section-stack-blue {
-  position: relative;
   border-top-left-radius: 1.75rem;
   border-top-right-radius: 1.75rem;
   border-top: 1px solid rgba(255, 255, 255, 0.2);

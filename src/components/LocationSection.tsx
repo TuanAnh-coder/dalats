@@ -51,7 +51,7 @@ export function LocationSection() {
       fullHeight={true}
       sticky={true}
       dark
-      className="bg-[#000000] text-white border-b border-white/10 overflow-hidden scroll-mt-24"
+      className="bg-[#121314] text-white border-t border-white/15 border-b border-white/10 overflow-hidden scroll-mt-24"
     >
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8">

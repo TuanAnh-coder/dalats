@@ -277,6 +277,15 @@ img, svg, video, canvas, audio, iframe, embed, object {
     box-shadow: 0 -45px 95px -20px rgba(0, 0, 0, 0.75);
     will-change: transform;
   }
+
+  /* First section under the header starts flat with zero top radius */
+  #hero.section-stack,
+  #hero.section-stack-dark {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    border-top: none !important;
+    box-shadow: none !important;
+  }
 }
 
 /* Dragonfly Wing Flapping Keyframes for Scroll Companion */

@@ -91,19 +91,20 @@ export function HowItWorksSection({ onOpenBookingModal }: HowItWorksSectionProps
       index={30}
       fullHeight={true}
       sticky={true}
-      className="bg-[#ffffff] text-[#000000] border-b border-[#e5e5e5] overflow-hidden scroll-mt-20"
+      dark
+      className="section-stack-dark bg-[#121314] text-white border-b border-white/10 overflow-hidden scroll-mt-20"
     >
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
         {/* Editorial Header */}
-        <div className="text-center max-w-3xl mx-auto mb-6 sm:mb-8 md:mb-10">
+        <div className="text-center max-w-3xl mx-auto mb-4 sm:mb-6 md:mb-8">
           <FadeIn direction="up">
-            <span className="text-[11px] sm:text-xs uppercase tracking-[2px] text-[#0070d1] font-bold block mb-2">
+            <span className="text-[11px] sm:text-xs uppercase tracking-[2px] text-[#53b1ff] font-bold block mb-2">
               Quy Trình Đặt Phòng Tinh Gọn • How It Works
             </span>
-            <h2 className="font-serif text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-normal text-[#000000] tracking-tight leading-[1.2]">
+            <h2 className="font-serif text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-normal text-white tracking-tight leading-[1.2]">
               4 Bước Để Bắt Đầu Kỳ Nghỉ An Yên
             </h2>
-            <p className="text-xs sm:text-sm md:text-base text-[#000000]/70 font-normal leading-relaxed mt-2 max-w-2xl mx-auto">
+            <p className="text-xs sm:text-sm md:text-base text-neutral-400 font-normal leading-relaxed mt-2 max-w-2xl mx-auto">
               Trải nghiệm đặt phòng trực tiếp nhanh chóng, minh bạch và an tâm tuyệt đối trước chuyến đi đến Đà Lạt.
             </p>
           </FadeIn>
@@ -113,43 +114,43 @@ export function HowItWorksSection({ onOpenBookingModal }: HowItWorksSectionProps
         <div
           ref={scrollRef}
           onScroll={handleScroll}
-          className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5 overflow-x-auto no-scrollbar snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0 mb-4 sm:mb-8 pb-2 sm:pb-0"
+          className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 md:gap-5 overflow-x-auto no-scrollbar snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0 mb-4 sm:mb-6 pb-2 sm:pb-0"
         >
           {steps.map((item, idx) => {
             const Icon = item.icon;
             return (
               <div
                 key={idx}
-                className="step-card-snap w-[82vw] xs:w-[76vw] sm:w-auto shrink-0 snap-center group relative bg-[#f5f7fa] hover:bg-[#eef2f7] p-5 xs:p-6 sm:p-7 rounded-[12px] sm:rounded-[8px] border border-[#e5e5e5] hover:border-[#0070d1]/30 transition-all duration-300 flex flex-col justify-between h-full shadow-xs sm:shadow-none"
+                className="step-card-snap w-[82vw] xs:w-[76vw] sm:w-auto shrink-0 snap-center group relative bg-[#181818] hover:bg-[#1f2024] p-4 xs:p-5 sm:p-6 rounded-[12px] sm:rounded-[8px] border border-white/10 hover:border-[#53b1ff]/40 transition-all duration-300 flex flex-col justify-between h-full shadow-lg"
               >
                 <div>
                   {/* Top Row: Step Number & Icon */}
-                  <div className="flex items-center justify-between mb-4 sm:mb-5">
-                    <span className="font-mono text-2xl sm:text-3xl font-light text-[#0070d1] tracking-tight">
+                  <div className="flex items-center justify-between mb-3.5 sm:mb-4">
+                    <span className="font-mono text-2xl sm:text-3xl font-light text-[#53b1ff] tracking-tight">
                       {item.step}
                     </span>
-                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white text-[#0070d1] border border-[#e5e5e5] flex items-center justify-center shadow-xs group-hover:bg-[#0070d1] group-hover:text-white transition-colors duration-300">
+                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/10 text-[#53b1ff] border border-white/15 flex items-center justify-center shadow-xs group-hover:bg-[#0070d1] group-hover:text-white transition-colors duration-300">
                       <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
                   </div>
 
                   {/* Step Title & Subtitle */}
-                  <h3 className="font-serif text-lg sm:text-xl font-normal text-[#000000] tracking-tight group-hover:text-[#0070d1] transition-colors duration-300">
+                  <h3 className="font-serif text-lg sm:text-xl font-normal text-white tracking-tight group-hover:text-[#53b1ff] transition-colors duration-300">
                     {item.title}
                   </h3>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.8px] text-[#0070d1] mt-1 mb-2.5">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.8px] text-[#53b1ff] mt-1 mb-2">
                     {item.subtitle}
                   </p>
 
                   {/* Description */}
-                  <p className="text-xs sm:text-sm text-[#000000]/70 leading-relaxed font-light">
+                  <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed font-light">
                     {item.description}
                   </p>
                 </div>
 
                 {/* Bottom Feature Pill */}
-                <div className="pt-4 sm:pt-5 mt-4 sm:mt-5 border-t border-[#e5e5e5]/80 flex items-center gap-1.5 text-[11px] text-[#000000]/65 font-medium">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#0070d1] shrink-0" />
+                <div className="pt-3.5 sm:pt-4 mt-3.5 sm:mt-4 border-t border-white/10 flex items-center gap-1.5 text-[11px] text-neutral-300 font-medium">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#53b1ff] shrink-0" />
                   <span>{item.badge}</span>
                 </div>
               </div>
@@ -158,7 +159,7 @@ export function HowItWorksSection({ onOpenBookingModal }: HowItWorksSectionProps
         </div>
 
         {/* Mobile Carousel Indicators */}
-        <div className="flex sm:hidden items-center justify-center gap-1.5 mb-6">
+        <div className="flex sm:hidden items-center justify-center gap-1.5 mb-5">
           {steps.map((_, idx) => (
             <button
               key={idx}
@@ -166,7 +167,7 @@ export function HowItWorksSection({ onOpenBookingModal }: HowItWorksSectionProps
               onClick={() => handleScrollToStep(idx)}
               aria-label={`Bước ${idx + 1}`}
               className={`h-1.5 rounded-full transition-all cursor-pointer ${
-                activeStep === idx ? "w-6 bg-[#0070d1]" : "w-1.5 bg-[#e5e5e5]"
+                activeStep === idx ? "w-6 bg-[#53b1ff]" : "w-1.5 bg-white/20"
               }`}
             />
           ))}
@@ -174,19 +175,19 @@ export function HowItWorksSection({ onOpenBookingModal }: HowItWorksSectionProps
 
         {/* Trust Badges Banner & Quick Action */}
         <FadeIn direction="up">
-          <div className="bg-[#f5f7fa] rounded-[12px] sm:rounded-[8px] border border-[#e5e5e5] p-4 xs:p-5 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 shadow-none">
-            <div className="grid grid-cols-1 xs:grid-cols-3 sm:flex sm:flex-wrap items-center gap-3 xs:gap-4 sm:gap-10 text-xs sm:text-sm text-[#000000]/80 w-full md:w-auto">
+          <div className="bg-[#181818] rounded-[12px] sm:rounded-[8px] border border-white/10 p-4 xs:p-5 sm:p-6 flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 shadow-none">
+            <div className="grid grid-cols-1 xs:grid-cols-3 sm:flex sm:flex-wrap items-center gap-3 xs:gap-4 sm:gap-8 text-xs sm:text-sm text-neutral-300 w-full md:w-auto">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-[#0070d1] shrink-0" />
-                <span className="font-semibold text-xs sm:text-sm">Cam kết giá gốc</span>
+                <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-[#53b1ff] shrink-0" />
+                <span className="font-semibold text-xs sm:text-sm text-white">Cam kết giá gốc</span>
               </div>
               <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-[#0070d1] shrink-0" />
-                <span className="font-semibold text-xs sm:text-sm">Giữ phòng 100%</span>
+                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-[#53b1ff] shrink-0" />
+                <span className="font-semibold text-xs sm:text-sm text-white">Giữ phòng 100%</span>
               </div>
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-[#0070d1] shrink-0" />
-                <span className="font-semibold text-xs sm:text-sm">Đổi ngày linh hoạt</span>
+                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-[#53b1ff] shrink-0" />
+                <span className="font-semibold text-xs sm:text-sm text-white">Đổi ngày linh hoạt</span>
               </div>
             </div>
 

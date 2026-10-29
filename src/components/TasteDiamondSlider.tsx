@@ -94,16 +94,16 @@ export function TasteDiamondSlider() {
       index={40}
       fullHeight={true}
       sticky={true}
-      className="bg-[#ffffff] text-[#000000] border-b border-[#f3f3f3] overflow-hidden w-full max-w-full"
+      className="bg-[#ffffff] text-[#000000] border-t border-[#e5e5e5] border-b border-[#f3f3f3] overflow-hidden w-full max-w-full"
     >
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 w-full min-w-0">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
+        <div className="text-center max-w-2xl mx-auto mb-4 sm:mb-6">
           <FadeIn direction="up">
-            <span className="text-[11px] sm:text-xs uppercase tracking-[2px] text-[#0070d1] font-bold block mb-2">
+            <span className="text-[11px] sm:text-xs uppercase tracking-[2px] text-[#0070d1] font-bold block mb-1.5 sm:mb-2">
               Visual Narrative • Bộ Sưu Tập Không Gian
             </span>
-            <h2 className="font-serif text-2xl xs:text-3xl sm:text-4xl md:text-5xl text-[#000000] font-normal tracking-tight mb-2 sm:mb-3">
+            <h2 className="font-serif text-2xl xs:text-3xl sm:text-4xl md:text-5xl text-[#000000] font-normal tracking-tight mb-2">
               Góc Thơ Mộng Tại M_Dalats Villa
             </h2>
             <p className="text-xs sm:text-sm md:text-base text-[rgba(0,0,0,0.65)] font-normal leading-relaxed">
@@ -115,7 +115,7 @@ export function TasteDiamondSlider() {
         {/* Showcase Card: PlayStation surface-card #f5f7fa */}
         <div className="border border-[#e5e5e5] rounded-[12px] sm:rounded-[8px] overflow-hidden bg-[#f5f7fa] shadow-none">
           <div
-            className="relative h-[300px] xs:h-[360px] sm:h-[420px] md:h-[450px] w-full bg-neutral-900 select-none cursor-grab active:cursor-grabbing"
+            className="relative h-[260px] xs:h-[300px] sm:h-[360px] md:h-[380px] lg:h-[410px] w-full bg-neutral-900 select-none cursor-grab active:cursor-grabbing"
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >

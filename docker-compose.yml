@@ -7,15 +7,15 @@ services:
     container_name: mdalats-villa-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgrespassword}
-      POSTGRES_DB: ${POSTGRES_DB:-mdalats_villa}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: mdalats_villa
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-mdalats_villa}"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d mdalats_villa"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -35,13 +35,13 @@ services:
     image: redis:7-alpine
     container_name: mdalats-villa-redis
     restart: unless-stopped
-    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-redispassword}
+    command: redis-server --appendonly yes --requirepass redispassword
     ports:
-      - "${REDIS_PORT:-6379}:6379"
+      - "6379:6379"
     volumes:
       - redisdata:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-redispassword}", "ping"]
+      test: ["CMD", "redis-cli", "-a", "redispassword", "ping"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -63,13 +63,13 @@ services:
     container_name: mdalats-villa-minio
     restart: unless-stopped
     ports:
-      - "${MINIO_API_PORT:-9000}:9000"      # S3 API Endpoint
-      - "${MINIO_CONSOLE_PORT:-9001}:9001"  # Silo Web Console UI
+      - "9000:9000"   # S3 API Endpoint
+      - "9001:9001"   # Silo Web Console UI
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-miniopassword123}
-      MINIO_BROWSER_REDIRECT_URL: ${MINIO_BROWSER_REDIRECT_URL:-http://localhost:9001}
-      MINIO_SERVER_URL: ${MINIO_SERVER_URL:-http://localhost:9000}
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: miniopassword123
+      MINIO_BROWSER_REDIRECT_URL: http://localhost:9001
+      MINIO_SERVER_URL: http://localhost:9000
     command: server /data --console-address ":9001"
     volumes:
       - miniodata:/data
@@ -93,15 +93,15 @@ services:
       - minio
     entrypoint: >
       /bin/sh -c "
-      until (/usr/bin/mc alias set local http://minio:9000 ${MINIO_ROOT_USER:-minioadmin} ${MINIO_ROOT_PASSWORD:-miniopassword123}); do
+      until (/usr/bin/mc alias set local http://minio:9000 minioadmin miniopassword123); do
         echo 'Waiting for Silo server to be ready...';
         sleep 2;
       done;
-      /usr/bin/mc mb --ignore-existing local/${S3_BUCKET:-mdalats-media};
-      /usr/bin/mc anonymous set download local/${S3_BUCKET:-mdalats-media};
+      /usr/bin/mc mb --ignore-existing local/mdalats-media;
+      /usr/bin/mc anonymous set download local/mdalats-media;
       echo '==================================================';
-      echo 'Silo bucket [${S3_BUCKET:-mdalats-media}] is ready for Images & Videos!';
-      echo 'Public access URL: http://localhost:9000/${S3_BUCKET:-mdalats-media}/...';
+      echo 'Silo bucket [mdalats-media] is ready for Images & Videos!';
+      echo 'Public access URL: http://localhost:9000/mdalats-media/...';
       echo '==================================================';
       exit 0;
       "
@@ -116,27 +116,27 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: ${DOCKER_IMAGE:-tuananhcoder1/dalats:latest}
+    image: tuananhcoder1/dalats:latest
     container_name: mdalats-villa-app
     restart: unless-stopped
     ports:
-      - "${APP_PORT:-3000}:3000"
+      - "3000:3000"
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=${DATABASE_URL:-postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgrespassword}@postgres:5432/${POSTGRES_DB:-mdalats_villa}}
-      - REDIS_URL=${REDIS_URL:-redis://:${REDIS_PASSWORD:-redispassword}@redis:6379}
-      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET:-K2WBz3+c7ZM2B4sSxvu5EPXAH9tx60Y25QEAAoFGBv4=}
-      - BETTER_AUTH_URL=${BETTER_AUTH_URL:-https://dalatsvilla.duckdns.org}
-      - BETTER_AUTH_TRUSTED_ORIGINS=${BETTER_AUTH_TRUSTED_ORIGINS:-https://dalatsvilla.duckdns.org,http://localhost:3000,http://localhost}
-      - BETTER_AUTH_GITHUB_CLIENT_ID=${BETTER_AUTH_GITHUB_CLIENT_ID:-}
-      - BETTER_AUTH_GITHUB_CLIENT_SECRET=${BETTER_AUTH_GITHUB_CLIENT_SECRET:-}
-      - S3_ENDPOINT=${S3_ENDPOINT:-http://minio:9000}
-      - S3_REGION=${S3_REGION:-us-east-1}
-      - S3_ACCESS_KEY=${S3_ACCESS_KEY:-${MINIO_ROOT_USER:-minioadmin}}
-      - S3_SECRET_KEY=${S3_SECRET_KEY:-${MINIO_ROOT_PASSWORD:-miniopassword123}}
-      - S3_BUCKET=${S3_BUCKET:-mdalats-media}
-      - S3_PUBLIC_URL=${S3_PUBLIC_URL:-https://dalatsvilla.duckdns.org/media}
-      - S3_FORCE_PATH_STYLE=${S3_FORCE_PATH_STYLE:-true}
+      - DATABASE_URL=postgresql://postgres:postgrespassword@postgres:5432/mdalats_villa
+      - REDIS_URL=redis://:redispassword@redis:6379
+      - BETTER_AUTH_SECRET=K2WBz3+c7ZM2B4sSxvu5EPXAH9tx60Y25QEAAoFGBv4=
+      - BETTER_AUTH_URL=https://dalatsvilla.duckdns.org
+      - BETTER_AUTH_TRUSTED_ORIGINS=https://dalatsvilla.duckdns.org,http://localhost:3000,http://localhost
+      - BETTER_AUTH_GITHUB_CLIENT_ID=
+      - BETTER_AUTH_GITHUB_CLIENT_SECRET=
+      - S3_ENDPOINT=http://minio:9000
+      - S3_REGION=us-east-1
+      - S3_ACCESS_KEY=minioadmin
+      - S3_SECRET_KEY=miniopassword123
+      - S3_BUCKET=mdalats-media
+      - S3_PUBLIC_URL=https://dalatsvilla.duckdns.org/media
+      - S3_FORCE_PATH_STYLE=true
     volumes:
       - app_uploads:/app/public/uploads
     depends_on:
@@ -172,7 +172,7 @@ services:
     container_name: mdalats-villa-gateway
     restart: unless-stopped
     ports:
-      - "${HTTP_PORT:-80}:80"
+      - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
